@@ -21,12 +21,12 @@ ACCESS_TOKEN_EXPIRATION = int(os.getenv("ACCESS_TOKEN_EXPIRATION")) or 1
 REFRESH_TOKEN_EXPIRATION = int(os.getenv("REFRESH_TOKEN_EXPIRATION")) or 1
 
 access_security = JwtAccessBearerCookie(
-    secret_key=ACCESS_TOKEN_SECRET,
     auto_error=True,
+    secret_key=ACCESS_TOKEN_SECRET,
     access_expires_delta=timedelta(hours=ACCESS_TOKEN_EXPIRATION),
 )
 
 refresh_security = JwtRefreshBearerCookie(
-    secret_key=REFRESH_TOKEN_SECRET, 
-    auto_error=True
+    auto_error=True,
+    secret_key=REFRESH_TOKEN_SECRET,
 )
