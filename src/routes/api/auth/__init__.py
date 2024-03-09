@@ -2,7 +2,7 @@ import hashlib
 import json
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, or_
 
 from fastapi_jwt import JwtAuthorizationCredentials
 from fastapi import APIRouter, Depends, Security, Response
@@ -58,10 +58,12 @@ async def login(data: LoginSchema, db: AsyncSession = Depends(get_db)):
 
 @router.post("/register")
 async def register(data: RegisterSchema, db: AsyncSession = Depends(get_db)):
-    query = await db.execute(select(User).where(User.username == data.username))
+    query = await db.execute(select(User).where(or_(User.username == data.username, User.email == data.email)))
     user = query.scalars().first()
     if user:
-        return {"error": "User already exists"}
+        return Response(status_code=400, content=json.dumps({
+            "error": "Username or email already exists"
+        }))
 
     password = hashlib.sha256(data.password.encode()).hexdigest()
     user = User(
