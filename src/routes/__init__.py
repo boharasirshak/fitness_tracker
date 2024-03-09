@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
-from .auth import router as auth_router
-from .operations import router as operations_router
-from .tokens import router as tokens_router
-from .trains import router as trains_router
+from .api.auth import router as auth_router
+from .api.operations import router as operations_router
+from .api.tokens import router as tokens_router
+from .api.trains import router as trains_router
 
 def setup_api_routes(app: FastAPI):
     app.include_router(
