@@ -4,30 +4,15 @@ import json
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, or_
 
-from fastapi_jwt import JwtAuthorizationCredentials
-from fastapi import APIRouter, Depends, Security, Response
+from fastapi import APIRouter, Depends, Response
 
-from src.database import get_db
-from src.config import access_security, refresh_security
-from .schemas import LoginSchema, RegisterSchema
-
-from src.config import access_security, refresh_security
 from .models import User
+from src.database import get_db
+from .schemas import LoginSchema, RegisterSchema
+from src.config import access_security, refresh_security
+
 
 router = APIRouter(prefix="/auth")
-
-
-@router.get("/getinfo")
-async def get_info(
-    db: AsyncSession = Depends(get_db),
-    credentials: JwtAuthorizationCredentials = Security(access_security),
-):
-    user_id = credentials.payload.get("user_id")
-    user = await db.get(User, user_id)
-    if not user:
-        return {"error": "User not found"}
-    
-    return user
 
 @router.post("/login")
 async def login(data: LoginSchema, db: AsyncSession = Depends(get_db)):
