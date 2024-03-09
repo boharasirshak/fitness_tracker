@@ -1,8 +1,9 @@
-document.getElementById('submit').addEventListener('click', async e => {
+document.getElementById('submit')?.addEventListener('click', async e => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
     if (!email || !password) {
+        document.getElementById('toast-success').style.display = 'none';
         document.getElementById('toast-danger').style.display = '';
         document.getElementById('toast-danger-text').innerText = 'Email and password are required';
         return;
