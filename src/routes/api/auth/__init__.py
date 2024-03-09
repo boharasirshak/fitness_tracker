@@ -1,10 +1,11 @@
 import hashlib
+import json
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
 
-from fastapi import APIRouter, Depends, Security
 from fastapi_jwt import JwtAuthorizationCredentials
+from fastapi import APIRouter, Depends, Security, Response
 
 from src.database import get_db
 from src.config import access_security, refresh_security
@@ -34,14 +35,16 @@ async def login(data: LoginSchema, db: AsyncSession = Depends(get_db)):
 
     query = await db.execute(
         select(User).where(
-            User.username == data.username, User.hashed_password == password
+            User.email == data.email, User.hashed_password == password
         )
     )
     user = query.scalars().first()
     if not user:
-        return {"error": "username or password incorrect"}
+        return Response(status_code=401, content=json.dumps({
+            "error": "email or password incorrect"
+        }))
 
-    subject = {"username": user.username, "user_id": user.id, "role_id": user.role_id}
+    subject = {"email": user.email, "user_id": user.id, "role_id": user.role_id}
 
     access_token = access_security.create_access_token(subject=subject)
     refresh_token = refresh_security.create_refresh_token(subject=subject)
