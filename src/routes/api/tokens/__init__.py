@@ -1,6 +1,7 @@
+import json
 from datetime import timedelta
 
-from fastapi import APIRouter, Security
+from fastapi import APIRouter, Security, Response
 from fastapi_jwt import JwtAuthorizationCredentials
 
 from src.config import (
@@ -12,7 +13,9 @@ from src.config import (
 router = APIRouter(prefix="/tokens")
 
 @router.post("/verify")
-async def verify_token(credentials: JwtAuthorizationCredentials = Security(access_security)):
+async def verify_token(
+    credentials: JwtAuthorizationCredentials = Security(access_security)
+):  
     return {"message": "Token is valid"}
 
 

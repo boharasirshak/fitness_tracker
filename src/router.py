@@ -4,6 +4,7 @@ from .routes.api.auth import router as auth_router
 from .routes.api.operations import router as operations_router
 from .routes.api.tokens import router as tokens_router
 from .routes.api.trains import router as trains_router
+from .routes.api.users import router as users_router
 
 router = APIRouter(
     tags=["Pages"]
@@ -24,6 +25,10 @@ def setup_api_routes(app: FastAPI):
     
     app.include_router(
         trains_router, prefix="/api/v1", tags=['Trains']
+    )
+    
+    app.include_router(
+        users_router, prefix="/api/v1", tags=['Users']
     )
 
 __all__ = [
