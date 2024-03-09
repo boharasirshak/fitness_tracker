@@ -8,9 +8,12 @@ from src.database import Base
 from src.database import engine
 from src.router import setup_api_routes
 
+from fastapi.staticfiles import StaticFiles
+
 load_dotenv()
 app = FastAPI()
 lifespan = app.router.lifespan_context
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
 
 @asynccontextmanager

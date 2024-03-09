@@ -6,6 +6,7 @@ from fastapi_jwt import (
     JwtAccessBearerCookie,
     JwtRefreshBearerCookie,
 )
+from fastapi.templating import Jinja2Templates
 
 load_dotenv()
 
@@ -30,3 +31,5 @@ refresh_security = JwtRefreshBearerCookie(
     secret_key=REFRESH_TOKEN_SECRET, 
     auto_error=True
 )
+
+templates = Jinja2Templates(directory="templates")
