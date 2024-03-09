@@ -38,8 +38,8 @@ app.router.lifespan_context = lifespan_wrapper
 setup_api_routes(app)
 
 @app.get("/")
-async def index():
-    return {"message": "Hello, world!"}
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/auth/register")
 def get_register_page(request: Request):
