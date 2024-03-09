@@ -27,6 +27,5 @@ def setup_api_routes(app: FastAPI):
     )
 
 __all__ = [
-    "setup_api_routes",
-    "setup_static_routes"
+    "setup_api_routes"
 ]
