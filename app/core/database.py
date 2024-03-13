@@ -21,6 +21,11 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 
+async def drop_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         yield session
