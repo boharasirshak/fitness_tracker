@@ -2,13 +2,11 @@ from pydantic import BaseModel
 
 
 class UserLoginSchema(BaseModel):
-    username: str
+    email: str
     password: str
 
 
 class UserRegisterSchema(BaseModel):
-    username: str
-    password: str
     email: str
 
 
@@ -21,12 +19,8 @@ class UserLoginResponseSchema(BaseModel):
 
 
 class UserRegisterResponseSchema(BaseModel):
-    username: str
-    email: str
-    role_id: int
-    access_token: str
-    refresh_token: str
+    message: str
 
 
 class AuthErrorResponseSchema(BaseModel):
-    error: str
+    detail: str
