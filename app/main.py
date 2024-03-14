@@ -11,13 +11,16 @@ from app.api.v1.users import router as users_router
 from app.api.v1.tokens import router as tokens_router
 
 from app.core.emails import init_smtp
-from app.core.database import create_tables, drop_tables
+from app.core.database import (
+    create_tables,
+    # drop_tables
+)
 
 logging.getLogger('passlib').setLevel(logging.ERROR)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     # Warning: This will drop all tables, so use only in dev
     # asyncio.create_task(drop_tables())
     asyncio.create_task(create_tables())
