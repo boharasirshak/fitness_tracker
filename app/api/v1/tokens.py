@@ -1,9 +1,11 @@
 
-from fastapi import APIRouter, Security
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, Security, Depends
 from fastapi_jwt import JwtAuthorizationCredentials
 
+from app.models.users import User
+from app.dependencies.jwt import jwt_verify
 from app.schemas import ErrorResponseSchema
 from app.schemas.tokens import (
     TokenVerifyResponse,
@@ -18,15 +20,35 @@ router = APIRouter(prefix="/tokens", tags=["Tokens"])
 
 
 @router.get(
-    "/verify",
-    description="Verifies if the token is valid",
+    "/validate",
+    description="Only checks the signature of the token and not the contents inside it.",
     responses={
         200: {"model": TokenVerifyResponse, "description": "Token is valid"},
         401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"}
     }
 )
+async def validate_token(
+    _: JwtAuthorizationCredentials = Security(access_security)
+):
+    return JSONResponse(
+        status_code=200,
+        content=jsonable_encoder({
+            "message": "Token is valid"
+        })
+    )
+
+
+@router.get(
+    "/verify",
+    description="Fully verify the token, including the contents inside it.",
+    responses={
+        200: {"model": TokenVerifyResponse, "description": "Token is valid"},
+        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"},
+        404: {"model": ErrorResponseSchema, "description": "User not found"}
+    }
+)
 async def verify_token(
-    credentials: JwtAuthorizationCredentials = Security(access_security)
+    _: User = Depends(jwt_verify)
 ):
     return JSONResponse(
         status_code=200,
