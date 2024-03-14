@@ -4,8 +4,8 @@ from datetime import timedelta
 import aiosmtplib
 from dotenv import load_dotenv
 from fastapi_jwt import (
-    JwtAccessBearerCookie,
-    JwtRefreshBearerCookie,
+    JwtAccessBearer,
+    JwtRefreshBearer,
 )
 
 load_dotenv()
@@ -30,15 +30,16 @@ REFRESH_TOKEN_SECRET = os.getenv("REFRESH_TOKEN_SECRET") or "FITNESS_REFRESH_TOK
 ACCESS_TOKEN_EXPIRATION = int(os.getenv("ACCESS_TOKEN_EXPIRATION")) or 1
 REFRESH_TOKEN_EXPIRATION = int(os.getenv("REFRESH_TOKEN_EXPIRATION")) or 1
 
-access_security = JwtAccessBearerCookie(
+access_security = JwtAccessBearer(
     auto_error=True,
     secret_key=ACCESS_TOKEN_SECRET,
     access_expires_delta=timedelta(hours=ACCESS_TOKEN_EXPIRATION),
 )
 
-refresh_security = JwtRefreshBearerCookie(
+refresh_security = JwtRefreshBearer(
     auto_error=True,
     secret_key=REFRESH_TOKEN_SECRET,
+    access_expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRATION),
 )
 
 smtp = aiosmtplib.SMTP(
