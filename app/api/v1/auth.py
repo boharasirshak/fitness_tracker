@@ -9,12 +9,12 @@ from fastapi.encoders import jsonable_encoder
 
 from app.models.users import User
 from app.core.database import get_db
-from app.schemas.auth import (
+from app.schemas import ErrorResponseSchema
+from app.schemas.users import (
     UserLoginSchema,
     UserRegisterSchema,
     UserRegisterResponseSchema,
-    UserLoginResponseSchema,
-    AuthErrorResponseSchema
+    UserLoginResponseSchema
 )
 from app.core.emails import read_email_template, send_mail_async
 from app.core.utils import generate_random_password
@@ -25,7 +25,7 @@ from app.config import (
     BASE_URL
 )
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post(
@@ -33,8 +33,7 @@ router = APIRouter(prefix="/auth")
     response_description="Login user by email and password",
     responses={
         200: {"model": UserLoginResponseSchema, "description": "User login successful"},
-        401: {"model": AuthErrorResponseSchema, "description": "Incorrect email or password"},
-        500: {"model": AuthErrorResponseSchema, "description": "Internal server error"},
+        401: {"model": ErrorResponseSchema, "description": "Incorrect email or password"}
     }
 )
 async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
@@ -53,10 +52,8 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
         )
 
     subject = {
-        "username": user.username,
         "email": user.email,
-        "user_id": user.id,
-        "role_id": user.role_id
+        "user_id": user.id
     }
 
     access_token = access_security.create_access_token(subject=subject)
@@ -65,7 +62,6 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     return UserLoginResponseSchema(
         username=user.username,
         email=user.email,
-        role_id=user.role_id,
         access_token=access_token,
         refresh_token=refresh_token,
     )
@@ -76,8 +72,7 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     response_description="Register the user by email and send temporary password to that email",
     responses={
         200: {"model": UserRegisterResponseSchema, "description": "Registration successful & password sent to email"},
-        409: {"model": AuthErrorResponseSchema, "description": "Email already exists"},
-        500: {"model": AuthErrorResponseSchema, "description": "Internal server error"},
+        409: {"model": ErrorResponseSchema, "description": "Email already exists"},
     }
 )
 async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db)):
@@ -95,7 +90,7 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
             })
         )
 
-    temp_password = generate_random_password(12)
+    temp_password = generate_random_password(20)
     hashed_password = get_password_hash(temp_password)
 
     user = User(email=data.email, hashed_password=hashed_password)
