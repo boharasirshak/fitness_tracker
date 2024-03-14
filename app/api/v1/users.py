@@ -1,3 +1,5 @@
+import enum
+
 from sqlalchemy.sql import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,11 +8,12 @@ from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Depends, Security
 from fastapi_jwt import JwtAuthorizationCredentials
 
+from app.dependencies.jwt import jwt_verify
 from app.models.users import User
 from app.core.database import get_db
 from app.schemas import ErrorResponseSchema
 from app.schemas.users import (
-    UserDataAddSchema,
+    UserDataUpdateSchema,
     UserDataSchema
 )
 from app.config import (
@@ -30,45 +33,8 @@ router = APIRouter(prefix="/users", tags=["Users"])
     }
 )
 async def get_user_data(
-        db: AsyncSession = Depends(get_db),
-        credentials: JwtAuthorizationCredentials = Security(access_security),
+    user: User = Depends(jwt_verify)
 ):
-    # region TODO: make this a middleware
-    user_id = credentials.subject.get("user_id")
-    if not user_id or user_id == "":
-        return JSONResponse(
-            status_code=401,
-            content=jsonable_encoder({
-                "detail": "Invalid token: user_id is missing in the subject"
-            })
-        )
-
-    # check if user_id is integer
-    try:
-        user_id = int(user_id)
-    except ValueError:
-        return JSONResponse(
-            status_code=401,
-            content=jsonable_encoder({
-                "detail": "Invalid token: user_id is not an integer"
-            })
-        )
-    # endregion
-
-    async with db as session:
-        # noinspection PyTypeChecker
-        query = select(User).where(User.id == user_id)
-        result = await session.execute(query)
-        user = result.scalars().first()
-
-    if not user:
-        return JSONResponse(
-            status_code=404,
-            content=jsonable_encoder({
-                "detail": "User not found"
-            })
-        )
-
     return UserDataSchema(
         email=user.email,
         username=user.username,
@@ -77,3 +43,43 @@ async def get_user_data(
         weight=user.weight,
         activity_level=user.activity_level
     )
+
+
+@router.put(
+    "/",
+    response_description="Updates user's data",
+    responses={
+        200: {"model": UserDataSchema, "description": "Entire user's data"},
+        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"},
+        404: {"model": ErrorResponseSchema, "description": "User not found"},
+    }
+)
+async def change_user_data(
+        data: UserDataUpdateSchema,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(jwt_verify)
+):
+    async with db as session:
+        # we create a new user object because the `user` we get from jwt_verify is not persistent in the session
+        # noinspection PyTypeChecker
+        query = select(User).where(User.id == user.id)
+        result = await session.execute(query)
+        new_user = result.scalar()
+
+        update_data = data.dict(exclude_none=True)
+        for key, value in update_data.items():
+            if isinstance(value, enum.Enum):
+                value = value.value
+            setattr(new_user, key, value)
+
+        await session.commit()
+        await session.refresh(new_user)
+
+        return UserDataSchema(
+            email=new_user.email,
+            username=new_user.username,
+            gender=new_user.gender,
+            height=new_user.height,
+            weight=new_user.weight,
+            activity_level=new_user.activity_level
+        )
