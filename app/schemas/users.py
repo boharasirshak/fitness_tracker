@@ -1,14 +1,9 @@
 import enum
+from typing import Optional
 
 from pydantic import BaseModel
 
-
-class ActivityLevel(enum.Enum):
-    not_given = 0   # Value not given during registration
-    beginner = 1    # Doesn't practice much
-    average = 2     # Practice sports 1-3 timer per week
-    athlete = 3     # Practice sports 3-5 times per week
-    # add more activity levels here
+from app.models.users import ActivityLevel
 
 
 class UserLoginSchema(BaseModel):
@@ -20,11 +15,17 @@ class UserRegisterSchema(BaseModel):
     email: str
 
 
-class UserDataAddSchema(BaseModel):
-    username: str
-    height: int
-    weight: int
-    activity_level: ActivityLevel
+class UserDataUpdateSchema(BaseModel):
+    email: Optional[str] = None
+    username: Optional[str] = None
+    gender: Optional[str] = None
+    height: Optional[int] = None
+    weight: Optional[int] = None
+    activity_level: Optional[ActivityLevel] = None
+
+    # Throws an error if any extra fields are present
+    class Config:
+        extra = "forbid"
 
 
 class UserDataSchema(BaseModel):
@@ -33,7 +34,7 @@ class UserDataSchema(BaseModel):
     username: str
     height: int
     weight: int
-    activity_level: ActivityLevel
+    activity_level: ActivityLevel | int
 
 
 class UserLoginResponseSchema(BaseModel):
