@@ -7,6 +7,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.api.v1.auth import router as auth_router
+from app.api.v1.users import router as users_router
+from app.api.v1.tokens import router as tokens_router
+
 from app.core.emails import init_smtp
 from app.core.database import create_tables, drop_tables
 
@@ -32,3 +35,5 @@ async def read_root():
     return {"Hello": "World"}
 
 app.include_router(auth_router, prefix="/api/v1")
+app.include_router(users_router, prefix="/api/v1")
+app.include_router(tokens_router, prefix="/api/v1")
