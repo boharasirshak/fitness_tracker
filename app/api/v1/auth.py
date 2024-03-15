@@ -93,11 +93,6 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
     temp_password = generate_random_password(20)
     hashed_password = get_password_hash(temp_password)
 
-    user = User(email=data.email, hashed_password=hashed_password)
-    db.add(user)
-    await db.commit()
-    await db.refresh(user)
-
     html = read_email_template("temporary-password.html")
     html = html.replace("{{email}}", data.email)
     html = html.replace("{{temporary_password}}", temp_password)
@@ -109,11 +104,19 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
             subject="Your Temporary Password",
             html=html
         )
-    except SMTPException:
+        
+        # first send the email, then only register the user.
+        user = User(email=data.email, hashed_password=hashed_password)
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        
+    except SMTPException as e:
+        print(e)
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({
-                "detail": "Error sending email to this email!"
+                "detail": "Error sending message to this email!"
             })
         )
 
