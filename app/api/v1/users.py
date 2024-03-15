@@ -66,7 +66,7 @@ async def change_user_data(
         result = await session.execute(query)
         new_user = result.scalar()
 
-        update_data = data.dict(exclude_none=True)
+        update_data = data.model_dump(exclude_none=True)
         for key, value in update_data.items():
             if isinstance(value, enum.Enum):
                 value = value.value
