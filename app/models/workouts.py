@@ -22,6 +22,3 @@ class Workout(Base):
     # sets = Column(Integer, nullable=False) # The sets of the exercise the user did
 
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.utcnow)
-
-    # Relationship
-    exercise = relationship("Exercise", back_populates="workouts")
