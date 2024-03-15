@@ -2,7 +2,7 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -34,8 +34,17 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/register")
+def get_register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
+@app.get("/login")
+def get_login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
 
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
