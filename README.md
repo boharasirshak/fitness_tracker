@@ -11,3 +11,10 @@ Record workout videos and get the number of reps, correctness of form and time t
 
 ### 3. Workout tracking
 Track workout progress over time and view statistics.
+
+## Note
+- > The entire frontend is made using basic HTML, CSS and JavaScript. No frontend framework is used to keep everything simple, fast and efficient. 
+
+- > If the project grows in complexity, a frontend framework like React is advised to use because pure JS is hard to maintain. 
+
+- > For that the FastAPI should server as API only, and React frontend should be hosted separately.
