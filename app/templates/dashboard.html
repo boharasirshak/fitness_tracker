@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Fitness Tracker</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', path='favicon.ico') }}"
+      type="image/x-icon"
+    />
+    <link
+      href="{{ url_for('static', path='/css/main.css') }}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <script>
+      (async () => {
+        let accessToken = localStorage.getItem("access_token");
+        let refreshToken = localStorage.getItem("refresh_token");
+        if (accessToken && refreshToken) {
+          let isValid = await verifyJwtToken(accessToken);
+          console.log(`Access token is: ${isValid ? "valid" : "invalid"}`);
+
+          if (isValid) {
+            window.location.href = "/dashboard";
+          } else {
+            let { access_token, refresh_token } = await refreshJwtToken(
+              refreshToken
+            );
+
+            if (access_token && refresh_token) {
+              localStorage.setItem("access_token", access_token);
+              localStorage.setItem("refresh_token", refresh_token);
+              window.location.href = "/dashboard";
+            } else {
+              console.log("Invalid refresh token. Stay on the page.");
+            }
+          }
+        }
+      })();
+    </script> 
+    Dashboard
+  </body>
+</html>
