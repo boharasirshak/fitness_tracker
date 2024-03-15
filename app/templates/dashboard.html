@@ -42,6 +42,21 @@
         }
       })();
     </script> 
+
+    <script>
+      (async () => {
+        // *Technically* the token should not expire because we already validated that just above
+        // but in some rare edge cases, the token might expire between the time we validated it and the time we use it
+        // so, TODO: handle that edge case
+
+        // let user = await getUser();
+
+        // // CASE: the user has not set his nickname yet
+        // if (user.username === "") {
+          
+        // }
+      })();
+    </script>
     Dashboard
   </body>
 </html>
