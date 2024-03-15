@@ -71,7 +71,7 @@ async def refresh_a_token(credentials: JwtAuthorizationCredentials = Security(re
     refresh_token = refresh_security.create_refresh_token(subject=credentials.subject)
 
     return JSONResponse(
-        status_code=201,
+        status_code=200,
         content=jsonable_encoder({
             "access_token": access_token,
             "refresh_token": refresh_token,
