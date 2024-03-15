@@ -24,7 +24,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get(
-    "/",
+    "/me",
     response_description="Gets user's data",
     responses={
         200: {"model": UserDataSchema, "description": "Entire user's data"},
