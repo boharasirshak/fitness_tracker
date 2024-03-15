@@ -29,5 +29,5 @@ class User(Base):
     gender = Column(String, nullable=True, default="")
     height = Column(Integer, nullable=True, default=0)
     weight = Column(Integer, nullable=True, default=0)
-    activity_level = Column(Integer, create_type=False, nullable=True, default=ActivityLevel.NOT_GIVEN.value)
+    activity_level = Column(Integer, nullable=True, default=ActivityLevel.NOT_GIVEN.value)
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
