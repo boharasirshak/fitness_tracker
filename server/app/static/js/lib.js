@@ -27,3 +27,18 @@ async function refreshJwtToken(token) {
     return {};
   }
 }
+
+async function getUser(token) {
+  const res = await fetch("/api/v1/users/me", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  try {
+    return await res.json();
+  } catch {
+    return {};
+  }
+}
