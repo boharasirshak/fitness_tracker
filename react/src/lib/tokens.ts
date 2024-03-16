@@ -1,6 +1,6 @@
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ?? "http://localhost:8000";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
 
-async function verifyJwtToken(token: string) {
+export async function verifyJwtToken(token: string) {
   const res = await fetch(`${BACKEND_URL}/api/v1/tokens/verif`, {
     method: "GET",
     headers: {
@@ -15,7 +15,7 @@ async function verifyJwtToken(token: string) {
   }
 }
 
-async function refreshJwtToken(token: string) {
+export async function refreshJwtToken(token: string) {
   const res = await fetch(`${BACKEND_URL}/api/v1/tokens/refresh`, {
     method: "GET",
     headers: {
