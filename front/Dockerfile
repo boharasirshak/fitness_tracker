@@ -1,9 +1,8 @@
-# front/Dockerfile
 FROM node:18 AS build
 
 WORKDIR /app
 
-COPY front/package*.json ./
+COPY package*.json ./
 RUN npm install
 
 COPY . .

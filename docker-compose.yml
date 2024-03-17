@@ -3,8 +3,8 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ./front
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: front/Dockerfile
       args:
         # Replace with your own domain name
         VITE_BACKEND_URL: "https://api.sirshak.tech"
@@ -17,8 +17,8 @@ services:
 
   backend:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: server/Dockerfile
     ports:
       - "8000:8000"
     volumes:
