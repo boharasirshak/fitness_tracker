@@ -83,9 +83,17 @@
 
     <button>Сохранить</button>
 
+    <button id="logout">выход из системы</button>
+
     <script>
       let user = new Store("user");
       document.getElementById("user-data").innerHTML = JSON.stringify(user.state, null, 2);
+
+      document.getElementById("logout").addEventListener("click", () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "/login";
+      });
     </script>
   </body>
 </html>
