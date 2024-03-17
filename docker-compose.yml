@@ -21,8 +21,7 @@ services:
       - "8000:8000"
     volumes:
       - ./server/app:/app/app
-    environment:
-      - VARIABLE_NAME=value # Example of setting environment variable
+    env_file: .env 
 
   nginx:
     image: nginx:alpine
