@@ -1,4 +1,5 @@
 from pathlib import Path
+from smtplib import SMTP
 from email.header import Header
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -7,7 +8,9 @@ from app.config import smtp
 from app.config import (
     SMTP_USER,
     SMTP_PASS,
-    SMTP_FROM_NAME
+    SMTP_FROM_NAME,
+    SMTP_HOST,
+    SMTP_PORT
 )
 
 
@@ -24,14 +27,14 @@ def read_email_template(filename: str):
     # construct the url using the pathlib `/` operator
     template_path = project_root / 'app' / 'templates' / 'emails' / filename
 
-    with open(template_path, "r", encoding="utf-8", errors="ignore") as f:
+    with open(template_path, "r", encoding="utf-8") as f:
         return f.read()
 
 
 async def send_mail_async(
-        to: str,
-        subject: str,
-        html: str
+    to: str,
+    subject: str,
+    html: str
 ):
     """Send an outgoing email with the given parameters.
 
@@ -44,15 +47,54 @@ async def send_mail_async(
     :param html: The text of the email.
     :type html: str
     """
+    
+    # encode the html to utf-8 first
+    html = html.encode("utf-8")
 
     # Prepare Message
-    msg = MIMEMultipart()
-    msg.preamble = subject
-    msg['Subject'] = subject
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = Header(subject, 'utf-8')
     msg['From'] = Header(SMTP_FROM_NAME, 'utf-8')
     msg['To'] = to
 
     msg.attach(MIMEText(html, "html", "utf-8"))
 
     await smtp.send_message(msg)
-    await smtp.quit()
+
+
+def send_mail_sync(
+    to: str,
+    subject: str,
+    html: str
+):
+    """Send an outgoing email with the given parameters.
+
+    :param to: A list of recipient email addresses.
+    :type to: list
+
+    :param subject: The subject of the email.
+    :type subject: str
+
+    :param html: The text of the email.
+    :type html: str
+    """
+    
+    # encode the html to utf-8 first
+    smtp = SMTP(
+        host=SMTP_HOST,
+        port=SMTP_PORT,
+    )
+    smtp.starttls()
+    smtp.login(SMTP_USER, SMTP_PASS)
+    
+    html = html.encode("utf-8")
+
+    # Prepare Message
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = Header(subject, 'utf-8')
+    msg['From'] = Header(SMTP_FROM_NAME, 'utf-8')
+    msg['To'] = to
+
+    msg.attach(MIMEText(html, "html", "utf-8"))
+
+    smtp.send_message(msg)
