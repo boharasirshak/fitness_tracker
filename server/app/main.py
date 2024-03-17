@@ -41,18 +41,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# @app.get("/")
-# async def index(request: Request):
-#     return templates.TemplateResponse("index.html", {"request": request})
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-# @app.get("/register")
-# def get_register_page(request: Request):
-#     return templates.TemplateResponse("register.html", {"request": request})
+@app.get("/register")
+def get_register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
 
 
-# @app.get("/login")
-# def get_login_page(request: Request):
-#     return templates.TemplateResponse("login.html", {"request": request})
+@app.get("/login")
+def get_login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
 
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")

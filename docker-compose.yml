@@ -1,18 +1,5 @@
 version: '3.8'
-
-services:
-  frontend:
-    build:
-      context: ./front
-      dockerfile: Dockerfile
-      args:
-        VITE_BACKEND_URL: "http://159.65.155.131"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-
-  backend:
+  app:
     build:
       context: ./server
       dockerfile: Dockerfile
