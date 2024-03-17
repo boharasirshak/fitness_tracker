@@ -7,11 +7,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.emails import init_smtp
 from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
 from app.api.v1.tokens import router as tokens_router
 
-from app.core.emails import init_smtp
 from app.core.database import (
     create_tables,
     # drop_tables
@@ -24,9 +24,9 @@ logging.getLogger('passlib').setLevel(logging.ERROR)
 async def lifespan(_: FastAPI):
     # Warning: This will drop all tables, so use only in dev
     # asyncio.create_task(drop_tables())
-    asyncio.create_task(create_tables())
     asyncio.create_task(init_smtp())
-    print("Setup SMTP and Database Tables Successful")
+    asyncio.create_task(create_tables())
+    print("Setup Successful")
     yield
 
 app = FastAPI(lifespan=lifespan)
