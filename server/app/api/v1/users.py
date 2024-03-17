@@ -20,16 +20,16 @@ from app.config import (
     access_security
 )
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(prefix="/users", tags=["Пользователи"])
 
 
 @router.get(
     "/me",
     response_description="Gets user's data",
     responses={
-        200: {"model": UserDataSchema, "description": "Entire user's data"},
-        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"},
-        404: {"model": ErrorResponseSchema, "description": "User not found"},
+        200: {"model": UserDataSchema, "description": "Все данные пользователя"},
+        401: {"model": ErrorResponseSchema, "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"},
     }
 )
 async def get_user_data(
@@ -47,11 +47,11 @@ async def get_user_data(
 
 @router.put(
     "/",
-    response_description="Updates user's data",
+    response_description="Обновляет данные пользователя",
     responses={
-        200: {"model": UserDataSchema, "description": "Entire user's data"},
-        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"},
-        404: {"model": ErrorResponseSchema, "description": "User not found"},
+        200: {"model": UserDataSchema, "description": "Все обновленные данные пользователя"},
+        401: {"model": ErrorResponseSchema, "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"},
     }
 )
 async def change_user_data(

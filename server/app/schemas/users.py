@@ -16,7 +16,6 @@ class UserRegisterSchema(BaseModel):
 
 
 class UserDataUpdateSchema(BaseModel):
-    email: Optional[str] = None
     username: Optional[str] = None
     gender: Optional[str] = None
     height: Optional[int] = None

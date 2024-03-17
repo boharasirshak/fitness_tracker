@@ -25,15 +25,15 @@ from app.config import (
     BASE_URL
 )
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/auth", tags=["Авторизация"])
 
 
 @router.post(
     "/login",
-    response_description="Login user by email and password",
+    response_description="Войдите в систему с помощью электронной почты и пароля",
     responses={
-        200: {"model": UserLoginResponseSchema, "description": "User login successful"},
-        401: {"model": ErrorResponseSchema, "description": "Incorrect email or password"}
+        200: {"model": UserLoginResponseSchema, "description": "Успешный вход пользователя в систему"},
+        401: {"model": ErrorResponseSchema, "description": "Неверный адрес электронной почты или пароль"}
     }
 )
 async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
@@ -47,7 +47,7 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
         return JSONResponse(
             status_code=401,
             content=jsonable_encoder({
-                "detail": "Incorrect email or password"
+                "detail": "Неверный адрес электронной почты или пароль"
             })
         )
 
@@ -69,10 +69,10 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
 
 @router.post(
     "/register",
-    response_description="Register the user by email and send temporary password to that email",
+    response_description="Зарегистрируйте пользователя по электронной почте и отправьте временный пароль на это электронное письмо",
     responses={
-        200: {"model": UserRegisterResponseSchema, "description": "Registration successful & password sent to email"},
-        409: {"model": ErrorResponseSchema, "description": "Email already exists"},
+        200: {"model": UserRegisterResponseSchema, "description": "Регистрация прошла успешно, пароль отправлен на электронную почту"},
+        409: {"model": ErrorResponseSchema, "description": "Электронная почта уже существует"},
     }
 )
 async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db)):
@@ -86,7 +86,7 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         return JSONResponse(
             status_code=409,
             content=jsonable_encoder({
-                "detail": "Email already exists"
+                "detail": "Электронная почта уже существует"
             })
         )
 
@@ -101,7 +101,7 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
     try:
         await send_mail_async(
             to=data.email,
-            subject="Your Temporary Password",
+            subject="Ваш временный пароль",
             html=html
         )
         
@@ -116,10 +116,10 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({
-                "detail": "Error sending message to this email!"
+                "detail": "Сообщение об ошибке при отправке на этот адрес электронной почты!"
             })
         )
 
     return UserRegisterResponseSchema(
-        message="Temporary email sent to your email."
+        message="Временные данные отправлены на ваш электронный адрес."
     )

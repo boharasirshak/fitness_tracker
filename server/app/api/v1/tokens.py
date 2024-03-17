@@ -16,15 +16,15 @@ from app.config import (
     refresh_security
 )
 
-router = APIRouter(prefix="/tokens", tags=["Tokens"])
+router = APIRouter(prefix="/tokens", tags=["Жетоны"])
 
 
 @router.get(
     "/validate",
-    description="Only checks the signature of the token and not the contents inside it.",
+    description="Проверяет только подпись токена, а не содержимое внутри него.",
     responses={
-        200: {"model": TokenVerifyResponse, "description": "Token is valid"},
-        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"}
+        200: {"model": TokenVerifyResponse, "description": "Токен действителен"},
+        401: {"model": ErrorResponseSchema, "description": "Токен недействителен, срок действия истек или не предоставлен"}
     }
 )
 async def validate_token(
@@ -33,18 +33,18 @@ async def validate_token(
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder({
-            "message": "Token is valid"
+            "message": "Токен действителен"
         })
     )
 
 
 @router.get(
     "/verify",
-    description="Fully verify the token, including the contents inside it.",
+    description="Полностью проверьте токен, включая содержимое внутри него.",
     responses={
-        200: {"model": TokenVerifyResponse, "description": "Token is valid"},
-        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"},
-        404: {"model": ErrorResponseSchema, "description": "User not found"}
+        200: {"model": TokenVerifyResponse, "description": "Токен действителен"},
+        401: {"model": ErrorResponseSchema, "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"}
     }
 )
 async def verify_token(
@@ -53,17 +53,17 @@ async def verify_token(
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder({
-            "message": "Token is valid"
+            "message": "Токен действителен"
         })
     )
 
 
 @router.get(
     "/refresh",
-    description="Refreshes the access token",
+    description="Обновляет токен доступа",
     responses={
-        200: {"model": RefreshTokenResponse, "description": "Token is refreshed"},
-        401: {"model": ErrorResponseSchema, "description": "Token is invalid, expired or not provided"}
+        200: {"model": RefreshTokenResponse, "description": "Токен обновлен"},
+        401: {"model": ErrorResponseSchema, "description": "Токен недействителен, срок действия истек или не предоставлен"}
     }
 )
 async def refresh_a_token(credentials: JwtAuthorizationCredentials = Security(refresh_security)):
