@@ -1,11 +1,12 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
 
+
 export async function verifyJwtToken(token: string) {
-  const res = await fetch(`${BACKEND_URL}/api/v1/tokens/verif`, {
+  const res = await fetch(`${BACKEND_URL}/api/v1/tokens/verify`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      "Authorization": `Bearer ${token}`,
     },
   });
   try {

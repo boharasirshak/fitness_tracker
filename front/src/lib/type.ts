@@ -1,3 +1,5 @@
+export type Fetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>
+
 export type JwtTokenData = {
   userId: string | undefined;
   email: string | undefined;

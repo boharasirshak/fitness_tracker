@@ -14,7 +14,7 @@
 		showAlert = true;
 		message = msg;
 		success = suc;
-	}
+	};
 
 	const submit = async () => {
 		const backendUrl = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
@@ -37,8 +37,8 @@
 
     const data = await res.json();
 		if (res.status == 200) {
-			localStorage.setItem("access_token", data.access_token);
-			localStorage.setItem("refresh_token", data.refresh_token);
+			localStorage.setItem("accessToken", data.access_token);
+			localStorage.setItem("refreshToken", data.refresh_token);
 			accessToken.set(data.access_token);
 			refreshToken.set(data.refresh_token);
 			isAuthenticated.set(true);
@@ -59,9 +59,9 @@
 </script>
 
 {#if $isAuthenticated}
-  {
-    goto("/dashboard").then(() => {})
-  }
+	{
+		goto("/dashboard").then(() => {})
+	}
 {/if}
 
 <section class="bg-gray-50 dark:bg-gray-900">
