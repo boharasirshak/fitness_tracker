@@ -4,6 +4,7 @@ services:
   frontend:
     build:
       context: ./front
+      dockerfile: Dockerfile
       args:
         # Replace with your own domain name
         VITE_BACKEND_URL: "https://api.sirshak.tech"

@@ -6,7 +6,7 @@ WORKDIR /app
 COPY front/package*.json ./
 RUN npm install
 
-COPY front/ .
+COPY . .
 
 ARG VITE_BACKEND_URL
 RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
