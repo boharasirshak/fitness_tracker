@@ -6,7 +6,6 @@ services:
       context: ./front
       dockerfile: Dockerfile
       args:
-        # Replace with your own domain name
         VITE_BACKEND_URL: "https://api.sirshak.tech"
     ports:
       - "3000:3000"
@@ -29,21 +28,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # The init.conf must be replaced by ssl.conf after installing the SSL certificate 
-      - ./nginx:/etc/nginx/init.conf
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      # The init.conf will be changed with ssl. conf once we have ssl
+      - ./nginx/init.conf:/etc/nginx/nginx.conf
     depends_on:
       - frontend
       - backend
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    # Replace with your own domain name and email
-    command: certonly --webroot --webroot-path=/var/www/certbot --email boharasirshak101@gmail.com --agree-tos --no-eff-email -d sirshak.tech -d www.sirshak.tech -d api.sirshak.tech --manual-public-ip-logging-ok
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    depends_on:
-      - nginx
