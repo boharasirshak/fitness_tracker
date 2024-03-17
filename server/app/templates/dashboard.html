@@ -17,6 +17,9 @@
     <script src="{{ url_for('static', path='/js/store.js') }}"></script>
   </head>
   <body>
+    Dashboard
+    <div id="user-data"> </div>
+
     <script>
       (async () => {
         let accessToken = localStorage.getItem("access_token");
@@ -53,17 +56,9 @@
           window.location.href = "/profile";
         }
 
-        // Save user data to local storage
-        new Store("user", data);
+        document.getElementById("user-data").innerHTML = JSON.stringify(data, null, 2);
 
       })();
     </script> 
-    Dashboard
-    <div id="user-data"> </div>
-
-    <script>
-      let user = new Store("user");
-      document.getElementById("user-data").innerHTML = JSON.stringify(user.state, null, 2);
-    </script>
   </body>
 </html>

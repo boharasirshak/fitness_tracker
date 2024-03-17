@@ -28,6 +28,34 @@ async function refreshJwtToken(token) {
   }
 }
 
+async function authFlow(redirect) {
+  let accessToken = localStorage.getItem("access_token");
+  let refreshToken = localStorage.getItem("refresh_token");
+
+  if (accessToken && refreshToken) {
+    let isValid = await verifyJwtToken(accessToken);
+    console.log(`Access token is: ${isValid ? "valid" : "invalid"}`);
+
+    if (isValid) {
+      if (redirect) {
+        window.location.href = redirect;
+      }
+    } else {
+      let { access_token, refresh_token } = await refreshJwtToken(refreshToken);
+
+      if (access_token && refresh_token) {
+        localStorage.setItem("access_token", access_token);
+        localStorage.setItem("refresh_token", refresh_token);
+        if (redirect) {
+          window.location.href = redirect;
+        }
+      } else {
+        console.log("Недопустимый токен обновления. Оставайтесь на странице.");
+      }
+    }
+  }
+}
+
 async function getUser(token) {
   const res = await fetch("/api/v1/users/me", {
     method: "GET",
@@ -44,7 +72,7 @@ async function getUser(token) {
   } catch {
     return {
       res,
-      detail: "Internal Server Error"
+      detail: "Internal Server Error",
     };
   }
 }

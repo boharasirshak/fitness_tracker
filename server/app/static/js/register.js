@@ -4,7 +4,7 @@ document.getElementById('submit')?.addEventListener('click', async e => {
     if (!email) {
         document.getElementById('toast-success').style.display = 'none';
         document.getElementById('toast-danger').style.display = '';
-        document.getElementById('toast-danger-text').innerText = 'All fields are required';
+        document.getElementById('toast-danger-text').innerText = 'Все поля обязательны для заполнения';
         return;
     }
 
@@ -41,6 +41,6 @@ document.getElementById('submit')?.addEventListener('click', async e => {
     } catch {
         document.getElementById('toast-success').style.display = 'none';
         document.getElementById('toast-danger').style.display = '';
-        document.getElementById('toast-danger-text').innerText = 'Internal server error. Please try again later.';
+        document.getElementById('toast-danger-text').innerText = 'Внутренняя ошибка сервера. Пожалуйста, повторите попытку позже.';
     }
 });

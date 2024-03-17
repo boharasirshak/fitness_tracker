@@ -5,7 +5,7 @@ document.getElementById('submit')?.addEventListener('click', async e => {
     if (!email || !password) {
         document.getElementById('toast-success').style.display = 'none';
         document.getElementById('toast-danger').style.display = '';
-        document.getElementById('toast-danger-text').innerText = 'Email and password are required';
+        document.getElementById('toast-danger-text').innerText = 'Требуется адрес электронной почты и пароль!';
         return;
     }
 
@@ -34,7 +34,7 @@ document.getElementById('submit')?.addEventListener('click', async e => {
     
         document.getElementById('toast-danger').style.display = 'none';
         document.getElementById('toast-success').style.display = '';
-        document.getElementById('toast-success-text').innerText = "User logged in successfully. Redirecting to dashboard...";
+        document.getElementById('toast-success-text').innerText = "Пользователь успешно вошел в систему. Перенаправление на панель мониторинга...";
     
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
@@ -44,6 +44,6 @@ document.getElementById('submit')?.addEventListener('click', async e => {
     } catch {
         document.getElementById('toast-success').style.display = 'none';
         document.getElementById('toast-danger').style.display = '';
-        document.getElementById('toast-danger-text').innerText = 'Internal server error. Please try again later.';
+        document.getElementById('toast-danger-text').innerText = 'Внутренняя ошибка сервера. Пожалуйста, повторите попытку позже.';
     }
 });

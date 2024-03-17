@@ -4,12 +4,13 @@ class Store {
     this.subscribers = [];
     this.localStorageKey = key;
 
-    if (this.state && Object.keys(this.state).length === 0) {
+    if (this.state !== undefined && Object.keys(this.state).length === 0) {
       this.load();
     } else {
-      let newState = init; 
       this.load()
-      this.setState(newState);
+      this.setState(init);
+      this.save()
+      this.notify()
     }
   }
 
@@ -19,6 +20,7 @@ class Store {
       this.state = JSON.parse(savedState);
       this.notify();
     }
+    return this.state;
   }
 
   save() {
@@ -30,12 +32,20 @@ class Store {
     listener(this.state);
   }
 
+  change(newState) {
+    this.state = newState;
+  }
+
   notify() {
     this.subscribers.forEach((listener) => listener(this.state));
   }
 
   setState(newState) {
-    this.state = { ...this.state, ...newState };
+    if (newState) {
+      this.state = { ...this.state, ...newState };
+    } else {
+      this.state = { ...this.state };
+    }
     this.save();
     this.notify();
   }
