@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile | Fitness Tracker</title>
+    <title>Профиль | Фитнес-трекер</title>
     <link
       rel="shortcut icon"
       href="{{ url_for('static', path='favicon.ico') }}"
@@ -50,34 +50,35 @@
 
       })();
     </script> 
-    Your profile
+    Ваш профиль
     <div id="user-data"></div>
 
     <form action="">
-      <label for="email">Email</label>
-      <input type="text" placeholder="name@mail.ru">
+      <label for="email">Электронная почта: </label>
+      <input type="text" placeholder="name@mail.ru" disabled> <br>
 
-      <label for="username">Username</label>
-      <input type="text" placeholder="username">
+      <label for="username">Имя пользователя: </label>
+      <input type="text" placeholder="username"> <br>
 
-      <label for="gender">Gender</label>
+      <label for="gender">Пол: </label>
       <select name="gender" id="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-      </select>
+        <option value="male">Самец</option>
+        <option value="female">Женский</option>
+        <option value="other">Другой</option>
+      </select> <br>
 
-      <label for="height">Height</label>
-      <input type="text" placeholder="height in cm">
+      <label for="height">Высота: </label>
+      <input type="text" placeholder="высота в см"> <br>
 
-      <label for="weight">Weight</label>
-      <input type="text" placeholder="weight in kg">
+      <label for="weight">Вес: </label>
+      <input type="text" placeholder="масса в кг"> <br>
 
-      <label for="activity">Activeness</label>
+      <label for="activity">Активность: </label>
       <select name="activity" id="activity">
-        <option value="lightly-active">Lightly active</option>
-        <option value="moderately-active">Moderately active</option>
-        <option value="very-active">Very active</option>
+        <option value="lightly-active">Слегка активен</option>
+        <option value="moderately-active">Умеренно активный</option>
+        <option value="very-active">Очень активный</option>
+      </select> <br>
     </form>
 
     <button>Save</button>
