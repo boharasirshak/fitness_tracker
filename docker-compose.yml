@@ -9,7 +9,7 @@ services:
         # Replace with your own domain name
         VITE_BACKEND_URL: "https://api.sirshak.tech"
     ports:
-      - "80:80"
+      - "80:3000"
     depends_on:
       - backend
 
@@ -27,7 +27,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
+      - "8080:80"
       - "443:443"
     volumes:
       # The init.conf must be replaced by ssl.conf after installing the SSL certificate 
