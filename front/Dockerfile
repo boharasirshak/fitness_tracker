@@ -8,9 +8,6 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-ARG VITE_BACKEND_URL
-RUN echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" > .env
-
 RUN npm run build
 
 FROM nginx:alpine
