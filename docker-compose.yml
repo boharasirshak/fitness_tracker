@@ -18,6 +18,5 @@ version: '3.8'
       # The init.conf will be changed with ssl. conf once we have ssl
       - ./nginx/init.conf:/etc/nginx/nginx.conf
     depends_on:
-      - frontend
-      - backend
+      - app
 
