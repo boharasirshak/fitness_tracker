@@ -20,7 +20,7 @@
 		const backendUrl = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
 
     if (!email || !password) {
-			return alert("Please fill in all fields", false);
+			return alert("Пожалуйста, заполните все поля", false);
     }
 
 		const res = await fetch(`${backendUrl}/api/v1/auth/login`, {
@@ -36,7 +36,7 @@
 				const data = await res.json();
 				return alert(data.detail, false);
 			} catch (error) {
-				return alert("Internal Server Error!", false);
+				return alert("Внутренняя ошибка сервера!", false);
 			}
     }
 
@@ -47,18 +47,18 @@
 			accessToken.set(data.access_token);
 			refreshToken.set(data.refresh_token);
 			isAuthenticated.set(true);
-			alert("Logged in successfully", true);
+			alert("Успешно вошел в систему", true);
 
 			setTimeout(() => {goto("/dashboard").then(() => {})}, 1000);
 
 		} else if (res.status === 401) {
-			alert("Incorrect email or password", false);
+			alert("Неверный адрес электронной почты или пароль", false);
 
 		} else if (res.status === 422) {
-			alert("Please fill in all fields", false);
+			alert("Пожалуйста, заполните все поля", false);
 
 		} else {
-			alert("An error occurred", false);
+			alert("Произошла ошибка", false);
 		}
 	};
 </script>
@@ -78,19 +78,19 @@
 				<h1
 					class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
 				>
-					Sign in to your account
+				Войдите в свою учетную запись
 				</h1>
 				<div class="space-y-4 md:space-y-6">
 					<div>
 						<label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-							Your email
+							Ваш адрес электронной почты
 						</label>
 						<input
 							type="email"
 							name="email"
 							id="email"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-							placeholder="name@company.com"
+							placeholder="name@mail.ru"
 							required
 							bind:value={email}
 						/>
@@ -100,7 +100,7 @@
 							for="password"
 							class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
 						>
-							Password
+							Пароль
 						</label>
 						<input
 							type="password"
@@ -124,7 +124,7 @@
 								/>
 							</div>
 							<div class="ml-3 text-sm">
-								<label for="remember" class="text-gray-500 dark:text-gray-300"> Remember me </label>
+								<label for="remember" class="text-gray-500 dark:text-gray-300">Помни меня </label>
 							</div>
 						</div>
 						<!-- <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">forgot password?</a> -->
@@ -138,12 +138,12 @@
 					>Sign In
 					</Button>
 					<p class="text-sm font-light text-gray-500 dark:text-gray-400">
-						Don’t have an account yet?{" "}
+						У вас еще нет учетной записи?{" "}
 						<a
 							href="/register"
 							class="font-medium text-primary-600 hover:underline dark:text-primary-500"
 						>
-							Register Now
+						Зарегистрируйтесь сейчас
 						</a>
 					</p>
 				</div>

@@ -2,4 +2,4 @@
 
 </script>
 
-Dashboard
+Приборная панель

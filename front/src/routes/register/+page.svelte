@@ -9,6 +9,7 @@
 	let message = "";
 	let showAlert = false;
 	let success = false;
+	let agreeToTOC = false;
 
 	const alert = (msg: string, suc: boolean) => {
 		showAlert = true;
@@ -20,7 +21,7 @@
 		const backendUrl = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
 
 		if (!email) {
-			return alert("Please fill in all fields", false);
+			return alert("Пожалуйста, заполните все поля", false);
 		}
 
 		const res = await fetch(`${backendUrl}/api/v1/auth/register`, {
@@ -36,7 +37,7 @@
 				const data = await res.json();
 				return alert(data.detail, false);
 			} catch (error) {
-				return alert("Internal Server Error!", false);
+				return alert("Внутренняя ошибка сервера!", false);
 			}
     }
 
@@ -46,9 +47,9 @@
 		} else if (res.status === 409) {
 			alert(data.detail, false);
 		} else if (res.status === 422) {
-			alert("Please fill in all fields", false);
+			alert("Пожалуйста, заполните все поля", false);
 		} else {
-			alert("An error occurred", false);
+			alert("Произошла ошибка", false);
 		}
 	};
 </script>
@@ -68,7 +69,7 @@
 				<h1
 					class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
 				>
-					Register an new account
+				Зарегистрируйте новую учетную запись
 				</h1>
 				<div class="space-y-4 md:space-y-6">
 					<div>
@@ -80,51 +81,51 @@
 							name="email"
 							id="email"
 							class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-							placeholder="name@company.com"
+							placeholder="name@mail.ru"
 							required
 							bind:value={email}
 						/>
 					</div>
 					<div class="flex items-center justify-between">
-						<Checkbox>
-							I agree with the
+						<Checkbox bind:checked={agreeToTOC}>
+							Я согласен с
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<span
 								on:click={() => (defaultModal = true)}
 								class="text-primary-600 dark:text-primary-500 hover:underline ms-1 cursor-pointer"
-								>terms and conditions</span
+								>условия и положения</span
 							>
 							.
 						</Checkbox>
 					</div>
 					<Modal title="Terms of Service" bind:open={defaultModal} autoclose>
 						<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-							With less than a month to go before the European Union enacts new consumer privacy
-							laws for its citizens, companies around the world are updating their terms of service
-							agreements to comply.
+							Осталось меньше месяца до того, как Европейский союз введет в действие новые законы о защите прав потребителей
+							для своих граждан, компании по всему миру обновляют свои условия предоставления услуг
+							соглашения о соблюдении.
 						</p>
 						<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-							The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on
-							May 25 and is meant to ensure a common set of data rights in the European Union. It
-							requires organizations to notify users as soon as possible of high-risk data breaches
-							that could personally affect them.
+							Общий регламент Европейского союза по защите данных (G.D.P.R.) вступает в силу 25
+							мая и призван обеспечить общий набор прав на данные в Европейском союзе. Он
+							требует от организаций как можно скорее уведомлять пользователей о нарушениях данных высокого риска
+							это может повлиять лично на них.
 						</p>
 						<svelte:fragment slot="footer">
-							<Button>I accept</Button>
+							<Button>Я принимаю</Button>
 						</svelte:fragment>
 					</Modal>
 
-					<Button color="green" type="submit" id="submit" class="w-full" on:click={submit}
+					<Button color="green" type="submit" id="submit" class="w-full" on:click={submit} disabled={!agreeToTOC}
 						>Register
 					</Button>
 					<p class="text-sm font-light text-gray-500 dark:text-gray-400">
-						Already have an account? {" "}
+						У вас уже есть учетная запись? {" "}
 						<a
 							href="/login"
 							class="font-medium text-primary-600 hover:underline dark:text-primary-500"
 						>
-							Login Now
+						Войдите сейчас
 						</a>
 					</p>
 				</div>
