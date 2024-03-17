@@ -79,3 +79,45 @@ async function getUser(token) {
     };
   }
 }
+
+async function getAllExercises(token) {
+  const res = await fetch("/api/v1/exercises", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  try {
+    return {
+      res,
+      data: await res.json(),
+    };
+  } catch {
+    return {
+      res,
+      detail: "Internal Server Error",
+    };
+  }
+}
+
+async function getUserWorkouts(token) {
+  const res = await fetch("/api/v1/users/workouts", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  try {
+    return {
+      res,
+      data: await res.json(),
+    };
+  } catch {
+    return {
+      res,
+      detail: "Internal Server Error",
+    };
+  }
+}
