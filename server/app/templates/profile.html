@@ -403,5 +403,18 @@
     </script>
 
     <script src="{{ url_for('static', path='/js/profile.js') }}" defer></script>
+
+    <script>
+      const menuButton = document.querySelector(
+        '[data-collapse-toggle="navbar-sticky"]'
+      );
+      const menu = document.getElementById("navbar-sticky");
+
+      menuButton.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+        const isExpanded = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", !isExpanded);
+      });
+    </script>
   </body>
 </html>

@@ -29,10 +29,7 @@
       <div
         class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
       >
-        <a
-          href="#"
-          class="flex items-center space-x-3 rtl:space-x-reverse"
-        >
+        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
           <img
             src="https://em-content.zobj.net/source/apple/76/flexed-biceps_1f4aa.png"
             class="h-8"
@@ -101,5 +98,18 @@
         </div>
       </div>
     </nav>
+
+    <script>
+      const menuButton = document.querySelector(
+        '[data-collapse-toggle="navbar-sticky"]'
+      );
+      const menu = document.getElementById("navbar-sticky");
+
+      menuButton.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+        const isExpanded = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", !isExpanded);
+      });
+    </script>
   </body>
 </html>
