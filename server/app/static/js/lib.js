@@ -28,7 +28,7 @@ async function refreshJwtToken(token) {
   }
 }
 
-async function authFlow(redirect) {
+async function authFlow(success, failure) {
   let accessToken = localStorage.getItem("access_token");
   let refreshToken = localStorage.getItem("refresh_token");
 
@@ -37,8 +37,8 @@ async function authFlow(redirect) {
     console.log(`Access token is: ${isValid ? "valid" : "invalid"}`);
 
     if (isValid) {
-      if (redirect) {
-        window.location.href = redirect;
+      if (success) {
+        window.location.href = success;
       }
     } else {
       let { access_token, refresh_token } = await refreshJwtToken(refreshToken);
@@ -47,10 +47,13 @@ async function authFlow(redirect) {
         localStorage.setItem("access_token", access_token);
         localStorage.setItem("refresh_token", refresh_token);
         if (redirect) {
-          window.location.href = redirect;
+          window.location.href = success;
         }
       } else {
         console.log("Недопустимый токен обновления. Оставайтесь на странице.");
+        if (failure) {
+          window.location.href = failure;
+        }
       }
     }
   }
