@@ -2,8 +2,9 @@ FROM node:18 AS build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+COPY package*.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
