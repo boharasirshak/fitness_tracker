@@ -16,8 +16,6 @@
 		success = suc;
 	};
 
-	console.log($isAuthenticated);
-
 	const submit = async () => {
 		const backendUrl = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
 
@@ -34,8 +32,13 @@
 		});
 
 		if (res.status >= 500) {
-			return alert("Internal Server Error!", false);
-		}
+			try {
+				const data = await res.json();
+				return alert(data.detail, false);
+			} catch (error) {
+				return alert("Internal Server Error!", false);
+			}
+    }
 
 		const data = await res.json();
 		if (res.status == 200) {

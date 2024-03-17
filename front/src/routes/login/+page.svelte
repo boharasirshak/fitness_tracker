@@ -32,7 +32,12 @@
 		});
 
     if (res.status >= 500) {
-      return alert("Internal Server Error!", false);
+			try {
+				const data = await res.json();
+				return alert(data.detail, false);
+			} catch (error) {
+				return alert("Internal Server Error!", false);
+			}
     }
 
     const data = await res.json();
