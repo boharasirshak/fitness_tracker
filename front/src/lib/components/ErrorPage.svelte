@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Error } from "$lib/types";
+  import type { Error } from "$lib/type";
 
   export let error: Error;
 

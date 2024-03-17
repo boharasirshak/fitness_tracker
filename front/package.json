@@ -26,5 +26,12 @@
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@popperjs/core": "^2.11.8",
+		"flowbite": "^2.3.0",
+		"flowbite-svelte": "^0.44.24",
+		"flowbite-svelte-icons": "^1.4.3",
+		"tailwind-merge": "^2.2.2"
+	}
 }

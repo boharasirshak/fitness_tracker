@@ -2,26 +2,25 @@
 	import { goto } from "$app/navigation";
 	import Alert from "$lib/components/Alert.svelte";
 	import { accessToken, isAuthenticated, refreshToken } from "$lib/stores";
-	import { AlertType } from "$lib/type";
+	import { Button } from 'flowbite-svelte';
 
 	let email = "";
 	let password = "";
-	let show = false;
 	let message = "";
-	let type: AlertType;
+	let showAlert = false;
+	let success = false;
+
+	const alert = (msg: string, suc: boolean) => {
+		showAlert = true;
+		message = msg;
+		success = suc;
+	}
 
 	const submit = async () => {
 		const backendUrl = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:8000";
-    setTimeout(() => {
-      show = false;
-      message = "";
-    }, 1000);
 
     if (!email || !password) {
-      show = true;
-      message = "Please fill in all fields";
-      type = AlertType.Error;
-      return;
+			return alert("Please fill in all fields", false);
     }
 
 		const res = await fetch(`${backendUrl}/api/v1/auth/login`, {
@@ -33,10 +32,7 @@
 		});
 
     if (res.status >= 500) {
-      show = true;
-      message = "Internal server error. Please try again later.";
-      type = AlertType.Error;
-      return;
+      return alert("Internal Server Error!", false);
     }
 
     const data = await res.json();
@@ -46,28 +42,18 @@
 			accessToken.set(data.access_token);
 			refreshToken.set(data.refresh_token);
 			isAuthenticated.set(true);
-			show = true;
-			message = "Logged in successfully";
-			type = AlertType.Success;
-			setTimeout(() => {
-        show = false;
-				goto("/dashboard").then(() => {});
-			}, 1000);
+			alert("Logged in successfully", true);
+
+			setTimeout(() => {goto("/dashboard").then(() => {})}, 1000);
 
 		} else if (res.status === 401) {
-			show = true;
-			message = "Incorrect email or password";
-			type = AlertType.Error;
+			alert("Incorrect email or password", false);
 
 		} else if (res.status === 422) {
-			show = true;
-			message = "Please fill in all fields";
-			type = AlertType.Error;
+			alert("Please fill in all fields", false);
 
 		} else {
-			show = true;
-			message = "An error occurred";
-			type = AlertType.Error;
+			alert("An error occurred", false);
 		}
 	};
 </script>
@@ -138,14 +124,14 @@
 						</div>
 						<!-- <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">forgot password?</a> -->
 					</div>
-					<button
+					<Button 
+						color="green"
 						type="submit"
 						id="submit"
-						class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+						class="w-full"
 						on:click={submit}
-					>
-						Sign in
-					</button>
+					>Sign In
+					</Button>
 					<p class="text-sm font-light text-gray-500 dark:text-gray-400">
 						Don’t have an account yet?{" "}
 						<a
@@ -161,6 +147,4 @@
 	</div>
 </section>
 
-{#if show}
-	<Alert {show} {message} {type} />
-{/if}
+<Alert bind:open={showAlert} {message} {success}  />

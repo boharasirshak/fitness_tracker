@@ -1,14 +1,9 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { isAuthenticated } from "$lib/stores";
-  </script>
+  import { goto } from '$app/navigation';
+  import { isAuthenticated } from '$lib/stores';
+  import { onMount } from 'svelte';
 
-{#if $isAuthenticated}
-  {
-    goto("/dashboard").then(() => {})
-  }
-{:else}
-  {
-    goto("/login").then(() => {})
-  }
-{/if}
+  onMount(() => {
+    $isAuthenticated ? goto('/dashboard') : goto('/login');
+  });
+</script>
