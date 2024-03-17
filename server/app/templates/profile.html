@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | Fitness Tracker</title>
+    <title>Profile | Fitness Tracker</title>
     <link
       rel="shortcut icon"
       href="{{ url_for('static', path='favicon.ico') }}"
@@ -48,18 +48,39 @@
           window.location.href = "/login";
         }
 
-        // CASE: user has not set up their profile yet
-        if (data.username === "") {
-          window.location.href = "/profile";
-        }
-
-        // Save user data to local storage
-        new Store("user", data);
-
       })();
     </script> 
-    Dashboard
-    <div id="user-data"> </div>
+    Your profile
+    <div id="user-data"></div>
+
+    <form action="">
+      <label for="email">Email</label>
+      <input type="text" placeholder="name@mail.ru">
+
+      <label for="username">Username</label>
+      <input type="text" placeholder="username">
+
+      <label for="gender">Gender</label>
+      <select name="gender" id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="height">Height</label>
+      <input type="text" placeholder="height in cm">
+
+      <label for="weight">Weight</label>
+      <input type="text" placeholder="weight in kg">
+
+      <label for="activity">Activeness</label>
+      <select name="activity" id="activity">
+        <option value="lightly-active">Lightly active</option>
+        <option value="moderately-active">Moderately active</option>
+        <option value="very-active">Very active</option>
+    </form>
+
+    <button>Save</button>
 
     <script>
       let user = new Store("user");

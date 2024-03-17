@@ -37,8 +37,14 @@ async function getUser(token) {
     },
   });
   try {
-    return await res.json();
+    return {
+      res,
+      data: await res.json(),
+    };
   } catch {
-    return {};
+    return {
+      res,
+      detail: "Internal Server Error"
+    };
   }
 }

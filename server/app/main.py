@@ -54,6 +54,14 @@ def get_register_page(request: Request):
 def get_login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+@app.get("/dashboard")
+def get_login_page(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+@app.get("/profile")
+def get_login_page(request: Request):
+    return templates.TemplateResponse("profile.html", {"request": request})
+
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
 app.include_router(tokens_router, prefix="/api/v1")
