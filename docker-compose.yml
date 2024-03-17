@@ -30,7 +30,7 @@ services:
       - "443:443"
     volumes:
       # The init.conf must be replaced by ssl.conf after installing the SSL certificate 
-      - ./nginx:/etc/nginx/init.d
+      - ./nginx:/etc/nginx/init.conf
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     depends_on:
