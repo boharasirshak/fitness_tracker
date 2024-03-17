@@ -6,7 +6,7 @@ services:
       context: ./front
       dockerfile: Dockerfile
       args:
-        VITE_BACKEND_URL: "https://api.sirshak.tech"
+        VITE_BACKEND_URL: "http://159.65.155.131"
     ports:
       - "3000:3000"
     depends_on:
