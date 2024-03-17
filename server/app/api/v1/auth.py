@@ -16,7 +16,11 @@ from app.schemas.users import (
     UserRegisterResponseSchema,
     UserLoginResponseSchema
 )
-from app.core.emails import read_email_template, send_mail_async
+from app.core.emails import (
+    read_email_template,
+    # send_mail_sync, 
+    send_mail_async,
+)
 from app.core.utils import generate_random_password
 from app.core.security import verify_password, get_password_hash
 from app.config import (
