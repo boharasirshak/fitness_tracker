@@ -634,6 +634,18 @@
       function closeToast(id) {
         document.getElementById(id).style.display = "none";
       }
+
+      const sideBarToggle = document.querySelector(
+        '[data-drawer-toggle="default-sidebar"]'
+      );
+      const sideBar = document.getElementById("default-sidebar");
+
+      sideBarToggle.addEventListener("click", () => {
+        sideBar.classList.toggle("-translate-x-full");
+        const isExpanded =
+          sideBarToggle.getAttribute("aria-expanded") === "true";
+        sideBarToggle.setAttribute("aria-expanded", !isExpanded);
+      });
     </script>
   </body>
 </html>
