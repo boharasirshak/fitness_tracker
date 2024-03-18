@@ -143,8 +143,7 @@
           >
             <ul class="space-y-2 font-medium">
               <li>
-                <a
-                  href="/workouts/jumping-jacks-slug"
+                <button
                   class="flex w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                 >
                   <h4
@@ -153,12 +152,11 @@
                     Jumping Jacks
                   </h4>
                   <p class="font-normal text-gray-700 dark:text-gray-400"></p>
-                </a>
+                </button>
               </li>
 
               <li>
-                <a
-                  href="/workouts/high-knees-slug"
+                <button
                   class="flex w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                 >
                   <h4
@@ -167,7 +165,7 @@
                     High Knees
                   </h4>
                   <p class="font-normal text-gray-700 dark:text-gray-400"></p>
-                </a>
+                </button>
               </li>
             </ul>
             <div class="w-full flex flex-col items-center content-center">
@@ -199,44 +197,12 @@
       <div class="flex-grow">
         <div class="p-4 sm:ml-64">
           <div
-            class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14"
+            class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700"
           >
-            <div id="header">
-              <div class="info">
-                <div>
-                  Repetitions: <span id="repetition-count">0</span>
-                </div>
-                <div>Timer: <span id="timer">0:00</span></div>
-              </div>
-              <div class="buttons">
-                <button class="border-b " id="voice-button">Play voice</button>
-                <button id="download-button">Download video</button>
-                <!-- Добавленная кнопка -->
-              </div>
-            </div>
-            <div id="video-container">
-              <video width="600" loop autoplay>
-                <source src="/static/highknees.mov" type="video/mp4" />
-              </video>
-            </div>
-            <video id="video" playsinline autoplay></video>
-            <img
-              id="received-image"
-              src=""
-              alt="Received Image"
-              style="display: block; width: 100%; max-width: 640px"
-            />
-            <div id="repetition-count">0</div>
-            <div id="timer">0:00</div>
-            <audio
-              id="audio"
-              src="/static/track.mp3"
-              preload="auto"
-              type="audio/mpeg"
-            ></audio>
-            <button id="voice-button">Включить музыку</button>
-            <button id="download-video">Скачать видео</button>
-            <!-- Добавленная кнопка -->
+            <div>Exercise: <span id="current">Jumping Jacks</span></div>
+            <div>Timer: <span id="timer">0:00</span></div>
+            <div>Repetitions: <span id="repetition-count">0</span></div>
+            <video id="video" class="w-[65%] h-full" playsinline autoplay></video>
           </div>
         </div>
       </div>
@@ -264,11 +230,8 @@
 
     <script>
       const video = document.getElementById("video");
-      const receivedImg = document.getElementById("received-image");
-      const repetitionsCountElement =
-        document.getElementById("repetition-count");
+      const repetitionsCountElement = document.getElementById("repetition-count");
       const timerElement = document.getElementById("timer");
-      const audio = document.getElementById("audio");
       const ws = new WebSocket(
         (window.location.protocol === "https:" ? "wss://" : "ws://") +
           window.location.host +
@@ -343,39 +306,6 @@
 
         setInterval(updateTimer, 1000);
       });
-
-      const voiceButtonClicked = () => {
-        if (audio.paused) {
-          audio.play();
-          voiceButton.innerText = "Выключить музыку";
-        } else {
-          audio.pause();
-          voiceButton.innerText = "Включить музыку";
-        }
-      };
-
-      const downloadVideo = async () => {
-        try {
-          const response = await fetch("/download_video");
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "video.mp4";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        } catch (error) {
-          console.error("Ошибка при скачивании видео:", error);
-        }
-      };
-
-      document
-        .getElementById("voice-button")
-        .addEventListener("click", voiceButtonClicked);
-      document
-        .getElementById("download-button")
-        .addEventListener("click", downloadVideo);
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
