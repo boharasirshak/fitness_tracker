@@ -41,11 +41,10 @@ router = APIRouter(prefix="/auth", tags=["Авторизация"])
     }
 )
 async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
-    async with db as session:
-        # noinspection PyTypeChecker
-        query = select(User).where(User.email == data.email)
-        result = await session.execute(query)
-        user = result.scalars().first()
+    # noinspection PyTypeChecker
+    query = select(User).where(User.email == data.email)
+    result = await db.execute(query)
+    user = result.scalars().first()
 
     if not user or not verify_password(data.password, user.hashed_password):
         return JSONResponse(
@@ -75,16 +74,16 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     "/register",
     response_description="Зарегистрируйте пользователя по электронной почте и отправьте временный пароль на это электронное письмо",
     responses={
-        200: {"model": UserRegisterResponseSchema, "description": "Регистрация прошла успешно, пароль отправлен на электронную почту"},
+        200: {"model": UserRegisterResponseSchema,
+              "description": "Регистрация прошла успешно, пароль отправлен на электронную почту"},
         409: {"model": ErrorResponseSchema, "description": "Электронная почта уже существует"},
     }
 )
 async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db)):
-    async with db as session:
-        # noinspection PyTypeChecker
-        query = select(User).where(User.email == data.email)
-        result = await session.execute(query)
-        user = result.scalars().first()
+    # noinspection PyTypeChecker
+    query = select(User).where(User.email == data.email)
+    result = await db.execute(query)
+    user = result.scalars().first()
 
     if user:
         return JSONResponse(
@@ -108,13 +107,13 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
             subject="Ваш временный пароль",
             html=html
         )
-        
+
         # first send the email, then only register the user.
         user = User(email=data.email, hashed_password=hashed_password)
         db.add(user)
         await db.commit()
         await db.refresh(user)
-        
+
     except SMTPException as e:
         print(e)
         return JSONResponse(
