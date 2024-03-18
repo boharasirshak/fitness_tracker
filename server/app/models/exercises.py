@@ -1,11 +1,11 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     Integer,
     String,
-    TIMESTAMP,
+    DateTime,
 )
+from sqlalchemy.sql import func
+
 from app.core.database import Base
 
 
@@ -14,6 +14,6 @@ class Exercise(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    total_time = Column(Integer, nullable=False)
-    rest_time = Column(Integer, nullable=False)
-    created_at = Column(TIMESTAMP, nullable=False, default=datetime.utcnow)
+    video_link = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=func.now())
