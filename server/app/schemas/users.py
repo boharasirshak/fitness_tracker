@@ -21,19 +21,22 @@ class UserDataUpdateSchema(BaseModel):
     height: Optional[int] = None
     weight: Optional[int] = None
     activity_level: Optional[ActivityLevel] = None
+    password: Optional[str] = None
+    phone_number: Optional[str] = None
 
     # Throws an error if any extra fields are present
     class Config:
         extra = "forbid"
 
 
-class UserDataSchema(BaseModel):
+class UserSchema(BaseModel):
     email: str
     gender: str
     username: str
     height: int
     weight: int
     activity_level: ActivityLevel | int
+    phone_number: str
 
 
 class UserLoginResponseSchema(BaseModel):

@@ -5,8 +5,9 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
-    TIMESTAMP,
+    DateTime,
 )
+from sqlalchemy.sql import func
 
 from app.core.database import Base
 
@@ -23,11 +24,13 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, index=True, unique=True)
     username = Column(String, nullable=True, default="")
     hashed_password: str = Column(String, nullable=False)
     gender = Column(String, nullable=True, default="")
     height = Column(Integer, nullable=True, default=0)
     weight = Column(Integer, nullable=True, default=0)
+    profile_picture_url = Column(String, nullable=True, default="")
+    phone_number = Column(String, nullable=True, unique=True, index=True)
     activity_level = Column(Integer, nullable=True, default=ActivityLevel.NOT_GIVEN.value)
-    registered_at = Column(TIMESTAMP, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=func.now())
