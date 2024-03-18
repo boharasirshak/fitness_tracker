@@ -326,7 +326,8 @@
     </main>
 
     <script>
-      (async () => {
+      (
+      async () => {
         let accessToken = localStorage.getItem("access_token");
         let { res, data } = await getUser(accessToken);
         if (res.status === 401) {
@@ -357,22 +358,6 @@
           activityLevelTag.value = activityLevel;
         }
       })();
-
-      const userMenuButton = document.getElementById("user-menu-button");
-      const userDropdown = document.getElementById("user-dropdown");
-
-      userMenuButton.addEventListener("click", function () {
-        userDropdown.classList.toggle("hidden");
-      });
-
-      window.addEventListener("click", function (e) {
-        if (
-          !userMenuButton.contains(e.target) &&
-          !userDropdown.contains(e.target)
-        ) {
-          userDropdown.classList.add("hidden");
-        }
-      });
 
       document.getElementById("logout").addEventListener("click", () => {
         localStorage.removeItem("access_token");
