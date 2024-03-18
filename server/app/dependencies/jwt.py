@@ -24,13 +24,12 @@ async def jwt_verify(
     except ValueError:
         raise HTTPException(status_code=401, detail="Invalid token: user_id is not an integer")
 
-    # Here you could add more checks, e.g., verify user exists in DB
-    async with db as session:
-        # noinspection PyTypeChecker
-        query = select(User).where(User.id == user_id)
-        result = await session.execute(query)
-        user = result.scalar()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
+    # noinspection PyTypeChecker
+    query = select(User).where(User.id == user_id)
+    result = await db.execute(query)
+    user = result.scalar()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
-        return user
+    return user
+
