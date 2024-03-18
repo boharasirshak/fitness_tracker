@@ -56,6 +56,10 @@ async function authFlow(success, failure) {
         }
       }
     }
+  } else {
+    if (failure) {
+      window.location.href = failure;
+    }
   }
 }
 
