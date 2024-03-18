@@ -26,6 +26,17 @@
     <script>
       (async () => {
         await authFlow(null, "/login");
+
+        let accessToken = localStorage.getItem("access_token");
+        let {res, data} = await getUser(accessToken);
+        if (res.status === 401) {
+          window.location.href = "/login";
+        }
+
+        if (data.username === "") {
+          window.location.href = "/profile";
+        }
+
       })();
     </script>
 
