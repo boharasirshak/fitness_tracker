@@ -106,7 +106,29 @@ async function getAllExercises(token) {
 }
 
 async function getUserWorkouts(token) {
-  const res = await fetch("/api/v1/users/workouts", {
+  const res = await fetch("/api/v1/workouts", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  try {
+    return {
+      res,
+      data: await res.json(),
+    };
+  } catch {
+    return {
+      res,
+      detail: "Internal Server Error",
+    };
+  }
+}
+
+
+async function getWorkoutData(token, workout_id) {
+  const res = await fetch(`/api/v1/workouts/${workout_id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
