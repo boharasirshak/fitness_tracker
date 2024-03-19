@@ -108,6 +108,88 @@ async def get_all_users_workouts(
     return AllWorkoutsSchema(workouts=all_workouts)
 
 
+@router.get(
+    "/{workout_id}", 
+    response_description="Get a single workout by its ID",
+    responses={
+        200: {"model": DetailedWorkoutSchema, "description": "Detailed workout schema"},
+        401: {"model": ErrorResponseSchema,
+              "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        404: {"model": ErrorResponseSchema, "description": "User or Exercise not found"},
+    }
+)
+async def get_single_workout(
+    workout_id: int, 
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(jwt_verify)
+):
+    # noinspection PyTypeChecker
+    query = select(Workout).where(and_(
+        Workout.id == workout_id,
+        Workout.user_id == user.id
+    ))
+    result = await db.execute(query)
+    workout = result.scalars().first()
+
+    if not workout:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({
+                "detail": "Workout not found"
+            })
+        )
+
+    # noinspection PyTypeChecker
+    query = select(Exercise).where(Exercise.id == workout.exercise_id)
+    result = await db.execute(query)
+    exercise = result.scalars().first()
+
+    if not exercise:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({
+                "detail": "Exercise not found"
+            })
+        )
+
+    workout_exercise = ExerciseSchema(
+        id=exercise.id,
+        name=exercise.name,
+        description=exercise.description,
+        created_at=exercise.created_at,
+        video_link=exercise.video_link
+    )
+
+    # noinspection PyTypeChecker
+    query = select(WorkoutSession).where(WorkoutSession.workout_id == workout.id)
+    result = await db.execute(query)
+    sessions = result.scalars().all()
+    workout_sessions: list[WorkoutSessionSchema] = []
+
+    for session in sessions:
+        workout_sessions.append(WorkoutSessionSchema(
+            id=session.id,
+            user_id=session.user_id,
+            workout_id=session.workout_id,
+            start_time=session.start_time,
+            end_time=session.end_time,
+            repetitions=session.repetitions
+        ))
+
+    return DetailedWorkoutSchema(
+        id=workout.id,
+        name=workout.name,
+        description=workout.description,
+        total_time=workout.total_time,
+        rest_time=workout.rest_time,
+        efficiency=workout.efficiency,
+        user_id=workout.user_id,
+        exercise_id=workout.exercise_id,
+        created_at=workout.created_at,
+        sessions=workout_sessions,
+        exercise=workout_exercise
+    )
+
 @router.post(
     "/",
     response_description="Create a new workout for the user",
