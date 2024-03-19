@@ -67,11 +67,9 @@ document.getElementById("form").addEventListener("submit", async e => {
       return;
     }
 
-    if (response.status === 200) {
-      document.getElementById('toast-danger').style.display = 'none';
-      document.getElementById('toast-success').style.display = '';
-      document.getElementById('toast-success-text').innerText = 'Данные успешно обновлены';
-    }
+    document.getElementById('toast-danger').style.display = 'none';
+    document.getElementById('toast-success').style.display = '';
+    document.getElementById('toast-success-text').innerText = 'Данные успешно обновлены';
 
 
 });
