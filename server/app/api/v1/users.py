@@ -42,7 +42,7 @@ async def get_user_data(
 
 
 @router.put(
-    "/",
+    "",
     response_description="Обновляет данные пользователя",
     responses={
         200: {"model": UserSchema, "description": "Все обновленные данные пользователя"},
