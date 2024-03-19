@@ -6,14 +6,14 @@
     <title>Логин | Фитнес-трекер</title>
     <link
       rel="shortcut icon"
-      href="{{ url_for('static', path='favicon.ico') }}"
+      href="../static/favicon.ico"
       type="image/x-icon"
     />
     <link
-      href="{{ url_for('static', path='/css/main.css') }}"
+      href="../static/css/main.css"
       rel="stylesheet"
     />
-    <script src="{{ url_for('static', path='/js/lib.js') }}"></script>
+    <script src="../static/js/lib.js"></script>
   </head>
   <body>
     <script>
@@ -239,6 +239,6 @@
         document.getElementById(id).style.display = "none";
       }
     </script>
-    <script src="{{ url_for('static', path='/js/login.js') }}" defer></script>
+    <script src="../static/js/login.js"></script>
   </body>
 </html>

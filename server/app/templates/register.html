@@ -4,12 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Регистрация | Фитнес-трекер</title>
-    <link rel="shortcut icon" href="{{ url_for('static', path='favicon.ico') }}" type="image/x-icon">
     <link
-      href="{{ url_for('static', path='/css/main.css') }}"
+      rel="shortcut icon"
+      href="../static/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      href="../static/css/main.css"
       rel="stylesheet"
     />
-    <script src="{{ url_for('static', path='/js/lib.js') }}"></script>
+    <script src="../static/js/lib.js"></script>
   </head>
   <body>
     <script>
@@ -224,6 +228,6 @@
           document.getElementById("submit").disabled = !e.target.checked;
         });
       </script>
-      <script src="{{ url_for('static', path='/js/register.js') }}" defer></script>
+      <script src="../static/js/register.js" defer></script>
   </body>
 </html>
