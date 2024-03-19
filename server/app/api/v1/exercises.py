@@ -13,14 +13,14 @@ from app.schemas.exercises import (
     AllExercisesResponse
 )
 
-router = APIRouter(prefix="/exercises", tags=["Exercises"])
+router = APIRouter(prefix="/exercises", tags=["Упражнения"])
 
 
 @router.get(
     "/",
-    response_description="Get all exercises",
+    response_description="Выполните все упражнения",
     responses={
-        200: {"model": AllExercisesResponse, "description": "All exercises"},
+        200: {"model": AllExercisesResponse, "description": "Все упражнения"},
         401: {"model": ErrorResponseSchema, "description": "Токен недействителен, срок действия истек или не "
                                                            "предоставлен"},
         404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"},

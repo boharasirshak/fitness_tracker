@@ -19,7 +19,7 @@ router = APIRouter(prefix="/users", tags=["Пользователи"])
 
 @router.get(
     "/me",
-    response_description="Gets user's data",
+    response_description="Получает данные пользователя",
     responses={
         200: {"model": UserSchema, "description": "Все данные пользователя"},
         401: {"model": ErrorResponseSchema,

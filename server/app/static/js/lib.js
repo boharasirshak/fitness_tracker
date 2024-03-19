@@ -79,7 +79,7 @@ async function getUser(token) {
   } catch {
     return {
       res,
-      detail: "Internal Server Error",
+      detail: "внутренняя ошибка сервера",
     };
   }
 }
@@ -100,7 +100,7 @@ async function getAllExercises(token) {
   } catch {
     return {
       res,
-      detail: "Internal Server Error",
+      detail: "внутренняя ошибка сервера",
     };
   }
 }
@@ -121,7 +121,7 @@ async function getUserWorkouts(token) {
   } catch {
     return {
       res,
-      detail: "Internal Server Error",
+      detail: "внутренняя ошибка сервера",
     };
   }
 }
@@ -143,7 +143,7 @@ async function getWorkoutData(token, workout_id) {
   } catch {
     return {
       res,
-      detail: "Internal Server Error",
+      detail: "внутренняя ошибка сервера",
     };
   }
 }

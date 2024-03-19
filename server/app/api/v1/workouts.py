@@ -24,17 +24,17 @@ from app.schemas.workouts import (
     ExerciseSchema
 )
 
-router = APIRouter(prefix="/workouts", tags=["Workouts"])
+router = APIRouter(prefix="/workouts", tags=["Тренировки"])
 
 
 @router.get(
     "/",
-    response_description="Gets all workouts done by users along with each session",
+    response_description="Получает все тренировки, выполненные пользователями вместе с каждой сессией",
     responses={
         200: {"model": AllWorkoutsSchema, "description": "Все данные пользователя"},
         401: {"model": ErrorResponseSchema,
               "description": "Токен недействителен, срок действия истек или не предоставлен"},
-        404: {"model": ErrorResponseSchema, "description": "User or Exercise not found"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь или упражнение не найдены"},
     }
 )
 async def get_all_users_workouts(
@@ -60,7 +60,7 @@ async def get_all_users_workouts(
             return JSONResponse(
                 status_code=404,
                 content=jsonable_encoder({
-                    "detail": "An exercise not found"
+                    "detail": "Упражнение не найдено"
                 })
             )
 
@@ -110,12 +110,12 @@ async def get_all_users_workouts(
 
 @router.get(
     "/{workout_id}", 
-    response_description="Get a single workout by its ID",
+    response_description="Получите одну тренировку по ее идентификатору",
     responses={
-        200: {"model": DetailedWorkoutSchema, "description": "Detailed workout schema"},
+        200: {"model": DetailedWorkoutSchema, "description": "Подробная схема тренировки"},
         401: {"model": ErrorResponseSchema,
               "description": "Токен недействителен, срок действия истек или не предоставлен"},
-        404: {"model": ErrorResponseSchema, "description": "User or Exercise not found"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь или упражнение не найдены"},
     }
 )
 async def get_single_workout(
@@ -135,7 +135,7 @@ async def get_single_workout(
         return JSONResponse(
             status_code=404,
             content=jsonable_encoder({
-                "detail": "Workout not found"
+                "detail": "Тренировка не найдена"
             })
         )
 
@@ -148,7 +148,7 @@ async def get_single_workout(
         return JSONResponse(
             status_code=404,
             content=jsonable_encoder({
-                "detail": "Exercise not found"
+                "detail": "Упражнение не найдено"
             })
         )
 
@@ -192,12 +192,12 @@ async def get_single_workout(
 
 @router.post(
     "/",
-    response_description="Create a new workout for the user",
+    response_description="Создайте новую тренировку для пользователя",
     responses={
-        200: {"model": CreateWorkoutResponseSchema, "description": "A new workout created"},
+        200: {"model": CreateWorkoutResponseSchema, "description": "Создана новая тренировка"},
         401: {"model": ErrorResponseSchema,
               "description": "Токен недействителен, срок действия истек или не предоставлен"},
-        404: {"model": ErrorResponseSchema, "description": "User or exercise not found"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь или упражнение не найдены"},
     }
 )
 async def create_new_workout(
@@ -214,7 +214,7 @@ async def create_new_workout(
         return JSONResponse(
             status_code=404,
             content=jsonable_encoder({
-                "detail": "Exercise not found"
+                "detail": "Упражнение не найдено"
             })
         )
 
@@ -243,18 +243,18 @@ async def create_new_workout(
             efficiency=new_workout.efficiency,
             created_at=new_workout.created_at,
         ),
-        message="Workout created successfully"
+        message="Тренировка создана успешно"
     )
 
 
 @router.post(
     "/sessions",
-    response_description="Add a new workout session to a workout",
+    response_description="Добавьте новый тренировочный сеанс к тренировке",
     responses={
-        200: {"model": CreateWorkoutSessionResponseSchema, "description": "Workout session added successfully"},
+        200: {"model": CreateWorkoutSessionResponseSchema, "description": "Тренировка успешно добавлена"},
         401: {"model": ErrorResponseSchema,
               "description": "Токен недействителен, срок действия истек или не предоставлен"},
-        404: {"model": ErrorResponseSchema, "description": "User or workout not found"},
+        404: {"model": ErrorResponseSchema, "description": "Пользователь или тренировка не найдены"},
     }
 )
 async def add_new_workout_session(
@@ -271,7 +271,7 @@ async def add_new_workout_session(
         return JSONResponse(
             status_code=404,
             content=jsonable_encoder({
-                "detail": "Workout not found"
+                "detail": "Тренировка не найдена"
             })
         )
 
@@ -295,5 +295,5 @@ async def add_new_workout_session(
             repetitions=new_workout_session.repetitions,
             start_time=new_workout_session.start_time
         ),
-        message="Workout session added successfully."
+        message="Тренировка успешно завершена."
     )
