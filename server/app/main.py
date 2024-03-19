@@ -2,12 +2,15 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.emails import init_smtp
+from app.models.workouts import Workout
+from app.dependencies.workouts import workout_verify
+
 from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
 from app.api.v1.tokens import router as tokens_router
@@ -51,28 +54,40 @@ async def index(request: Request):
 
 
 @app.get("/register")
-def get_register_page(request: Request):
+def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 
 @app.get("/login")
-def get_login_page(request: Request):
+def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
 @app.get("/dashboard")
-def get_login_page(request: Request):
+def dashboard_page(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 
 @app.get("/profile")
-def get_login_page(request: Request):
+def profile_page(request: Request):
     return templates.TemplateResponse("profile.html", {"request": request})
 
 
 @app.get("/workouts/new")
-def get_login_page(request: Request):
+def new_workout(request: Request):
     return templates.TemplateResponse("new-workouts.html", {"request": request})
+
+
+@app.get("/workouts/start/{workout_id}")
+def start_workout(
+    workout_id: int, 
+    request: Request,
+    workout: Workout = Depends(workout_verify)
+):
+    return templates.TemplateResponse("workout.html", {
+        "request": request,
+        "workout": workout
+    })
 
 
 app.include_router(auth_router, prefix="/api/v1")
