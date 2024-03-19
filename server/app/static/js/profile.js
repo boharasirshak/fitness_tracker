@@ -4,11 +4,13 @@ document.getElementById("form").addEventListener("submit", async e => {
     const activityLevel = formData.get("activity_level");
     const weight = formData.get("weight");
     const height = formData.get("height");
+    const phoneNum = formData.get("phone_number");
 
     if (
       Number.isNaN(parseInt(activityLevel)) ||
       Number.isNaN(parseInt(weight)) ||
       Number.isNaN(parseInt(height)) || 
+      Number.isNaN(parseInt(phoneNum)) ||
       formData.get("weight") === "0" ||
       formData.get("height") === "0"
     ){
