@@ -31,6 +31,8 @@
       <div class="flex w-[20%]">
         <video id="helper-video" src="" class="" loop autoplay controls muted playsinline></video>
       </div>
+
+      <img id="received-img" src="" alt="Received Image" style="display:block; width:100%; max-width: 640px;">
     </main>
 
     <script>
@@ -69,13 +71,11 @@
 
     <script>
       const video = document.getElementById("video");
+      const receivedImg = document.getElementById('received-img');
       const repetitionsCountElement = document.getElementById("repetition-count");
       const timerElement = document.getElementById("timer");
-      const ws = new WebSocket(
-        (window.location.protocol === "https:" ? "wss://" : "ws://") +
-          window.location.host +
-          "/ws"
-      );
+      const ws = new WebSocket(`ws://${window.location.host}/api/v1/ws`);
+
       let seconds = 0;
       let minutes = 0;
 
@@ -114,6 +114,7 @@
 
         const sendFrame = () => {
           if (video.paused || video.ended) {
+            console.log("Video paused or ended");
             return;
           }
 
