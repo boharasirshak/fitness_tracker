@@ -175,6 +175,7 @@
                 type="number"
                 id="height"
                 name="height"
+                min="1"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value=""
                 required
@@ -190,6 +191,7 @@
                 type="number"
                 id="weight"
                 name="weight"
+                min="1"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder=""
                 required
@@ -223,7 +225,9 @@
                 type="number"
                 id="phone-number"
                 name="phone_number"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                min="1"
+                pattern="[0-9]{10}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 remove-arrow"
                 placeholder=""
                 required
               />
@@ -242,7 +246,7 @@
       <section id="toasts">
         <div
           id="toast-success"
-          class="fixed top-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+          class="fixed top-[15%] right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
           role="alert"
           style="display: none"
         >
@@ -387,5 +391,18 @@
 
     <script src="../static/js/profile.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+    <style>
+      /* Removes the increment and decrement arrow from the default input:number tag */
+      .remove-arrow::-webkit-inner-spin-button,
+      .remove-arrow::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      .remove-arrow {
+          -moz-appearance: textfield;
+          appearance: textfield;
+      }
+    </style>
   </body>
 </html>
