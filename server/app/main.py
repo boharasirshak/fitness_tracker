@@ -3,11 +3,11 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from starlette.middleware import Middleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
-from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 from app.config import BASE_URL
 from app.core.emails import init_smtp
@@ -43,7 +43,6 @@ if BASE_URL.__contains__("localhost"):
 else:
     domain = BASE_URL.split("//")[1]
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=[domain, f'*.{domain}'])
-    app.add_middleware(HTTPSRedirectMiddleware)
 
 # noinspection PyTypeChecker
 app.add_middleware(
