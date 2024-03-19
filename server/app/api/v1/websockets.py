@@ -10,28 +10,34 @@ from starlette.websockets import WebSocketDisconnect
 from fastapi.responses import FileResponse, StreamingResponse
 
 router = APIRouter(prefix="/ws", tags=["Websockets"])
-pcs = set()
-pcs_ws = set()
-video_frames = []
+connections = {}
 
-mpPose = mp.solutions.pose
-pose = mpPose.Pose(static_image_mode=False, model_complexity=0, smooth_landmarks=False, enable_segmentation=False)
-mpDraw = mp.solutions.drawing_utils
+mp_pose = mp.solutions.pose
+pose = mp_pose.Pose(
+    static_image_mode=False, 
+    model_complexity=0, 
+    smooth_landmarks=False, 
+    enable_segmentation=False
+)
+mp_draw = mp.solutions.drawing_utils
 
-jump_started = False
-repetitions_count = 0
-pTime = 0
-
-new_width = 128
-new_height = 128
-
-desired_fps = 120
+NEW_WIDTH = 128
+NEW_HEIGHT = 128
+DESIRED_FPS = 120
 
 
-def process_image(frame):
-    global jump_started, repetitions_count, pTime
+def process_image(frame, session_data: dict):
+    if 'jump_started' not in session_data:
+        session_data.update({'jump_started': False, 'repetitions_count': 0, 'p_time': 0})
+    
+    jump_started, repetitions_count, p_time \
+        = session_data['jump_started'], session_data['repetitions_count'], session_data['p_time']
 
-    frame_resized = cv2.resize(frame, (new_width, new_height), interpolation=cv2.INTER_NEAREST)
+    frame_resized = cv2.resize(
+        frame, 
+        (NEW_WIDTH, NEW_HEIGHT), 
+        interpolation=cv2.INTER_NEAREST
+    )
 
     img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(img_rgb)
@@ -57,56 +63,63 @@ def process_image(frame):
         elif point_30_y >= point_25_y and point_29_y >= point_26_y:
             jump_started = False
 
-        mpDraw.draw_landmarks(img_rgb, results.pose_landmarks, mpPose.POSE_CONNECTIONS)
-        for id, lm in enumerate(results.pose_landmarks.landmark):
-            h, w, c = img_rgb.shape
+        mp_draw.draw_landmarks(
+            img_rgb, 
+            results.pose_landmarks, 
+            mp_pose.POSE_CONNECTIONS
+        )
+        for _, lm in enumerate(results.pose_landmarks.landmark):
+            h, w, _ = img_rgb.shape
             cx, cy = int(lm.x * w), int(lm.y * h)
             cv2.circle(img_rgb, (int(cx), int(cy)), 5, (255, 0, 0), cv2.FILLED)
 
-    cTime = time.time()
-    fps = 1 / (cTime - pTime)
-    pTime = cTime
+    current_time = time.time()
+    fps = 1 / (current_time - p_time)
+    p_time = current_time
 
     cv2.putText(img_rgb, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    
+    session_data.update({
+        'jump_started': jump_started, 
+        'repetitions_count': repetitions_count, 
+        'p_time': p_time
+    })
 
     return img_rgb, fps, repetitions_count
 
 
-@router.websocket("/")
-async def websocket_endpoint(websocket: WebSocket):
+@router.websocket("")
+async def workout_connection(websocket: WebSocket):
+    global connections
+    
     await websocket.accept()
+    connections[websocket] = {"video_frames": []}
+    
     try:
         while True:
             data = await websocket.receive_bytes()
             nparr = np.frombuffer(data, np.uint8)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            video_frames.append(img)  # Это было добавлено
-            track_img, fps, repetitions_count = process_image(img)
-            # print(repetitions_count)
+            connections[websocket]["video_frames"].append(img)
+            r_img, _, repetitions_count = process_image(img, connections[websocket])
 
-            # Сохраняем одно изображение
-            # cv2.imwrite('saved_image.jpg', img)
-
-            # Отправляем изображение обратно на клиент
-            _, img_encoded = cv2.imencode('.jpg', track_img)
-            # await websocket.send_bytes(img_encoded.tobytes())  # если хотим видеть точки, включить
+            await websocket.send_bytes(r_img.tobytes())
             await websocket.send_text(str(repetitions_count))
 
     except WebSocketDisconnect:
-        pcs_ws.remove(websocket)
-        pcs.remove(websocket)
+        del connections[websocket]
         print("WebSocket connection closed")
         await websocket.close()
 
 
-@router.get("/download_video")
-async def download_video():
-    async def video_generator():
-        for frame in video_frames:
-            ret, jpeg = cv2.imencode('.jpg', frame)
-            if not ret:
-                continue
-            yield jpeg.tobytes()
+# @router.get("/download_video")
+# async def download_video():
+#     async def video_generator():
+#         for frame in video_frames:
+#             ret, jpeg = cv2.imencode('.jpg', frame)
+#             if not ret:
+#                 continue
+#             yield jpeg.tobytes()
 
-    return StreamingResponse(video_generator(), media_type="multipart/x-mixed-replace; boundary=frame")
+#     return StreamingResponse(video_generator(), media_type="multipart/x-mixed-replace; boundary=frame")
 
