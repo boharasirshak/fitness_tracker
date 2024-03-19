@@ -42,7 +42,7 @@ async def get_user_data(
 
 
 @router.put(
-    "",
+    "", # You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
     response_description="Обновляет данные пользователя",
     responses={
         200: {"model": UserSchema, "description": "Все обновленные данные пользователя"},
