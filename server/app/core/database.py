@@ -11,10 +11,11 @@ DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{D
 engine = create_async_engine(
     DATABASE_URL,
     echo=True,
-    pool_size=2,
+    pool_size=8,
     max_overflow=0,
     pool_recycle=1800,
     pool_timeout=30,
+    pool_pre_ping=True,
 )
 
 # noinspection PyTypeChecker
