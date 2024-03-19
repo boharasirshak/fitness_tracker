@@ -28,7 +28,7 @@ router = APIRouter(prefix="/workouts", tags=["Тренировки"])
 
 
 @router.get(
-    "/",
+    "",# You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
     response_description="Получает все тренировки, выполненные пользователями вместе с каждой сессией",
     responses={
         200: {"model": AllWorkoutsSchema, "description": "Все данные пользователя"},
@@ -191,7 +191,7 @@ async def get_single_workout(
     )
 
 @router.post(
-    "/",
+    "",# You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
     response_description="Создайте новую тренировку для пользователя",
     responses={
         200: {"model": CreateWorkoutResponseSchema, "description": "Создана новая тренировка"},
