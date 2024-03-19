@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout | Fitness Tracker</title>
+    <link
+      rel="shortcut icon"
+      href="../../static/favicon.ico"
+      type="image/x-icon"
+    />
+    <link href="../../static/css/main.css" rel="stylesheet" />
+    <script src="../../static/js/lib.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="flex flex-row">
+      <div
+        class="flex flex-col w-[70%] border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700"
+      >
+        <div>Workout Name: <span id="workout-name"></span></div>
+        <div>Exercise Name: <span id="exercise-name"></span></div>
+        <div>Timer: <span id="timer">0:00</span></div>
+        <div>Repitions: <span id="repetition-count">0</span></div>
+        <video id="video" class="h-[60%]" autoplay></video>
+      </div>
+
+      <div class="flex w-[20%]">
+        <video id="helper-video" src="" class="" loop autoplay controls muted playsinline></video>
+      </div>
+    </main>
+
+    <script>
+      (async () => {
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+          console.error("Access token not found");
+          alert("Access token not found");
+          window.location.href = "/login";
+          return;
+        }
+
+        // This id comes verified from the server
+        const workout_id = window.location.pathname.split("/").pop();
+
+      if (Number.isNaN(parseInt(workout_id))) {
+        console.error("Invalid workout id");
+        alert("Invalid workout id");
+        window.location.href = "/dashboard";
+      }
+
+        // get the workout details
+        let {res, data} = await getWorkoutData(accessToken, workout_id);
+        if (res.status !== 200) {
+          console.error("Failed to get workout data");
+          alert((data && data.detail) || "Failed to get workout data");
+          window.location.href = "/dashboard";
+          return;
+        }
+        
+        document.getElementById("workout-name").innerText = data.name;
+        document.getElementById("exercise-name").innerText = data.exercise.name;
+        document.getElementById("helper-video").src = `../../static/videos/${data.exercise.video_link}`;
+      })();
+    </script>
+
+    <script>
+      const video = document.getElementById("video");
+      const repetitionsCountElement = document.getElementById("repetition-count");
+      const timerElement = document.getElementById("timer");
+      const ws = new WebSocket(
+        (window.location.protocol === "https:" ? "wss://" : "ws://") +
+          window.location.host +
+          "/ws"
+      );
+      let seconds = 0;
+      let minutes = 0;
+
+      function updateTimer() {
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+        }
+        timerElement.innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      }
+
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (err) {
+            console.log("Что-то пошло не так!", err);
+          });
+      }
+
+      ws.onmessage = function (event) {
+        const arrayBuffer = event.data;
+        const blob = new Blob([arrayBuffer], { type: "image/jpeg" });
+        receivedImg.src = URL.createObjectURL(blob);
+        repetitionsCountElement.innerText = event.data;
+      };
+
+      video.addEventListener("play", () => {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const fps = 10;
+        const interval = 1000 / fps;
+
+        const sendFrame = () => {
+          if (video.paused || video.ended) {
+            return;
+          }
+
+          const aspectRatio = video.videoWidth / video.videoHeight;
+          let targetHeight = 120;
+          let targetWidth = aspectRatio * targetHeight;
+
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+
+          context.drawImage(video, 0, 0, targetWidth, targetHeight);
+          canvas.toBlob(
+            (blob) => {
+              blob.arrayBuffer().then((buffer) => {
+                const uint8View = new Uint8Array(buffer);
+                ws.send(uint8View);
+              });
+            },
+            "image/jpeg",
+            0.7
+          );
+
+          setTimeout(sendFrame, interval);
+        };
+        sendFrame();
+
+        setInterval(updateTimer, 1000);
+      });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>
