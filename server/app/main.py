@@ -6,7 +6,10 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 
+from app.config import BASE_URL
 from app.core.emails import init_smtp
 from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
@@ -34,6 +37,13 @@ async def lifespan(_: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+
+if BASE_URL.__contains__("localhost"):
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=['*'])
+else:
+    domain = BASE_URL.split("//")[1]
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=[domain, f'*.{domain}'])
+    app.add_middleware(HTTPSRedirectMiddleware)
 
 # noinspection PyTypeChecker
 app.add_middleware(
