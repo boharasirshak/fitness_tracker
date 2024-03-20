@@ -74,7 +74,8 @@
       const receivedImg = document.getElementById('received-img');
       const repetitionsCountElement = document.getElementById("repetition-count");
       const timerElement = document.getElementById("timer");
-      const ws = new WebSocket(`ws://${window.location.host}/api/v1/ws`);
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
 
       let seconds = 0;
       let minutes = 0;
@@ -100,10 +101,13 @@
       }
 
       ws.onmessage = function (event) {
-        const arrayBuffer = event.data;
-        const blob = new Blob([arrayBuffer], { type: "image/jpeg" });
-        receivedImg.src = URL.createObjectURL(blob);
-        repetitionsCountElement.innerText = event.data;
+        const message = JSON.parse(event.data);
+
+        if (message.type === "image") {
+            receivedImg.src = `data:image/jpeg;base64,${message.data}`
+        } else if (message.type === "count") {
+            repetitionsCountElement.innerText = message.data;
+        }
       };
 
       video.addEventListener("play", () => {

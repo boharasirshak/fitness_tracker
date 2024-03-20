@@ -1,4 +1,5 @@
 import time
+import base64
 
 import cv2
 import mediapipe as mp
@@ -77,7 +78,7 @@ def process_image(frame, session_data: dict):
     fps = 1 / (current_time - p_time)
     p_time = current_time
 
-    cv2.putText(img_rgb, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    img_rgb = cv2.putText(img_rgb, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
     
     session_data.update({
         'jump_started': jump_started, 
@@ -102,9 +103,17 @@ async def workout_connection(websocket: WebSocket):
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             connections[websocket]["video_frames"].append(img)
             r_img, _, repetitions_count = process_image(img, connections[websocket])
-
-            await websocket.send_bytes(r_img.tobytes())
-            await websocket.send_text(str(repetitions_count))
+            _, buffer = cv2.imencode('.jpg', r_img)
+            b64_img = base64.b64encode(buffer.tobytes()).decode('utf-8')
+            
+            await websocket.send_json({
+                "type": "image",
+                "data": b64_img
+            })
+            await websocket.send_json({
+                "type": "count",
+                "data": repetitions_count
+            })
 
     except WebSocketDisconnect:
         del connections[websocket]
