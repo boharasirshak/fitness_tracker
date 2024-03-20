@@ -8,7 +8,6 @@ import numpy as np
 from fastapi import APIRouter
 from fastapi import WebSocket
 from starlette.websockets import WebSocketDisconnect
-from fastapi.responses import FileResponse, StreamingResponse
 
 router = APIRouter(prefix="/ws", tags=["Websockets"])
 connections = {}
@@ -78,7 +77,7 @@ def process_image(frame, session_data: dict):
     fps = 1 / (current_time - p_time)
     p_time = current_time
 
-    img_rgb = cv2.putText(img_rgb, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    img_rgb = cv2.putText(img_rgb, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
     session_data.update({
         'jump_started': jump_started, 
@@ -118,7 +117,10 @@ async def workout_connection(websocket: WebSocket):
     except WebSocketDisconnect:
         del connections[websocket]
         print("WebSocket connection closed")
-        await websocket.close()
+        try:
+            await websocket.close()
+        except:
+            pass
 
 
 # @router.get("/download_video")
