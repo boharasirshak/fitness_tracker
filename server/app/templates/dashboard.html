@@ -206,79 +206,9 @@
                   id="workout-video"
                 ></div>
               </div>
-              <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
-                <div
-                  class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0"
-                >
-                  <div>
-                    <div
-                      class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
-                    >
-                      <svg
-                        class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                    <h3 class="mb-2 text-xl font-bold dark:text-white">
-                      Marketing
-                    </h3>
-                    <p class="text-gray-500 dark:text-gray-400">fvdfd</p>
-                  </div>
-                  <div>
-                    <div
-                      class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
-                    >
-                      <svg
-                        class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <h3 class="mb-2 text-xl font-bold dark:text-white">
-                      Legal
-                    </h3>
-                    <p class="text-gray-500 dark:text-gray-400">sdcsdc</p>
-                  </div>
-                  <div>
-                    <div
-                      class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
-                    >
-                      <svg
-                        class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
-                          clip-rule="evenodd"
-                        ></path>
-                        <path
-                          d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <h3 class="mb-2 text-xl font-bold dark:text-white">
-                      Business Automation
-                    </h3>
-                    <p class="text-gray-500 dark:text-gray-400">wqdwqqdw</p>
-                  </div>
-                </div>
-              </div>
+             <div id="workout-metadata">
+
+             </div>
             </section>
           </div>
         </div>
@@ -328,10 +258,10 @@
         let workout = workouts.find((workout) => workout.id === id);
         document.getElementById("workout-name").innerText = workout.name;
         document.getElementById("workout-description").innerText =
-          workout.description;
+          workout.exercise.description;
 
         document.getElementById("workout-start-container").innerHTML = `
-        <a
+        <a  
           href="/workouts/start/${workout.id}"
           class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
         >
@@ -362,6 +292,104 @@
           muted 
           loop
         /> </video>
+        `;
+
+        document.getElementById("workout-metadata").innerHTML = `
+        <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+          <div
+            class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0"
+          >
+            <div>
+              <div
+                class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
+              >
+                <svg
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                    stroke="#000000"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Total Time
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400">${workout.total_time} sec</p>
+            </div>
+            <div>
+              <div
+                class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
+              >
+                <svg
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.06152 12C5.55362 8.05369 8.92001 5 12.9996 5C17.4179 5 20.9996 8.58172 20.9996 13C20.9996 17.4183 17.4179 21 12.9996 21H8M13 13V9M11 3H15M3 15H8M5 18H10"
+                    stroke="#000000"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Rest Timeout
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400">${workout.rest_time} sec</p>
+            </div>
+            <div>
+              <div
+                class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
+              >
+                <svg
+                  fill="#000000"
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 32 32"
+                  id="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <style>
+                      .cls-1 {
+                        fill: none;
+                      }
+                    </style>
+                  </defs>
+                  <path
+                    d="M25,12H20v2h5a1.0008,1.0008,0,0,1,1,1v2H22a3.0033,3.0033,0,0,0-3,3v1a3.0033,3.0033,0,0,0,3,3h6V15A3.0033,3.0033,0,0,0,25,12ZM22,22a1.0008,1.0008,0,0,1-1-1V20a1.0008,1.0008,0,0,1,1-1h4v3Z"
+                  />
+                  <path
+                    d="M16,24h2L12,7H10L4,24H6l1.6936-5h6.6135ZM8.3711,17l2.4966-7.3711.2668.0005L13.63,17Z"
+                  />
+                  <rect
+                    id="_Transparent_Rectangle_"
+                    data-name="&lt;Transparent Rectangle&gt;"
+                    class="cls-1"
+                    width="32"
+                    height="32"
+                  />
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-bold dark:text-white">
+                Business Automation
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400">${workout.description}</p>
+            </div>
+          </div>
+        </div>
         `;
       }
 
