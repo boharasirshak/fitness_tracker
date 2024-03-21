@@ -28,7 +28,7 @@
           Rest Time: <span id="rest-timer">0</span>
         </div>
         <div>Repitions: <span id="repetition-count">0</span></div>
-        <video id="video" class="h-[60%]" autoplay></video>
+        <video id="video" class="h-[60%]" autoplay muted playsinline></video>
       </div>
 
       <div class="flex w-[20%]">
@@ -127,8 +127,6 @@
               video.srcObject = stream;
             })
             .catch(function (err) {
-              alert(err.name)
-              alert(err)
               if (err.name === 'NotAllowedError') {
               alert("Please allow access to camera and microphone to start the workout");
             } else {
