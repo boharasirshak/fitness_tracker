@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.emails import init_smtp
 from app.models.workouts import Workout
+from app.core.utils import insert_default_data
 from app.dependencies.workouts import workout_verify
 
 from app.api.v1.auth import router as auth_router
@@ -33,6 +34,7 @@ async def lifespan(_: FastAPI):
     # asyncio.create_task(drop_tables())
     asyncio.create_task(init_smtp())
     asyncio.create_task(create_tables())
+    asyncio.create_task(insert_default_data())
     yield
 
 
