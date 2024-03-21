@@ -37,6 +37,7 @@ class UserSchema(BaseModel):
     weight: int
     activity_level: ActivityLevel | int
     phone_number: str
+    profile_picture_url: str
 
 
 class UserLoginResponseSchema(BaseModel):
@@ -49,3 +50,6 @@ class UserLoginResponseSchema(BaseModel):
 class UserRegisterResponseSchema(BaseModel):
     message: str
 
+
+class FileUploadResponseSchema(BaseModel):
+    file_id: str
