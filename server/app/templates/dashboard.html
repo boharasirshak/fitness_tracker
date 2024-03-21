@@ -15,6 +15,9 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.0.2/luxon.min.js"></script>
+
   </head>
 
   <body>
@@ -34,7 +37,7 @@
       })();
     </script>
 
-    <main class="flex flex-col w-full h-full">
+    <main class="flex flex-col w-full">
       <nav
         class="top-0 z-50 w-full bg-white border-b border-gray-200 px-3 py-3 lg:px-5 lg:pl-3 flex items-center flex-wrap justify-between mx-auto p-4"
       >
@@ -207,11 +210,11 @@
                 ></div>
               </div>
              <div id="workout-metadata">
-
-             </div>
-            </section>
-          </div>
+            </div>
+          </section>
         </div>
+      </div>
+      <canvas id="workout-chart" class="p-1 mb-5"></canvas>
       </div>
     </main>
 
@@ -227,7 +230,7 @@
         // }
 
         let { res, data } = await getUserWorkouts(accessToken);
-        if (status.status === 401) {
+        if (res.status === 401) {
           window.location.href = "/login";
         }
         workouts = data.workouts;
@@ -257,8 +260,25 @@
       function chooseWorkout(id) {
         let workout = workouts.find((workout) => workout.id === id);
         document.getElementById("workout-name").innerText = workout.name;
-        document.getElementById("workout-description").innerText =
-          workout.exercise.description;
+        document.getElementById("workout-description").innerText = workout.exercise.description;
+        let video = document.getElementById("workout-video");
+
+        clearCanvas();
+        const ctx = document.getElementById('workout-chart').getContext('2d');
+
+        const allLabels = workout.sessions.map(
+          entry => `${formatDateTime(entry.start_time)} - ${formatDateTime(entry.end_time)}`
+        );
+        
+        let labelWidth = 5;
+        if (window.innerWidth > 768) {
+          labelWidth = 20;
+        } else {
+          labelWidth = 5;
+        }
+
+        const labels = allLabels.slice(0, labelWidth);
+        const data = workout.sessions.map(entry => entry.repetitions).slice(0, labelWidth);
 
         document.getElementById("workout-start-container").innerHTML = `
         <a  
@@ -281,7 +301,6 @@
         </a>
         `;
 
-        let video = document.getElementById("workout-video");
         video.innerHTML = `
         <video
           src="../static/videos/${workout.exercise.video_link}"
@@ -293,6 +312,54 @@
           loop
         /> </video>
         `;
+
+        function formatDateTime(dateTimeStr) {
+          const dateTime = luxon.DateTime.fromISO(dateTimeStr);
+          return dateTime.toFormat("h':'mm a");
+        }
+        
+        const chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Repetitions',
+              data: data,
+              pointRadius: data.map(entry => entry === 0 ? 0 : 3),
+              fill: false,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Time vs Repetitions'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Repetitions'
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Exercise Session Time'
+                }
+              }
+            }
+          }
+        });
 
         document.getElementById("workout-metadata").innerHTML = `
         <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
@@ -388,9 +455,50 @@
               </h3>
               <p class="text-gray-500 dark:text-gray-400">${workout.description}</p>
             </div>
+            <label for="timeRange">Range:</label>
+            <select id="timeRange">
+            </select>
           </div>
+          
         </div>
-        `;
+        `;  
+
+        const range = document.getElementById('timeRange');
+        range.innerHTML = '';
+        for (let i = 0; i < allLabels.length; i += labelWidth) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.text = `Before ${allLabels[i]}`;
+          range.appendChild(option);
+        }
+
+        function updateTimeRange(selectedTimeRange) {
+          chart.data.datasets[0].data = workout.sessions.map(
+            entry => entry.repetitions
+          ).slice(selectedTimeRange, selectedTimeRange + labelWidth);
+
+          chart.data.labels = workout.sessions.map(
+            entry => `${formatDateTime(entry.start_time)} - ${formatDateTime(entry.end_time)}`
+          ).slice(selectedTimeRange, selectedTimeRange + labelWidth);
+
+          chart.update();
+        }
+
+        document.getElementById('timeRange').addEventListener('change', function(event) {
+          const selectedTimeRange = event.target.value;
+          updateTimeRange(parseInt(selectedTimeRange));
+        });
+      }
+
+      function clearCanvas() {
+        const existingChart = Chart.getChart('workout-chart');
+        if (existingChart) {
+            existingChart.destroy();
+        }
+
+        const canvas = document.getElementById('workout-chart');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
       }
 
       document.getElementById("logout").addEventListener("click", () => {
