@@ -4,7 +4,6 @@ document.getElementById("form").addEventListener("submit", async (e) => {
   const data = Object.fromEntries(formdata)
 
   if (
-    Number.isNaN(parseInt(data.exercise_id)) ||
     Number.isNaN(parseInt(data.total_time)) ||
     Number.isNaN(parseInt(data.rest_time))
   ) {
@@ -14,7 +13,6 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     return;
   }
 
-  data.exercise_id = parseInt(data.exercise_id)
   data.total_time = parseInt(data.total_time)
   data.rest_time = parseInt(data.rest_time)
 

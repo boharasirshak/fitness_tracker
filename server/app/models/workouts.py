@@ -20,5 +20,5 @@ class Workout(Base):
     rest_time = Column(Integer, nullable=False)
     efficiency = Column(Integer, nullable=False, default=0)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    exercise_id = Column(Integer, ForeignKey("exercises.id"), nullable=False)
+    exercise_id = Column(String, ForeignKey("exercises.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())

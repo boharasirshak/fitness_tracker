@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class ExerciseSchema(BaseModel):
-    id: int
+    id: str
     name: str
     description: str
     video_link: str

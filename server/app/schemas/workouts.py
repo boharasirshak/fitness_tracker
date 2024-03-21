@@ -21,7 +21,7 @@ class DetailedWorkoutSchema(BaseModel):
     total_time: int
     rest_time: int
     user_id: int
-    exercise_id: int
+    exercise_id: str
     efficiency: int
     created_at: datetime
 
@@ -37,7 +37,7 @@ class WorkoutSchema(BaseModel):
     rest_time: int
     efficiency: int
     user_id: int
-    exercise_id: int
+    exercise_id: str
     created_at: datetime
 
 
@@ -50,7 +50,7 @@ class CreateWorkoutSchema(BaseModel):
     description: str
     total_time: int
     rest_time: int
-    exercise_id: int
+    exercise_id: str
 
 
 class CreateWorkoutSessionSchema(BaseModel):
