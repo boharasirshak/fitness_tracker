@@ -1,8 +1,11 @@
 from typing import AsyncGenerator
 
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    create_async_engine,
+    async_sessionmaker
+)
 
 from app.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 
@@ -11,15 +14,11 @@ DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{D
 engine = create_async_engine(
     DATABASE_URL,
     echo=True,
-    pool_size=8,
-    max_overflow=0,
-    pool_recycle=1800,
-    pool_timeout=30,
+    future=True,
     pool_pre_ping=True,
 )
 
-# noinspection PyTypeChecker
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
+SessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
 Base = declarative_base()
 
@@ -35,5 +34,8 @@ async def drop_tables():
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    async with SessionLocal() as session:
-        yield session
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        await db.close()
