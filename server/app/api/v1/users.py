@@ -3,6 +3,9 @@ import os
 import shutil
 import uuid
 
+from PIL import Image
+from io import BytesIO
+
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.sql import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, FileResponse
 from fastapi import APIRouter, Depends, UploadFile, File
 
+from app.core.utils import compress_and_save_image
 from app.dependencies.jwt import jwt_verify
 from app.models.users import User
 from app.core.database import get_db
@@ -36,7 +40,7 @@ os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
     }
 )
 async def get_user_data(
-    user: User = Depends(jwt_verify)
+        user: User = Depends(jwt_verify)
 ):
     return UserSchema(
         email=user.email,
@@ -51,7 +55,8 @@ async def get_user_data(
 
 
 @router.put(
-    "", # You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
+    "",
+    # You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
     response_description="Обновляет данные пользователя",
     responses={
         200: {"model": UserSchema, "description": "Все обновленные данные пользователя"},
@@ -104,7 +109,7 @@ async def change_user_data(
     }
 )
 async def get_user_picture(
-    user: User = Depends(jwt_verify)
+        user: User = Depends(jwt_verify)
 ):
     if not user.profile_picture_url or not os.path.exists(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)):
         return JSONResponse(
@@ -141,9 +146,9 @@ async def get_user_picture(
     }
 )
 async def change_user_picture(
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(jwt_verify),
-    photo: UploadFile = File(...)
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(jwt_verify),
+        photo: UploadFile = File(...)
 ):
     extension = photo.filename.split(".")[-1]
     if extension not in ["jpg", "jpeg", "png"]:
@@ -157,8 +162,7 @@ async def change_user_picture(
     filename = f"{uuid.uuid4()}.{extension}"
     file_path = os.path.join(UPLOAD_DIRECTORY, filename)
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(photo.file, buffer)
+    await compress_and_save_image(photo, file_path)
 
     if user.profile_picture_url and os.path.exists(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)):
         os.remove(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url))
