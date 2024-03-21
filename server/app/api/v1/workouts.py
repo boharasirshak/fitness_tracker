@@ -278,8 +278,9 @@ async def add_new_workout_session(
     new_workout_session = WorkoutSession(
         user_id=user.id,
         workout_id=data.workout_id,
+        start_time=data.start_time,
         end_time=data.end_time,
-        repetitions=data.repetitions
+        repetitions=data.repetitions,
     )
 
     db.add(new_workout_session)
