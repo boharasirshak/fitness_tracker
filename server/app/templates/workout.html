@@ -142,8 +142,8 @@
         if (message.type === "image") {
           receivedImg.src = `data:image/jpeg;base64,${message.data}`;
         } else if (message.type === "count") {
-          repetitionsCountElement.innerText = message.data;
           repetitions = parseInt(message.data);
+          repetitionsCountElement.innerText = repetitions;
         }
       };
 
@@ -175,6 +175,7 @@
         console.log("Resting complete..");
         startTime = Date.now();
         restTimer = workout.rest_time;
+        repetitions = 0;
       }
 
       video.addEventListener("play", () => {
@@ -229,8 +230,12 @@
           canvas.toBlob(
             (blob) => {
               blob.arrayBuffer().then((buffer) => {
-                const uint8View = new Uint8Array(buffer);
-                ws.send(uint8View);
+                const b64Data = bufferToBase64(buffer);
+                const data = JSON.stringify({
+                  type: workout.exercise.id,
+                  data: b64Data
+                });
+                ws.send(data);
               });
             },
             "image/jpeg",
@@ -242,6 +247,16 @@
         sendFrame();
         setInterval(updateTimer, 1000);
       });
+
+      function bufferToBase64(buffer) {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
