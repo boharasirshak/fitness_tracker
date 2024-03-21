@@ -7,8 +7,8 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.sql import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from starlette.responses import JSONResponse, FileResponse
 from fastapi import APIRouter, Depends, UploadFile, File
-from starlette.responses import JSONResponse
 
 from app.dependencies.jwt import jwt_verify
 from app.models.users import User
@@ -86,7 +86,46 @@ async def change_user_data(
         height=new_user.height,
         weight=new_user.weight,
         activity_level=new_user.activity_level,
-        phone_number=new_user.phone_number
+        phone_number=new_user.phone_number,
+        profile_picture_url=new_user.profile_picture_url
+    )
+
+
+@router.get(
+    "/photo",
+    response_description="Получает фото пользователя",
+    responses={
+        200: {"model": FileUploadResponseSchema, "description": "Successfully uploaded and saved a file"},
+        404: {"model": ErrorResponseSchema,
+              "description": "User does not have profile picture or User does not exists"},
+        401: {"model": ErrorResponseSchema,
+              "description": "Токен недействителен, срок действия истек или не предоставлен"},
+    }
+)
+async def get_user_picture(
+    user: User = Depends(jwt_verify)
+):
+    if not user.profile_picture_url or not os.path.exists(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)):
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({
+                "detail": "User profile picture does not exists!"
+            })
+        )
+
+    file_path = os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)
+
+    content_type = "application/octet-stream"
+    if user.profile_picture_url.endswith(".jpg") or user.profile_picture_url.endswith(".jpeg"):
+        content_type = "image/jpeg"
+    elif user.profile_picture_url.endswith(".png"):
+        content_type = "image/png"
+    elif user.profile_picture_url.endswith(".gif"):
+        content_type = "image/gif"
+
+    return FileResponse(
+        file_path,
+        media_type=content_type
     )
 
 
