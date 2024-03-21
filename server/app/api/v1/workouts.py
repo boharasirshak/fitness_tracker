@@ -28,7 +28,9 @@ router = APIRouter(prefix="/workouts", tags=["Тренировки"])
 
 
 @router.get(
-    "",# You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
+    "",
+    # You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and
+    # NGINX redrections are clashing with each other.
     response_description="Получает все тренировки, выполненные пользователями вместе с каждой сессией",
     responses={
         200: {"model": AllWorkoutsSchema, "description": "Все данные пользователя"},
@@ -38,8 +40,8 @@ router = APIRouter(prefix="/workouts", tags=["Тренировки"])
     }
 )
 async def get_all_users_workouts(
-    user: User = Depends(jwt_verify),
-    db: AsyncSession = Depends(get_db)
+        user: User = Depends(jwt_verify),
+        db: AsyncSession = Depends(get_db)
 ):
     all_workouts: list[DetailedWorkoutSchema] = []
 
@@ -109,7 +111,7 @@ async def get_all_users_workouts(
 
 
 @router.get(
-    "/{workout_id}", 
+    "/{workout_id}",
     response_description="Получите одну тренировку по ее идентификатору",
     responses={
         200: {"model": DetailedWorkoutSchema, "description": "Подробная схема тренировки"},
@@ -119,9 +121,9 @@ async def get_all_users_workouts(
     }
 )
 async def get_single_workout(
-    workout_id: int, 
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(jwt_verify)
+        workout_id: int,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(jwt_verify)
 ):
     # noinspection PyTypeChecker
     query = select(Workout).where(and_(
@@ -190,8 +192,10 @@ async def get_single_workout(
         exercise=workout_exercise
     )
 
+
 @router.post(
-    "",# You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
+    "",  # You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and
+    # NGINX redrections are clashing with each other.
     response_description="Создайте новую тренировку для пользователя",
     responses={
         200: {"model": CreateWorkoutResponseSchema, "description": "Создана новая тренировка"},
@@ -201,9 +205,9 @@ async def get_single_workout(
     }
 )
 async def create_new_workout(
-    data: CreateWorkoutSchema,
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(jwt_verify)
+        data: CreateWorkoutSchema,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(jwt_verify)
 ):
     # noinspection PyTypeChecker
     query = select(Exercise).where(Exercise.id == data.exercise_id)
@@ -258,9 +262,9 @@ async def create_new_workout(
     }
 )
 async def add_new_workout_session(
-    data: CreateWorkoutSessionSchema,
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(jwt_verify)
+        data: CreateWorkoutSessionSchema,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(jwt_verify)
 ):
     # noinspection PyTypeChecker
     query = select(Workout).where(Workout.id == data.workout_id)

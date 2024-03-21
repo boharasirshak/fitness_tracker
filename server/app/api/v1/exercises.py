@@ -17,7 +17,8 @@ router = APIRouter(prefix="/exercises", tags=["Упражнения"])
 
 
 @router.get(
-    "",# You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and NGINX redrections are clashing with each other.
+    "",  # You might be temped to add a '/' here, but don't do it because it redirects traffics. Apparently FastAPI and
+    # NGINX redrections are clashing with each other.
     response_description="Выполните все упражнения",
     responses={
         200: {"model": AllExercisesResponse, "description": "Все упражнения"},

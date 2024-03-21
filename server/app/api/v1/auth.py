@@ -72,7 +72,8 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
 
 @router.post(
     "/register",
-    response_description="Зарегистрируйте пользователя по электронной почте и отправьте временный пароль на это электронное письмо",
+    response_description="Зарегистрируйте пользователя по электронной почте и отправьте временный пароль на это "
+                         "электронное письмо",
     responses={
         200: {"model": UserRegisterResponseSchema,
               "description": "Регистрация прошла успешно, пароль отправлен на электронную почту"},
