@@ -127,6 +127,8 @@
               video.srcObject = stream;
             })
             .catch(function (err) {
+              alert(err.name)
+              alert(err)
               if (err.name === 'NotAllowedError') {
               alert("Please allow access to camera and microphone to start the workout");
             } else {
