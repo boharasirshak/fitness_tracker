@@ -14,6 +14,6 @@ class WorkoutSession(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     workout_id = Column(Integer, ForeignKey('workouts.id'), nullable=False)
-    end_time = Column(DateTime(timezone=True), nullable=True)
     repetitions = Column(Integer, nullable=True, default=0)
-    start_time = Column(DateTime(timezone=True), default=func.now())
+    end_time = Column(DateTime(timezone=True), nullable=False)
+    start_time = Column(DateTime(timezone=True), nullable=False)

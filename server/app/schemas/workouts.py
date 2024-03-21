@@ -55,6 +55,7 @@ class CreateWorkoutSchema(BaseModel):
 
 class CreateWorkoutSessionSchema(BaseModel):
     workout_id: int
+    start_time: datetime
     end_time: datetime
     repetitions: int
 
