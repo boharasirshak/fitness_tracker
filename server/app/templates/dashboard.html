@@ -323,7 +323,7 @@
           data: {
             labels: labels,
             datasets: [{
-              label: 'Repetitions',
+              label: 'Повторения',
               data: data,
               pointRadius: data.map(entry => entry === 0 ? 0 : 3),
               fill: false,
@@ -340,7 +340,7 @@
               },
               title: {
                 display: true,
-                text: 'Time vs Repetitions'
+                text: 'Дата / Повторы'
               }
             },
             scales: {
@@ -348,13 +348,13 @@
                 beginAtZero: true,
                 title: {
                   display: true,
-                  text: 'Repetitions'
+                  text: 'Повторения'
                 }
               },
               x: {
                 title: {
                   display: true,
-                  text: 'Exercise Session Time'
+                  text: 'Время тренировки'
                 }
               }
             }
@@ -455,7 +455,7 @@
               </h3>
               <p class="text-gray-500 dark:text-gray-400">${workout.description}</p>
             </div>
-            <label for="timeRange">Range:</label>
+            <label for="timeRange">Диапазон:</label>
             <select id="timeRange">
             </select>
           </div>
@@ -468,7 +468,7 @@
         for (let i = 0; i < allLabels.length; i += labelWidth) {
           const option = document.createElement('option');
           option.value = i;
-          option.text = `Before ${allLabels[i]}`;
+          option.text = `До ${allLabels[i]}`;
           range.appendChild(option);
         }
 
