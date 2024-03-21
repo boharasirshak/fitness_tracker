@@ -127,8 +127,12 @@
               video.srcObject = stream;
             })
             .catch(function (err) {
-              console.log("Что-то пошло не так!", err);
-            });
+              if (err.name === 'NotAllowedError') {
+              alert("Please allow access to camera and microphone to start the workout");
+            } else {
+              console.error("An error occurred while accessing camera and microphone:", err);
+            }
+          });
         }
       })();
 
