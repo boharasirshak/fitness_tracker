@@ -94,8 +94,9 @@ async def change_user_data(
 @router.get(
     "/photo",
     response_description="Получает фото пользователя",
+    response_class=FileResponse,
     responses={
-        200: {"model": FileUploadResponseSchema, "description": "Successfully uploaded and saved a file"},
+        200: {"description": "Successfully uploaded and saved a file"},
         404: {"model": ErrorResponseSchema,
               "description": "User does not have profile picture or User does not exists"},
         401: {"model": ErrorResponseSchema,
