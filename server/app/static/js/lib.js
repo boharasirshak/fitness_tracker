@@ -46,7 +46,7 @@ async function authFlow(success, failure) {
       if (access_token && refresh_token) {
         localStorage.setItem("access_token", access_token);
         localStorage.setItem("refresh_token", refresh_token);
-        if (redirect) {
+        if (success) {
           window.location.href = success;
         }
       } else {
