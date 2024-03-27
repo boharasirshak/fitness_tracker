@@ -175,6 +175,9 @@
               onclick="chooseWorkout(${workout.id})"
               class="flex flex-col item-center content-center content-fit flex-flow w-full p-6 bg-white border border-gray-200 rounded-lg shadow transition-all	 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-all	"
             >
+            <div class="work-btn-wrapper">
+              <i class="fa-solid fa-dumbbell"></i>
+            <div class="work-content">
               <h4
                 class="mb-2 text-2xl font-sm tracking-tight text-gray-900 dark:text-white text-gray-900	"
               >
@@ -183,6 +186,8 @@
               <p class="text-l text-gray-700 dark:text-gray-400">${String(
           workout.description
         ).substring(0, 40)}...</p>
+        </div>
+        </div>
             </button>
           `;
         workoutTag.appendChild(li);
