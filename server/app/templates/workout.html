@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Workout | Fitness Tracker</title>
-    <link
-      rel="shortcut icon"
-      href="../../static/favicon.ico"
-      type="image/x-icon"
-    />
-    <link href="../../static/css/main.css" rel="stylesheet" />
-    <script src="../../static/js/lib.js"></script>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <main class="flex flex-row">
-      <div
-        class="flex flex-col w-[70%] border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700"
-      >
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout | Fitness Tracker</title>
+  <link rel="shortcut icon" href="../../static/favicon.ico" type="image/x-icon" />
+
+  <script src="../../static/js/lib.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="../../static/css/main.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="mob-nav-link">
+    <ul class="mob-nav-list">
+      <li><a href="/dashboard"><i class="fa-solid fa-chart-simple"></i> Панель приборов</a></li>
+      <li><a href="/workouts/new"><i class="fa-solid fa-dumbbell"></i> Новая тренировка
+        </a></li>
+      <li><a href="/profile"><i class="fa-solid fa-user"></i>Профиль</a></li>
+    </ul>
+  </div>
+  <div class="back-wraps">
+    <a href="/dashboard" class="back-to"><i class="fa-solid fa-angle-left"></i>Back</a>
+  </div>
+  <main class="grid grid-cols-3 gap-16 mar-100 profile-card work-grid">
+    <div class=" flex flex-col w-[70%] gap-6 rec-video">
+
+      <div class="flex flex-col gap-2 ">
         <div>Workout Name: <span id="workout-name"></span></div>
         <div>Exercise Name: <span id="exercise-name"></span></div>
         <div>Timer: <span id="timer">0:00</span></div>
@@ -28,237 +36,227 @@
           Rest Time: <span id="rest-timer">0</span>
         </div>
         <div>Repitions: <span id="repetition-count">0</span></div>
-        <video id="video" class="h-[60%]" autoplay muted playsinline></video>
       </div>
-
-      <div class="flex w-[20%]">
-        <video
-          id="helper-video"
-          src=""
-          class=""
-          loop
-          autoplay
-          controls
-          muted
-          playsinline
-        ></video>
+      <video id="video" class="h-100 " autoplay muted playsinline></video>
+      <div class="mt-8">
+        <button class="primary-btn"><i class="fa-solid fa-arrow-down"></i>Download</button>
       </div>
+    </div>
 
-      <img
-        id="received-img"
-        src=""
-        alt="Received Image"
-        style="display: block; width: 100%; max-width: 640px"
-      />
-    </main>
+    <div class="flex w-[20%] video-card">
+      <video id="helper-video" src="" class="" loop autoplay controls muted playsinline></video>
+    </div>
 
-    <script>
-      let workout;
-      let startTime;
-      let endTime;
-      let seconds = 0;
-      let minutes = 0;
-      let isResting = false;
-      let restTimer = 0;
-      let repetitions = 0;
-      const fps = 20;
-      const interval = 1000 / fps;
-      const accessToken = localStorage.getItem("access_token");
-      const workoutId = window.location.pathname.split("/").pop();
-      const video = document.getElementById("video");
-      const receivedImg = document.getElementById("received-img");
-      const repetitionsCountElement =
-        document.getElementById("repetition-count");
-      const restTimerElement = document.getElementById("rest-timer");
-      const timerElement = document.getElementById("timer");
-      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-      const ws = new WebSocket(
-        `${protocol}://${window.location.host}/api/v1/ws`
-      );
+    <img id="received-img" src="" alt="Received Image" style="display: block; width: 100%; max-width: 640px" />
+  </main>
 
-      if (!accessToken) {
-        console.error("Access token not found");
-        alert("Access token not found");
-        window.location.href = "/login";
+  <script>
+    let workout;
+    let startTime;
+    let endTime;
+    let seconds = 0;
+    let minutes = 0;
+    let isResting = false;
+    let restTimer = 0;
+    let repetitions = 0;
+    const fps = 20;
+    const interval = 1000 / fps;
+    const accessToken = localStorage.getItem("access_token");
+    const workoutId = window.location.pathname.split("/").pop();
+    const video = document.getElementById("video");
+    const receivedImg = document.getElementById("received-img");
+    const repetitionsCountElement =
+      document.getElementById("repetition-count");
+    const restTimerElement = document.getElementById("rest-timer");
+    const timerElement = document.getElementById("timer");
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws = new WebSocket(
+      `${protocol}://${window.location.host}/api/v1/ws`
+    );
+
+    if (!accessToken) {
+      console.error("Access token not found");
+      alert("Access token not found");
+      window.location.href = "/login";
+    }
+
+    if (Number.isNaN(parseInt(workoutId))) {
+      console.error("Invalid workout id");
+      alert("Invalid workout id");
+      window.location.href = "/dashboard";
+    }
+
+    function updateTimer() {
+      if (isResting) {
+        return;
       }
-
-      if (Number.isNaN(parseInt(workoutId))) {
-        console.error("Invalid workout id");
-        alert("Invalid workout id");
-        window.location.href = "/dashboard";
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
       }
-
-      function updateTimer() {
-        if (isResting) {
-          return;
-        }
-        seconds++;
-        if (seconds === 60) {
-          seconds = 0;
-          minutes++;
-        }
-        timerElement.innerText = `${minutes}:${
-          seconds < 10 ? "0" : ""
+      timerElement.innerText = `${minutes}:${seconds < 10 ? "0" : ""
         }${seconds}`;
+    }
+
+    (async () => {
+      let { res, data } = await getWorkoutData(accessToken, workoutId);
+      if (res.status !== 200) {
+        console.error("Failed to get workout data");
+        alert((data && data.detail) || "Failed to get workout data");
+        window.location.href = "/dashboard";
+        return;
       }
+      workout = data;
 
-      (async () => {
-        let { res, data } = await getWorkoutData(accessToken, workoutId);
-        if (res.status !== 200) {
-          console.error("Failed to get workout data");
-          alert((data && data.detail) || "Failed to get workout data");
-          window.location.href = "/dashboard";
-          return;
-        }
-        workout = data;
+      document.getElementById("workout-name").innerText = data.name;
+      document.getElementById("exercise-name").innerText = data.exercise.name;
+      document.getElementById(
+        "helper-video"
+      ).src = `../../static/videos/${data.exercise.video_link}`;
+      restTimer = data.rest_time;
 
-        document.getElementById("workout-name").innerText = data.name;
-        document.getElementById("exercise-name").innerText = data.exercise.name;
-        document.getElementById(
-          "helper-video"
-        ).src = `../../static/videos/${data.exercise.video_link}`;
-        restTimer = data.rest_time;
-
-        // start the video stream when we have the workout data
-        if (navigator.mediaDevices.getUserMedia) {
-          navigator.mediaDevices
-            .getUserMedia({ video: true })
-            .then(function (stream) {
-              video.srcObject = stream;
-            })
-            .catch(function (err) {
-              if (err.name === 'NotAllowedError') {
+      // start the video stream when we have the workout data
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (err) {
+            if (err.name === 'NotAllowedError') {
               alert("Please allow access to camera and microphone to start the workout");
             } else {
               console.error("An error occurred while accessing camera and microphone:", err);
             }
           });
-        }
-      })();
+      }
+    })();
 
-      ws.onmessage = function (event) {
-        const message = JSON.parse(event.data);
+    ws.onmessage = function (event) {
+      const message = JSON.parse(event.data);
 
-        if (message.type === "image") {
-          receivedImg.src = `data:image/jpeg;base64,${message.data}`;
-        } else if (message.type === "count") {
-          repetitions = parseInt(message.data);
-          repetitionsCountElement.innerText = repetitions;
+      if (message.type === "image") {
+        receivedImg.src = `data:image/jpeg;base64,${message.data}`;
+      } else if (message.type === "count") {
+        repetitions = parseInt(message.data);
+        repetitionsCountElement.innerText = repetitions;
+      }
+    };
+
+    function startRestPeriod() {
+      isResting = true;
+      document
+        .getElementById("rest-timer-container")
+        .removeAttribute("hidden");
+      updateRestTimer();
+    }
+
+    function updateRestTimer() {
+      restTimerElement.innerText = `${restTimer}s`;
+      if (restTimer > 0) {
+        setTimeout(() => {
+          restTimer--;
+          updateRestTimer();
+        }, 1000);
+      } else {
+        endRestPeriod();
+      }
+    }
+
+    function endRestPeriod() {
+      isResting = false;
+      document
+        .getElementById("rest-timer-container")
+        .setAttribute("hidden", "");
+      console.log("Resting complete..");
+      startTime = Date.now();
+      restTimer = workout.rest_time;
+      repetitions = 0;
+    }
+
+    video.addEventListener("play", () => {
+      startTime = Date.now();
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      const sendFrame = () => {
+        if (video.paused || video.ended) {
+          console.log("Video paused, ended.");
+          return;
         }
+
+        let timeSpent = (Date.now() - startTime) / 1000;
+        if (timeSpent >= workout.total_time && !isResting) {
+          endTime = Date.now();
+          isResting = true;
+          startRestPeriod();
+
+          fetch(`/api/v1/workouts/sessions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              workout_id: workout.id,
+              start_time: (new Date(startTime)).toISOString(),
+              end_time: (new Date(endTime)).toISOString(),
+              repetitions: repetitions,
+            }),
+          })
+            .then((res) => {
+              if (res.status !== 200) {
+                // handle token expiration
+              }
+            })
+            .catch((err) => {
+              console.error("Failed to complete workout", err);
+              alert("Failed to complete workout");
+            });
+        }
+
+        const aspectRatio = video.videoWidth / video.videoHeight;
+        let targetHeight = 120;
+        let targetWidth = aspectRatio * targetHeight;
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        context.drawImage(video, 0, 0, targetWidth, targetHeight);
+        canvas.toBlob(
+          (blob) => {
+            blob.arrayBuffer().then((buffer) => {
+              const b64Data = bufferToBase64(buffer);
+              const data = JSON.stringify({
+                type: workout.exercise.id,
+                data: b64Data
+              });
+              ws.send(data);
+            });
+          },
+          "image/jpeg",
+          0.7
+        );
+        setTimeout(sendFrame, interval);
       };
 
-      function startRestPeriod() {
-        isResting = true;
-        document
-          .getElementById("rest-timer-container")
-          .removeAttribute("hidden");
-        updateRestTimer();
+      sendFrame();
+      setInterval(updateTimer, 1000);
+    });
+
+    function bufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
       }
-
-      function updateRestTimer() {
-        restTimerElement.innerText = `${restTimer}s`;
-        if (restTimer > 0) {
-          setTimeout(() => {
-            restTimer--;
-            updateRestTimer();
-          }, 1000);
-        } else {
-          endRestPeriod();
-        }
-      }
-
-      function endRestPeriod() {
-        isResting = false;
-        document
-          .getElementById("rest-timer-container")
-          .setAttribute("hidden", "");
-        console.log("Resting complete..");
-        startTime = Date.now();
-        restTimer = workout.rest_time;
-        repetitions = 0;
-      }
-
-      video.addEventListener("play", () => {
-        startTime = Date.now();
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-
-        const sendFrame = () => {
-          if (video.paused || video.ended) {
-            console.log("Video paused, ended.");
-            return;
-          }
-
-          let timeSpent = (Date.now() - startTime) / 1000;
-          if (timeSpent >= workout.total_time && !isResting) {
-            endTime = Date.now();
-            isResting = true;
-            startRestPeriod();
-
-            fetch(`/api/v1/workouts/sessions`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
-              body: JSON.stringify({
-                workout_id: workout.id,
-                start_time: (new Date(startTime)).toISOString(),
-                end_time: (new Date(endTime)).toISOString(),
-                repetitions: repetitions,
-              }),
-            })
-              .then((res) => {
-                if (res.status !== 200) {
-                  // handle token expiration
-                }
-              })
-              .catch((err) => {
-                console.error("Failed to complete workout", err);
-                alert("Failed to complete workout");
-              });
-          }
-
-          const aspectRatio = video.videoWidth / video.videoHeight;
-          let targetHeight = 120;
-          let targetWidth = aspectRatio * targetHeight;
-
-          canvas.width = targetWidth;
-          canvas.height = targetHeight;
-
-          context.drawImage(video, 0, 0, targetWidth, targetHeight);
-          canvas.toBlob(
-            (blob) => {
-              blob.arrayBuffer().then((buffer) => {
-                const b64Data = bufferToBase64(buffer);
-                const data = JSON.stringify({
-                  type: workout.exercise.id,
-                  data: b64Data
-                });
-                ws.send(data);
-              });
-            },
-            "image/jpeg",
-            0.7
-          );
-          setTimeout(sendFrame, interval);
-        };
-
-        sendFrame();
-        setInterval(updateTimer, 1000);
-      });
-
-      function bufferToBase64(buffer) {
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
+      return window.btoa(binary);
     }
-    </script>
+  </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</body>
+
 </html>

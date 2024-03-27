@@ -1,289 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Панель мониторинга | Фитнес-трекер</title>
-    <link
-      rel="shortcut icon"
-      href="../static/favicon.ico"
-      type="image/x-icon"
-    />
-    <link href="../static/css/main.css" rel="stylesheet" />
-    <script src="../static/js/lib.js"></script>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.0.2/luxon.min.js"></script>
 
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Панель мониторинга | Фитнес-трекер</title>
+  <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon" />
+  <script src="../static/js/lib.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.0.2/luxon.min.js"></script>
+  <link href="../static/css/main.css" rel="stylesheet" />
 
-  <body>
-    <script>
-      (async () => {
-        await authFlow(null, "/login");
+</head>
 
-        let accessToken = localStorage.getItem("access_token");
-        let { res, data } = await getUser(accessToken);
-        if (res.status === 401) {
-          window.location.href = "/login";
-        }
+<body>
+  <script>
+    (async () => {
+      await authFlow(null, "/login");
 
-        if (data.username === "") {
-          window.location.href = "/profile";
-        }
-      })();
-    </script>
+      let accessToken = localStorage.getItem("access_token");
+      let { res, data } = await getUser(accessToken);
+      if (res.status === 401) {
+        window.location.href = "/login";
+      }
 
-    <main class="flex flex-col w-full">
-      <nav
-        class="top-0 z-50 w-full bg-white border-b border-gray-200 px-3 py-3 lg:px-5 lg:pl-3 flex items-center flex-wrap justify-between mx-auto p-4"
-      >
-        <a href="/dashboard" class="flex ms-2 md:me-24">
-          <img
-            src="https://em-content.zobj.net/source/apple/76/flexed-biceps_1f4aa.png"
-            class="h-8 me-3"
-            alt="Логотип"
-          />
-          <span
-            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
-            >Фитнес-трекер
-          </span>
-        </a>
+      if (data.username === "") {
+        window.location.href = "/profile";
+      }
+    })();
+  </script>
 
-        <!-- Sidebar toggle -->
-        <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          <button
-            type="button"
-            id="logout"
-            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-          >
-            Выход
-          </button>
-          <button
-            data-collapse-toggle="navbar-sticky"
-            type="button"
-            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            aria-controls="navbar-sticky"
-            aria-expanded="false"
-          >
-            <span class="sr-only">Открыть главное меню</span>
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          </button>
-        </div>
+  <main class="flex flex-col w-full">
+    <nav
+      class="top-0 z-50 w-full bg-white border-b border-gray-200 px-3 py-3 lg:px-5 lg:pl-3 flex items-center flex-wrap justify-between mx-auto p-4">
+      <a href="/dashboard" class="flex ms-2 md:me-24">
+        <img src="https://em-content.zobj.net/source/apple/76/flexed-biceps_1f4aa.png" class="h-8 me-3" alt="Логотип" />
+        <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Фитнес-трекер
+        </span>
+      </a>
 
-        <div
-          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-          id="navbar-sticky"
-        >
-          <ul
-            class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
-          >
-            <li>
-              <a
-                href="#"
-                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                aria-current="page"
-                >Приборная панель</a
-              >
-            </li>
-            <li>
-              <a
-                href="/profile"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >Профиль</a
-              >
-            </li>
+      <!-- Sidebar toggle -->
+      <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <button type="button" id="logout" class="primary-btn red">
+          Выход
+        </button>
+        <button data-collapse-toggle="navbar-sticky" type="button"
+          class=" mb-none inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          aria-controls="navbar-sticky" aria-expanded="false">
+          <span class="sr-only">Открыть главное меню</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M1 1h15M1 7h15M1 13h15" />
+          </svg>
+        </button>
+      </div>
 
-            <li>
-              <a
-                href="/workouts/new"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >Новая тренировка</a
-              >
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <div class=" mb-none items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+        <ul
+          class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <li>
+            <a href="#"
+              class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+              aria-current="page">Приборная панель</a>
+          </li>
+          <li>
+            <a href="/profile"
+              class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Профиль</a>
+          </li>
 
-      <section class="flex w-full flex-col justify-between">
-        <!-- Aside -->
-        <div class="rtl:justify-end">
-          <button
-            data-drawer-target="logo-sidebar"
-            data-drawer-toggle="logo-sidebar"
-            aria-controls="logo-sidebar"
-            type="button"
-            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          >
-            <span class="sr-only">Открыть боковую панель</span>
-            <svg
-              class="w-6 h-6"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-              ></path>
-            </svg>
-          </button>
-        </div>
+          <li>
+            <a href="/workouts/new"
+              class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Новая
+              тренировка</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="mob-nav-link">
+      <ul class="mob-nav-list">
+        <li><a href="/dashboard"><i class="fa-solid fa-chart-simple"></i> Панель приборов</a></li>
+        <li><a href="/workouts/new"><i class="fa-solid fa-dumbbell"></i> Новая тренировка
+          </a></li>
+        <li><a href="/profile"><i class="fa-solid fa-user"></i>Профиль</a></li>
+      </ul>
+    </div>
+    <section class="flex w-full flex-col justify-between">
 
-        <aside
-          id="logo-sidebar"
-          class="fixed top-0 left-0 z-40 flex items-center justify-start md:w-[30%] lg:w-[20%] w-[60%] h-screen mt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-          aria-label="Sidebar"
-        >
-          <div
-            class="flex flex-col h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800"
-          >
-            <ul class="space-y-2 font-medium" id="workouts"></ul>
-            <div class="w-full flex flex-col items-center content-center">
-              <a
-                href="/workouts/new"
-                class="flex flex-col items-center w-10 mt-5 rounded-full p-3 bg-blue-600 text-white text-center hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
-              >
-                <svg
-                  class="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </a>
-            </div>
+      <div class="rtl:justify-end">
+        <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+          type="button"
+          class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+          <span class="sr-only">Открыть боковую панель</span>
+          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+              d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
+          </svg>
+        </button>
+      </div>
+
+      <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 pt-20 flex items-center justify-start md:w-[30%] lg:w-[20%]  w-2/5 h-screen mt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 width-20"
+        aria-label="Sidebar">
+        <div class="flex flex-col h-full px-5 pb-4 pt-6 overflow-y-auto bg-white dark:bg-gray-800 w-full">
+          <h2 class=" text-green-600 text-center mb-8">Мои тренировки
+          </h2>
+          <ul class="space-y-2 font-medium" id="workouts"></ul>
+          <div class="w-full flex flex-col items-center content-center">
+            <a href="/workouts/new" class="flex px-8 py-3 items-center  mt-5 primary-btn">
+              <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 18 18">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 1v16M1 9h16" />
+              </svg>
+              Добавлять
+            </a>
           </div>
-        </aside>
-      </section>
+        </div>
+      </aside>
+    </section>
 
-      <div class="flex-grow">
-        <div class="p-4 sm:ml-64">
-          <div
-            class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700"
-          >
-            <section class="bg-white dark:bg-gray-900">
-              <div
-                class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12"
-              >
-                <div class="mr-auto place-self-center lg:col-span-7">
-                  <h1
-                    id="workout-name"
-                    class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white"
-                  ></h1>
-                  <p
-                    id="workout-description"
-                    class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"
-                  ></p>
-                  <div id="workout-start-container"></div>
+    <div class="flex-grow">
+      <div class="p-4 sm:ml-64 ml-100 pd-0">
+        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 ">
+          <section class="bg-white dark:bg-gray-900 card-curve">
+            <div class="workout-grid">
+              <div class="mr-auto">
+                <h1 id="workout-name" class="max-w-2xl mb-4 tracking-tight leading-none">
+                </h1>
+                <p id="workout-description"
+                  class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"></p>
+                <div id="workout-start-container"></div>
+                <div id="workout-metadata">
                 </div>
-                <div
-                  class="lg:mt-0 lg:col-span-5 lg:flex"
-                  id="workout-video"
-                ></div>
               </div>
-             <div id="workout-metadata">
+              <div class="video-card">
+                <div class="lg:mt-0 lg:col-span-5 lg:flex h-100" id="workout-video"></div>
+              </div>
+
             </div>
+
           </section>
         </div>
       </div>
-      <canvas id="workout-chart" class="p-1 mb-5"></canvas>
-      </div>
-    </main>
+      <canvas id="workout-chart" class="p-1 mb-5 mb-m-150"></canvas>
+    </div>
+  </main>
 
-    <script>
-      let workouts;
+  <script>
+    let workouts;
 
-      (async () => {
-        let accessToken = localStorage.getItem("access_token");
-        // for future case
-        // let { res, exercises } = await getAllExercises(accessToken);
-        // if (res.status === 401) {
-        //   window.location.href = "/login";
-        // }
+    (async () => {
+      let accessToken = localStorage.getItem("access_token");
+      // for future case
+      // let { res, exercises } = await getAllExercises(accessToken);
+      // if (res.status === 401) {
+      //   window.location.href = "/login";
+      // }
 
-        let { res, data } = await getUserWorkouts(accessToken);
-        if (res.status === 401) {
-          window.location.href = "/login";
-        }
-        workouts = data.workouts;
+      let { res, data } = await getUserWorkouts(accessToken);
+      if (res.status === 401) {
+        window.location.href = "/login";
+      }
+      workouts = data.workouts;
 
-        const workoutTag = document.getElementById("workouts");
-        data.workouts.forEach((workout) => {
-          const li = document.createElement("li");
-          li.innerHTML = `
+      const workoutTag = document.getElementById("workouts");
+      data.workouts.forEach((workout) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
             <button
               onclick="chooseWorkout(${workout.id})"
-              class="flex flex-col item-center content-center content-fit flex-flow w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+              class="flex flex-col item-center content-center content-fit flex-flow w-full p-6 bg-white border border-gray-200 rounded-lg shadow transition-all	 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-all	"
             >
               <h4
-                class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+                class="mb-2 text-2xl font-sm tracking-tight text-gray-900 dark:text-white text-gray-900	"
               >
                 ${workout.name}
               </h4>
-              <p class="text-xs text-gray-700 dark:text-gray-400">${String(
-                workout.description
-              ).substring(0, 40)}...</p>
+              <p class="text-l text-gray-700 dark:text-gray-400">${String(
+          workout.description
+        ).substring(0, 40)}...</p>
             </button>
           `;
-          workoutTag.appendChild(li);
-        });
-      })();
+        workoutTag.appendChild(li);
+      });
+    })();
 
-      function chooseWorkout(id) {
-        let workout = workouts.find((workout) => workout.id === id);
-        document.getElementById("workout-name").innerText = workout.name;
-        document.getElementById("workout-description").innerText = workout.exercise.description;
-        let video = document.getElementById("workout-video");
+    function chooseWorkout(id) {
+      let workout = workouts.find((workout) => workout.id === id);
+      document.getElementById("workout-name").innerText = workout.name;
+      document.getElementById("workout-description").innerText = workout.exercise.description;
+      let video = document.getElementById("workout-video");
 
-        clearCanvas();
-        const ctx = document.getElementById('workout-chart').getContext('2d');
+      clearCanvas();
+      const ctx = document.getElementById('workout-chart').getContext('2d');
 
-        const allLabels = workout.sessions.map(
-          entry => `${formatDateTime(entry.start_time)} - ${formatDateTime(entry.end_time)}`
-        );
-        
-        let labelWidth = 5;
-        if (window.innerWidth > 768) {
-          labelWidth = 20;
-        } else {
-          labelWidth = 5;
-        }
+      const allLabels = workout.sessions.map(
+        entry => `${formatDateTime(entry.start_time)} - ${formatDateTime(entry.end_time)}`
+      );
 
-        const labels = allLabels.slice(0, labelWidth);
-        const data = workout.sessions.map(entry => entry.repetitions).slice(0, labelWidth);
+      let labelWidth = 5;
+      if (window.innerWidth > 768) {
+        labelWidth = 20;
+      } else {
+        labelWidth = 5;
+      }
 
-        document.getElementById("workout-start-container").innerHTML = `
+      const labels = allLabels.slice(0, labelWidth);
+      const data = workout.sessions.map(entry => entry.repetitions).slice(0, labelWidth);
+
+      document.getElementById("workout-start-container").innerHTML = `
         <a  
           href="/workouts/start/${workout.id}"
-          class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+          class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900 primary-btn"
         >
           Start Exercise
           <svg
@@ -301,7 +233,7 @@
         </a>
         `;
 
-        video.innerHTML = `
+      video.innerHTML = `
         <video
           src="../static/videos/${workout.exercise.video_link}"
           alt="exercise video"
@@ -309,59 +241,59 @@
           autoplay
           controls
           muted 
-          loop
+          loop class="object-cover"
         /> </video>
         `;
 
-        function formatDateTime(dateTimeStr) {
-          const dateTime = luxon.DateTime.fromISO(dateTimeStr);
-          return dateTime.toFormat("h':'mm a");
-        }
-        
-        const chart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Повторения',
-              data: data,
-              pointRadius: data.map(entry => entry === 0 ? 0 : 3),
-              fill: false,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            }]
+      function formatDateTime(dateTimeStr) {
+        const dateTime = luxon.DateTime.fromISO(dateTimeStr);
+        return dateTime.toFormat("h':'mm a");
+      }
+
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Повторения',
+            data: data,
+            pointRadius: data.map(entry => entry === 0 ? 0 : 3),
+            fill: false,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Дата / Повторы'
+            }
           },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
+          scales: {
+            y: {
+              beginAtZero: true,
               title: {
                 display: true,
-                text: 'Дата / Повторы'
+                text: 'Повторения'
               }
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: 'Повторения'
-                }
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: 'Время тренировки'
-                }
+            x: {
+              title: {
+                display: true,
+                text: 'Время тренировки'
               }
             }
           }
-        });
+        }
+      });
 
-        document.getElementById("workout-metadata").innerHTML = `
+      document.getElementById("workout-metadata").innerHTML = `
         <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
           <div
             class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0"
@@ -370,21 +302,7 @@
               <div
                 class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
               >
-                <svg
-                  width="800px"
-                  height="800px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                    stroke="#000000"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 511.863 511.863" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M268.337 129.55c-7.18 0-13 5.82-13 13v25c0 7.18 5.82 13 13 13s13-5.82 13-13v-25c0-7.18-5.82-13-13-13zM268.337 405c-7.18 0-13 5.82-13 13v25c0 7.18 5.82 13 13 13s13-5.82 13-13v-25c0-7.18-5.82-13-13-13zM418.547 279.77h-25c-7.18 0-13 5.82-13 13s5.82 13 13 13h25c7.18 0 13-5.82 13-13s-5.82-13-13-13zM384.166 390.219a12.734 12.734 0 0 0-.419-.419l-17.68-17.68c-4.96-5.191-13.189-5.379-18.38-.419s-5.379 13.189-.419 18.38c.136.143.276.282.419.419l17.68 17.68c4.96 5.191 13.189 5.379 18.38.419s5.379-13.189.419-18.38zM376.381 183.952a12.999 12.999 0 0 0-17.634.048l-69 69c-21.989-11.852-49.423-3.634-61.275 18.355a45.223 45.223 0 0 0-5.415 21.475l.03-.06c-.013 24.991 20.235 45.261 45.226 45.274 24.991.013 45.261-20.235 45.274-45.226a45.254 45.254 0 0 0-5.42-21.498l69-69c4.855-5.289 4.503-13.513-.786-18.368zM268.337 312.02c-10.631 0-19.25-8.619-19.25-19.25.011-10.627 8.623-19.239 19.25-19.25 10.631 0 19.25 8.619 19.25 19.25s-8.619 19.25-19.25 19.25z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path><path d="M473.737 133.45c4.96 5.191 13.189 5.379 18.38.419 5.191-4.96 5.379-13.189.419-18.38a11.825 11.825 0 0 0-.419-.419L446.037 69c-5.191-4.96-13.42-4.772-18.38.419-4.801 5.025-4.801 12.936 0 17.961l13.91 13.91-27.61 27.61a217.36 217.36 0 0 0-132.61-55V26h45.9c7.18 0 13-5.82 13-13s-5.82-13-13-13h-117.81c-7.18 0-13 5.82-13 13s5.82 13 13 13h45.9v47.92a217.614 217.614 0 0 0-142 63.82c-4.96 5.191-4.772 13.42.419 18.38 5.025 4.801 12.937 4.801 17.961 0 75.461-75.461 197.807-75.462 273.268-.002l.002.002c75.34 75.34 75.34 197.93 0 273.27s-197.93 75.34-273.27 0c-5.191-4.96-13.42-4.772-18.38.419-4.801 5.025-4.801 12.936 0 17.961 85.68 85.55 224.488 85.444 310.038-.235 81.871-81.995 85.797-213.543 8.962-300.275l27.62-27.62 13.78 13.81z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path><path d="M147.947 196.4H28.727c-7.18 0-13 5.82-13 13s5.82 13 13 13h119.22c7.18 0 13-5.82 13-13s-5.82-13-13-13zM178.247 279.77H59.017c-7.18 0-13 5.82-13 13s5.82 13 13 13h119.23c7.18 0 13-5.82 13-13s-5.82-13-13-13zM147.947 363.13H28.727c-7.18 0-13 5.82-13 13s5.82 13 13 13h119.22c7.18 0 13-5.82 13-13s-5.82-13-13-13z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path></g></svg>
               </div>
               <h3 class="mb-2 text-xl font-bold dark:text-white">
                 Общее время
@@ -395,21 +313,8 @@
               <div
                 class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
               >
-                <svg
-                  width="800px"
-                  height="800px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.06152 12C5.55362 8.05369 8.92001 5 12.9996 5C17.4179 5 20.9996 8.58172 20.9996 13C20.9996 17.4183 17.4179 21 12.9996 21H8M13 13V9M11 3H15M3 15H8M5 18H10"
-                    stroke="#000000"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M56.344 47.894a1.002 1.002 0 0 0-1.062-.225 6.638 6.638 0 0 1-2.376.431 6.756 6.756 0 0 1-6.748-6.749 6.655 6.655 0 0 1 .431-2.375 1.007 1.007 0 0 0-1.285-1.293c-9.006 3.519-6.61 16.816 3.083 16.937a8.78 8.78 0 0 0 8.188-5.666 1.001 1.001 0 0 0-.231-1.06zm-7.957 4.726c-6.323.063-9.157-8.189-4.196-12.034q-.034.38-.033.765a8.759 8.759 0 0 0 8.748 8.75c.257 0 .513-.012.766-.034a6.784 6.784 0 0 1-5.285 2.553z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path><path d="M54.423 36.508c4.68-15.975-8.061-32.754-24.732-32.505a25.7 25.7 0 0 0-25.67 25.67c-.246 16.67 16.528 29.411 32.506 24.732A12.871 12.871 0 0 0 47.138 60c12.651-.049 17.588-16.44 7.285-23.492zM29.692 53.344c-31.399-1.298-31.398-46.045 0-47.342a23.638 23.638 0 0 1 22.936 29.484A12.85 12.85 0 0 0 35.504 52.61a23.68 23.68 0 0 1-5.812.734zM47.138 58a10.892 10.892 0 0 1-10.88-10.88c.597-14.434 21.165-14.43 21.76 0A10.892 10.892 0 0 1 47.139 58z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path><path d="M29.69 11.182a1 1 0 0 0 1-1v-2a1 1 0 1 0-2 0v2a1 1 0 0 0 1 1zM15.909 16.89a1.007 1.007 0 0 0 .707-1.707l-1.415-1.414a1 1 0 0 0-1.414 1.415c.547.46 1.51 1.796 2.122 1.707zM10.2 28.673h-2a1 1 0 1 0 0 2h2a1 1 0 0 0 0-2zM15.202 42.747l-1.415 1.414a1.007 1.007 0 0 0 .707 1.708c.607.093 1.583-1.254 2.122-1.707a1 1 0 0 0-1.414-1.415zM29.69 48.164a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-2a1 1 0 0 0-1-1zM49.181 30.673h2a1 1 0 1 0 0-2h-2a1 1 0 0 0 0 2zM43.472 16.89c.608.093 1.583-1.253 2.122-1.706a1 1 0 0 0-1.414-1.415l-1.415 1.414a1.007 1.007 0 0 0 .707 1.708zM30.692 26.336V15.453a1 1 0 0 0-2 0v10.883a3.49 3.49 0 0 0-2.338 2.337H18.47a1 1 0 0 0 0 2h7.883a3.49 3.49 0 1 0 4.338-4.337zm-1.001 4.837a1.5 1.5 0 0 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path></g></svg>
+               
               </div>
               <h3 class="mb-2 text-xl font-bold dark:text-white">
                 Таймер отдыха
@@ -420,35 +325,8 @@
               <div
                 class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900"
               >
-                <svg
-                  fill="#000000"
-                  width="800px"
-                  height="800px"
-                  viewBox="0 0 32 32"
-                  id="icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <style>
-                      .cls-1 {
-                        fill: none;
-                      }
-                    </style>
-                  </defs>
-                  <path
-                    d="M25,12H20v2h5a1.0008,1.0008,0,0,1,1,1v2H22a3.0033,3.0033,0,0,0-3,3v1a3.0033,3.0033,0,0,0,3,3h6V15A3.0033,3.0033,0,0,0,25,12ZM22,22a1.0008,1.0008,0,0,1-1-1V20a1.0008,1.0008,0,0,1,1-1h4v3Z"
-                  />
-                  <path
-                    d="M16,24h2L12,7H10L4,24H6l1.6936-5h6.6135ZM8.3711,17l2.4966-7.3711.2668.0005L13.63,17Z"
-                  />
-                  <rect
-                    id="_Transparent_Rectangle_"
-                    data-name="&lt;Transparent Rectangle&gt;"
-                    class="cls-1"
-                    width="32"
-                    height="32"
-                  />
-                </svg>
+              
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" x="0" y="0" viewBox="0 0 24 24" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M22.5 6h-21C.673 6 0 5.327 0 4.5v-3C0 .673.673 0 1.5 0h21c.827 0 1.5.673 1.5 1.5v3c0 .827-.673 1.5-1.5 1.5zm-21-5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h21a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM21 15c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3zm0-5c-1.103 0-2 .897-2 2s.897 2 2 2 2-.897 2-2-.897-2-2-2zM21 24c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3zm0-5c-1.103 0-2 .897-2 2s.897 2 2 2 2-.897 2-2-.897-2-2-2zM15.5 11H.5a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1zM15.5 14H.5a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1zM15.5 20H.5a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1zM15.5 23H.5a.5.5 0 0 1 0-1h15a.5.5 0 0 1 0 1z" fill="#ff4242" opacity="1" data-original="#000000" class=""></path></g></svg>
               </div>
               <h3 class="mb-2 text-xl font-bold dark:text-white">
                 Oписание
@@ -461,57 +339,58 @@
           </div>
           
         </div>
-        `;  
+        `;
 
-        const range = document.getElementById('timeRange');
-        range.innerHTML = '';
-        for (let i = 0; i < allLabels.length; i += labelWidth) {
-          const option = document.createElement('option');
-          option.value = i;
-          option.text = `До ${allLabels[i]}`;
-          range.appendChild(option);
-        }
-
-        function updateTimeRange(selectedTimeRange) {
-          chart.data.datasets[0].data = workout.sessions.map(
-            entry => entry.repetitions
-          ).slice(selectedTimeRange, selectedTimeRange + labelWidth);
-
-          chart.data.labels = workout.sessions.map(
-            entry => `${formatDateTime(entry.start_time)} - ${formatDateTime(entry.end_time)}`
-          ).slice(selectedTimeRange, selectedTimeRange + labelWidth);
-
-          chart.update();
-        }
-
-        document.getElementById('timeRange').addEventListener('change', function(event) {
-          const selectedTimeRange = event.target.value;
-          updateTimeRange(parseInt(selectedTimeRange));
-        });
+      const range = document.getElementById('timeRange');
+      range.innerHTML = '';
+      for (let i = 0; i < allLabels.length; i += labelWidth) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = `До ${allLabels[i]}`;
+        range.appendChild(option);
       }
 
-      function clearCanvas() {
-        const existingChart = Chart.getChart('workout-chart');
-        if (existingChart) {
-            existingChart.destroy();
-        }
+      function updateTimeRange(selectedTimeRange) {
+        chart.data.datasets[0].data = workout.sessions.map(
+          entry => entry.repetitions
+        ).slice(selectedTimeRange, selectedTimeRange + labelWidth);
 
-        const canvas = document.getElementById('workout-chart');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        chart.data.labels = workout.sessions.map(
+          entry => `${formatDateTime(entry.start_time)} - ${formatDateTime(entry.end_time)}`
+        ).slice(selectedTimeRange, selectedTimeRange + labelWidth);
+
+        chart.update();
       }
 
-      document.getElementById("logout").addEventListener("click", () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        window.location.href = "/login";
+      document.getElementById('timeRange').addEventListener('change', function (event) {
+        const selectedTimeRange = event.target.value;
+        updateTimeRange(parseInt(selectedTimeRange));
       });
+    }
 
-      function closeToast(id) {
-        document.getElementById(id).style.display = "none";
+    function clearCanvas() {
+      const existingChart = Chart.getChart('workout-chart');
+      if (existingChart) {
+        existingChart.destroy();
       }
-    </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-  </body>
+      const canvas = document.getElementById('workout-chart');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+
+    document.getElementById("logout").addEventListener("click", () => {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      window.location.href = "/login";
+    });
+
+    function closeToast(id) {
+      document.getElementById(id).style.display = "none";
+    }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</body>
+
 </html>
