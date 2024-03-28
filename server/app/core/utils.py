@@ -1,15 +1,31 @@
+import os
 import string
 import random
 from io import BytesIO
 
 from PIL import Image
-from fastapi import UploadFile
 from sqlalchemy.sql import select
+from fastapi import UploadFile
+from fastapi.responses import FileResponse
+from starlette.background import BackgroundTask
 
 from app.core.database import SessionLocal
-from app.models.users import User
 from app.models.exercises import Exercise
-from app.models.workouts import Workout
+
+
+class TempFileResponse(FileResponse):
+    def __init__(self, path: str, filename: str, *args, **kwargs):
+        super().__init__(path, *args, **kwargs)
+        self.temp_file_path = path
+        self.background = BackgroundTask(self.cleanup_temp_file)
+
+    async def cleanup_temp_file(self):
+        os.remove(self.temp_file_path)
+        print(f"Temporary file {self.temp_file_path} has been deleted.")
+
+    async def __call__(self, scope, receive, send):
+        await super().__call__(scope, receive, send)
+        await self.background()
 
 
 def generate_random_password(length: int):

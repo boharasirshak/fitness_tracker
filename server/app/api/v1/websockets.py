@@ -1,14 +1,22 @@
 import json
 import time
+import uuid
 import base64
+import shutil
+from tempfile import NamedTemporaryFile
 
 import cv2
 import mediapipe as mp
 import numpy as np
 
-from fastapi import APIRouter
-from fastapi import WebSocket
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse, FileResponse
+
+from fastapi import APIRouter, WebSocket
 from starlette.websockets import WebSocketDisconnect
+
+from app.core.utils import TempFileResponse
+
 
 router = APIRouter(prefix="/ws", tags=["Websockets"])
 connections = {}
@@ -24,7 +32,7 @@ mp_draw = mp.solutions.drawing_utils
 
 NEW_WIDTH = 128
 NEW_HEIGHT = 128
-DESIRED_FPS = 120
+DESIRED_FPS = 30
 
 
 def process_high_knees(frame, session_data: dict):
@@ -148,8 +156,10 @@ def process_jumping_jacks(frame, session_data: dict):
 async def workout_connection(websocket: WebSocket):
     global connections
 
+    connection_id = str(uuid.uuid4())
     await websocket.accept()
-    connections[websocket] = {"video_frames": []}
+    
+    connections[connection_id] = {"websocket": websocket, "video_frames": []}
 
     try:
         while True:
@@ -158,50 +168,103 @@ async def workout_connection(websocket: WebSocket):
 
             if "type" not in data_json:
                 continue
+            
+            if data_json["type"] == "reset":
+                connections[connection_id]["repetitions_count"] = 0
+                continue
 
             exercise_type = data_json["type"]
             video_b64 = data_json["data"]
             video_bytes = base64.b64decode(video_b64)
-            # connections[websocket]["video_frames"].append(video_bytes)
+            connections[connection_id]["video_frames"].append(video_bytes)
 
             np_array = np.frombuffer(video_bytes, np.uint8)
             img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-            connections[websocket]["video_frames"].append(img)
+            connections[connection_id]["video_frames"].append(img)
 
             if exercise_type == "high_knees":
-                r_img, _, repetitions_count = process_high_knees(img, connections[websocket])
+                r_img, _, repetitions_count = process_high_knees(img, connections[connection_id])
             elif exercise_type == "jumping_jacks":
-                r_img, _, repetitions_count = process_jumping_jacks(img, connections[websocket])
+                r_img, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
             else:
-                r_img, _, repetitions_count = process_jumping_jacks(img, connections[websocket])
+                r_img, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
 
             _, buffer = cv2.imencode('.jpg', r_img)
             b64_img = base64.b64encode(buffer.tobytes()).decode('utf-8')
 
             await websocket.send_json({
                 "type": "image",
-                "data": b64_img
+                "data": b64_img,
+                "connection_id": connection_id
             })
             await websocket.send_json({
                 "type": "count",
-                "data": repetitions_count
+                "data": repetitions_count,
+                "connection_id": connection_id
             })
 
     except WebSocketDisconnect:
-        del connections[websocket]
+        del connections[connection_id]
         print("WebSocket connection closed")
         try:
             await websocket.close()
         except:
             pass
 
-# @router.get("/download_video")
-# async def download_video():
-#     async def video_generator():
-#         for frame in video_frames:
-#             ret, jpeg = cv2.imencode('.jpg', frame)
-#             if not ret:
-#                 continue
-#             yield jpeg.tobytes()
 
-#     return StreamingResponse(video_generator(), media_type="multipart/x-mixed-replace; boundary=frame")
+@router.get("/download_video")
+async def download_video(connection_id: str):
+    connection = connections.get(connection_id)
+    if not connection:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({
+                "detail": "Connection not found",
+            })
+        )
+
+    video_frames = connection["video_frames"]
+    if not video_frames:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({
+                "detail": "Video frames not found",
+            })
+        )
+        
+    path = generate_video(video_frames)
+    if not path:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({
+                "detail": "Failed to generate video",
+            })
+        )
+    
+    return TempFileResponse(
+        path=path, 
+        filename=f"video_{connection_id}.mp4", 
+        media_type='video/mp4',
+    )
+
+
+def generate_video(frame_data) -> str:
+    if not frame_data:
+        return None
+    
+    with NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
+        temp_file_path = temp_file.name
+    
+    sample_frame = cv2.imdecode(np.frombuffer(frame_data[0], np.uint8), cv2.IMREAD_COLOR)
+    height, width, _ = sample_frame.shape
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # For MP4 format
+    video = cv2.VideoWriter(temp_file_path, fourcc, DESIRED_FPS, (width, height))
+
+    for frame_bytes in frame_data:
+        frame = cv2.imdecode(np.frombuffer(frame_bytes, np.uint8), cv2.IMREAD_COLOR)
+        video.write(frame)
+
+    video.release()
+    return temp_file_path
+    
