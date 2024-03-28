@@ -25,7 +25,7 @@ from app.core.database import (
     # drop_tables
 )
 
-logging.getLogger('passlib').setLevel(logging.ERROR)
+# logging.getLogger('passlib').setLevel(logging.ERROR)
 
 
 @asynccontextmanager
