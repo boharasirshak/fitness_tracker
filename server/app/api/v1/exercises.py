@@ -34,7 +34,7 @@ async def get_all_exercises(
     exercises: list[ExerciseSchema] = []
 
     query = select(Exercise)
-    result = await db.execute(query)
+    result = db.execute(query)
     results = result.scalars().all()
     for exercise in results:
         exercises.append(ExerciseSchema(

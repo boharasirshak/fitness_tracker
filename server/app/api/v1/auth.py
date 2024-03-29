@@ -43,7 +43,7 @@ router = APIRouter(prefix="/auth", tags=["Авторизация"])
 async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     # noinspection PyTypeChecker
     query = select(User).where(User.email == data.email)
-    result = await db.execute(query)
+    result = db.execute(query)
     user = result.scalars().first()
 
     if not user or not verify_password(data.password, user.hashed_password):
@@ -83,7 +83,7 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
 async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db)):
     # noinspection PyTypeChecker
     query = select(User).where(User.email == data.email)
-    result = await db.execute(query)
+    result = db.execute(query)
     user = result.scalars().first()
 
     if user:
@@ -112,8 +112,8 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         # first send the email, then only register the user.
         user = User(email=data.email, hashed_password=hashed_password)
         db.add(user)
-        await db.commit()
-        await db.refresh(user)
+        db.commit()
+        db.refresh(user)
 
     except SMTPException as e:
         print(e)

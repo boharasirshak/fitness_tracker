@@ -48,7 +48,7 @@ async def insert_default_data():
     db = SessionLocal()
 
     # noinspection PyTypeChecker
-    result = await db.execute(select(Exercise).where(Exercise.id == "high_knees"))
+    result = db.execute(select(Exercise).where(Exercise.id == "high_knees"))
     exists = result.scalars().first()
 
     if not exists:
@@ -62,7 +62,7 @@ async def insert_default_data():
         db.add(high_knees)
 
     # noinspection PyTypeChecker
-    result = await db.execute(select(Exercise).where(Exercise.id == "jumping_jacks"))
+    result = db.execute(select(Exercise).where(Exercise.id == "jumping_jacks"))
     exists = result.scalars().first()
 
     if not exists:
@@ -75,4 +75,4 @@ async def insert_default_data():
         )
         db.add(jumping_jacks)
 
-    await db.commit()
+    db.commit()

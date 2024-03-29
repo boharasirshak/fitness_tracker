@@ -69,7 +69,7 @@ async def change_user_data(
 ):
     # noinspection PyTypeChecker
     query = select(User).where(User.id == user.id)
-    result = await db.execute(query)
+    result = db.execute(query)
     new_user = result.scalar()
 
     update_data = data.model_dump(exclude_none=True)
@@ -78,8 +78,8 @@ async def change_user_data(
             value = value.value
         setattr(new_user, key, value)
 
-    await db.commit()
-    await db.refresh(new_user)
+    db.commit()
+    db.refresh(new_user)
 
     return UserSchema(
         email=new_user.email,
@@ -165,8 +165,8 @@ async def change_user_picture(
         os.remove(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url))
 
     user.profile_picture_url = filename
-    await db.commit()
-    await db.refresh(user)
+    db.commit()
+    db.refresh(user)
 
     return FileUploadResponseSchema(
         file_id=filename
