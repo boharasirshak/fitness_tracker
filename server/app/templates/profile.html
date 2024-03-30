@@ -128,7 +128,7 @@
             <div>
               <label for="phone-number"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Телефон</label>
-              <input type="number" id="phone-number" name="phone_number" min="1" pattern="[0-9]{10}"
+              <input type="text" id="phone-number" name="phone_number" min="1"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 remove-arrow"
                 placeholder="" required />
             </div>
@@ -235,9 +235,19 @@
 
     document.getElementById("phone-number").addEventListener("input", (e) => {
       let phoneNumber = e.target.value;
-      if (phoneNumber.length > 10) {
-        e.target.value = phoneNumber.slice(0, 10);
+      
+      if (!phoneNumber.includes("+7")) {
+        phoneNumber = "+7" + phoneNumber;
       }
+
+      phoneNumber = phoneNumber.replace(/\D/g, '');
+      phoneNumber = "+" + phoneNumber;
+
+      if (phoneNumber.length > 13) {
+        phoneNumber = phoneNumber.slice(0, 12);
+      }
+
+      event.target.value = phoneNumber;
     });
 
     function closeToast(id) {

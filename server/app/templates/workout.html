@@ -150,6 +150,10 @@
           return;
         }
 
+        if (isCustom) {
+          return;
+        }
+
         let timeSpent = (Date.now() - startTime) / 1000;
           if (timeSpent >= workout.total_time && !isResting) {
             endTime = Date.now();
@@ -189,6 +193,10 @@
           return;
         }
         workout = data;
+
+        if (workout.exercise.id === "custom") {
+          isCustom = true;
+        }
 
         document.getElementById("workout-name").innerText = data.name;
         document.getElementById("exercise-name").innerText = data.exercise.name;
@@ -239,7 +247,7 @@
           .getElementById("rest-timer-container")
           .removeAttribute("hidden");
           // debug this.
-        document.getElementById("helper-videi").paused = true;
+        document.getElementById("helper-video").pause()
         updateRestTimer();
       }
 
@@ -270,6 +278,7 @@
             connection_id: connectionId,
           })
         );
+        document.getElementById("helper-video").play()
       }
 
       video.addEventListener("play", () => {
