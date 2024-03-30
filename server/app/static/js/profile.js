@@ -55,6 +55,13 @@ document.getElementById("form").addEventListener("submit", async e => {
       }
     }
 
+    if (response.status === 409) {
+      document.getElementById('toast-success').style.display = 'none';
+      document.getElementById('toast-danger').style.display = '';
+      document.getElementById('toast-danger-text').innerText = 'Номер телефона уже существует!';
+      return;
+    }
+
     if (response.status === 401) {
       window.location.href = "/login";
       return;

@@ -63,7 +63,7 @@
           <li>
             <a href="#"
               class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-              aria-current="page">Приборная панель</a>
+              aria-current="page">Упражнениеь</a>
           </li>
           <li>
             <a href="/profile"
@@ -127,7 +127,7 @@
       </aside>
     </section>
 
-    <div class="flex-grow">
+    <div class="flex-grow" id="workout-data">
       <div class="p-4 sm:ml-64 ml-100 pd-0">
         <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
           <section class="bg-white dark:bg-gray-900 card-curve">
@@ -247,11 +247,6 @@
 
     (async () => {
       let accessToken = localStorage.getItem("access_token");
-      // for future case
-      // let { res, exercises } = await getAllExercises(accessToken);
-      // if (res.status === 401) {
-      //   window.location.href = "/login";
-      // }
 
       let { res, data } = await getUserWorkouts(accessToken);
       if (res.status === 401) {
@@ -287,6 +282,13 @@
 
       if (workouts.length > 0) {
         workout = changeWorkout(workouts[0]);
+      } else {
+        document.getElementById("workout-data").innerHTML = `
+          <div class="flex flex-col items-center justify-center h-full">
+            <h1 class="text-3xl font-semibold text-gray-900 dark:text-white">Нет тренировок</h1>
+            <a href="/workouts/new" class="mt-4 primary-btn">Добавить тренировку</a>
+          </div>
+        `;
       }
     })();
 

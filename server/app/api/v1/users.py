@@ -59,6 +59,7 @@ async def get_user_data(
         200: {"model": UserSchema, "description": "Все обновленные данные пользователя"},
         401: {"model": ErrorResponseSchema,
               "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        409: {"model": ErrorResponseSchema, "description": "Номер телефона уже существует!"},
         404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"},
     }
 )
@@ -71,6 +72,19 @@ async def change_user_data(
     query = select(User).where(User.id == user.id)
     result = db.execute(query)
     new_user = result.scalar()
+    
+    # check for the phone_number
+    if data.phone_number:
+        query = select(User).where(User.phone_number == data.phone_number)
+        result = db.execute(query)
+        existing_user = result.scalar()
+        if existing_user and existing_user.id != user.id:
+            return JSONResponse(
+                status_code=409,
+                content=jsonable_encoder({
+                    "detail": "Номер телефона уже существует!"
+                })
+            )
 
     update_data = data.model_dump(exclude_none=True)
     for key, value in update_data.items():

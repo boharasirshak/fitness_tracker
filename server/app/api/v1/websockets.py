@@ -130,18 +130,19 @@ def process_jumping_jacks(frame, session_data: dict):
                 left_ankle_y <= right_ankle_y:
             jump_started = False
 
-        mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        # This is no longer needed as we are sending the count only
+        # mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-        for idx, lm in enumerate(results.pose_landmarks.landmark):
-            h, w, c = frame.shape
-            cx, cy = int(lm.x * w), int(lm.y * h)
-            cv2.circle(frame, (int(cx), int(cy)), 10, (255, 0, 0), cv2.FILLED)
+        # for idx, lm in enumerate(results.pose_landmarks.landmark):
+        #     h, w, c = frame.shape
+        #     cx, cy = int(lm.x * w), int(lm.y * h)
+        #     cv2.circle(frame, (int(cx), int(cy)), 10, (255, 0, 0), cv2.FILLED)
 
     current_time = time.time()
     fps = 1 / (current_time - p_time)
     p_time = current_time
 
-    frame = cv2.putText(frame, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    # frame = cv2.putText(frame, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     session_data.update({
         'jump_started': jump_started,
@@ -183,20 +184,22 @@ async def workout_connection(websocket: WebSocket):
             connections[connection_id]["video_frames"].append(img)
 
             if exercise_type == "high_knees":
-                r_img, _, repetitions_count = process_high_knees(img, connections[connection_id])
+                _, _, repetitions_count = process_high_knees(img, connections[connection_id])
             elif exercise_type == "jumping_jacks":
-                r_img, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
+                _, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
             else:
-                r_img, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
+                _, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
 
-            _, buffer = cv2.imencode('.jpg', r_img)
-            b64_img = base64.b64encode(buffer.tobytes()).decode('utf-8')
-
-            await websocket.send_json({
-                "type": "image",
-                "data": b64_img,
-                "connection_id": connection_id
-            })
+            # This is no longer needed as we are sending the count only
+            
+            # _, buffer = cv2.imencode('.jpg', r_img)
+            # b64_img = base64.b64encode(buffer.tobytes()).decode('utf-8')
+            # await websocket.send_json({
+            #     "type": "image",
+            #     "data": b64_img,
+            #     "connection_id": connection_id
+            # })
+            
             await websocket.send_json({
                 "type": "count",
                 "data": repetitions_count,
