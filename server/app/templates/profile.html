@@ -1,526 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Профиль | Фитнес-трекер</title>
-    <link
-      rel="shortcut icon"
-      href="../static/favicon.ico"
-      type="image/x-icon"
-    />
-    <script src="../static/js/lib.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link href="../static/css/tailwind.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
-    />
-    <link href="../static/css/main.css" rel="stylesheet" />
-  </head>
 
-  <body>
-    <script>
-      (async () => {
-        await authFlow(null, "/login");
-      })();
-    </script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Профиль | Фитнес-трекер</title>
+  <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon" />
+  <script src="../static/js/lib.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="../static/css/tailwind.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
+  <link href="../static/css/main.css" rel="stylesheet" />
+</head>
 
-    <main class="flex flex-col items-center gap-5">
-      <nav
-        class="bg-white dark:bg-gray-900 w-full h-[15%] mb-5 z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600"
-      >
-        <div
-          class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
-        >
-          <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img
-              src="https://em-content.zobj.net/source/apple/76/flexed-biceps_1f4aa.png"
-              class="h-8"
-              alt="Логотип"
-            />
-            <span
-              class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-              >Фитнес-трекер</span
-            >
-          </a>
-          <div
-            class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
-          >
-            <button type="button" id="logout" class="primary-btn red">
-              Выход
-            </button>
-            <button
-              data-collapse-toggle="navbar-sticky"
-              type="button"
-              class="mb-none inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="navbar-sticky"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Открыть главное меню</span>
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 17 14"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M1 1h15M1 7h15M1 13h15"
-                />
-              </svg>
-            </button>
-          </div>
-          <div
-            class="mb-none items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-            id="navbar-sticky"
-          >
-            <ul
-              class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
-            >
-              <li>
-                <a
-                  href="/dashboard"
-                  class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                  >Приборная панель</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                  aria-current="page"
-                  >Профиль</a
-                >
-              </li>
-              <li>
-                <a
-                  href="/workouts/new"
-                  class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                  >Новая тренировка</a
-                >
-              </li>
-            </ul>
-          </div>
+<body>
+  <script>
+    (async () => {
+      await authFlow(null, "/login");
+    })();
+  </script>
+
+  <main class="flex flex-col items-center gap-5 h-screen">
+    <nav
+      class="bg-white h-auto dark:bg-gray-900 w-full  mb-5 z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <img src="https://em-content.zobj.net/source/apple/76/flexed-biceps_1f4aa.png" class="h-8" alt="Логотип" />
+          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Фитнес-трекер</span>
+        </a>
+        <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <button type="button" id="logout" class="primary-btn red">
+            Выход
+          </button>
+          <button data-collapse-toggle="navbar-sticky" type="button"
+            class="mb-none inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-controls="navbar-sticky" aria-expanded="false">
+            <span class="sr-only">Открыть главное меню</span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M1 1h15M1 7h15M1 13h15" />
+            </svg>
+          </button>
         </div>
-      </nav>
-      <div class="mob-nav-link">
-        <ul class="mob-nav-list">
-          <li>
-            <a href="/dashboard"
-              ><i class="fa-solid fa-chart-simple"></i> Панель приборов</a
-            >
-          </li>
-          <li>
-            <a href="/workouts/new"
-              ><i class="fa-solid fa-dumbbell"></i> Новая тренировка
-            </a>
-          </li>
-          <li>
-            <a href="/profile"><i class="fa-solid fa-user"></i>Профиль</a>
-          </li>
-        </ul>
+        <div class="mb-none items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+          <ul
+            class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            <li>
+              <a href="/dashboard"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Приборная
+                панель</a>
+            </li>
+            <li>
+              <a href="#"
+                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                aria-current="page">Профиль</a>
+            </li>
+            <li>
+              <a href="/workouts/new"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Новая
+                тренировка</a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="flex flex-row items-center justify-center h-[80%] mb-m-150">
-        <form class="w-[80%] flex flex-col" id="form">
-          <div class="profile-card">
-            <div class="flex items-center justify-center content-center mb-8">
-              <div class="profile-pic-container">
-                <input
-                  type="file"
-                  id="file-input"
-                  accept="image/*"
-                  style="display: none"
-                />
-                <img
-                  src=""
-                  alt="фотография профиля"
-                  id="profile-pic"
-                  class="rounded-full cursor-pointer w-32 h-32"
-                />
-              </div>
+    </nav>
+    <div class="mob-nav-link">
+      <ul class="mob-nav-list">
+        <li>
+          <a href="/dashboard"><i class="fa-solid fa-chart-simple"></i> Панель приборов</a>
+        </li>
+        <li>
+          <a href="/workouts/new"><i class="fa-solid fa-dumbbell"></i> Новая тренировка
+          </a>
+        </li>
+        <li>
+          <a href="/profile"><i class="fa-solid fa-user"></i>Профиль</a>
+        </li>
+      </ul>
+    </div>
+    <div class="flex flex-row items-center justify-center  mb-m-150">
+      <form class=" flex flex-col" id="form">
+        <div class="profile-card">
+          <div class="flex items-center justify-center content-center mb-8">
+            <div class="profile-pic-container">
+              <input type="file" id="file-input" accept="image/*" style="display: none" />
+              <img src="" alt="фотография профиля" id="profile-pic" class="rounded-full cursor-pointer w-32 h-32" />
             </div>
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
-              <div>
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Электронная почта</label
-                >
-                <input
-                  type="text"
-                  id="email"
-                  name="email"
-                  aria-label="disabled input"
-                  class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  value=""
-                  disabled
-                  readonly
-                />
-              </div>
-              <div>
-                <label
-                  for="username"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Имя пользователя</label
-                >
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  value=""
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="gender"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Пол</label
-                >
-                <select
-                  id="gender"
-                  name="gender"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option value="male">Самец</option>
-                  <option value="female" selected>Женский</option>
-                  <option value="others">Другие</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  for="height"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Высота (cm)</label
-                >
-                <input
-                  type="number"
-                  id="height"
-                  name="height"
-                  min="1"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  value=""
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="weight"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Вес (kg)</label
-                >
-                <input
-                  type="number"
-                  id="weight"
-                  name="weight"
-                  min="1"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder=""
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="activity-level"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Уровень активности</label
-                >
+          </div>
+          <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Электронная
+                почта</label>
+              <input type="text" id="email" name="email" aria-label="disabled input"
+                class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value="" disabled readonly />
+            </div>
+            <div>
+              <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Имя
+                пользователя</label>
+              <input type="text" id="username" name="username"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value="" required />
+            </div>
+            <div>
+              <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Пол</label>
+              <select id="gender" name="gender"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="male">Самец</option>
+                <option value="female" selected>Женский</option>
+                <option value="others">Другие</option>
+              </select>
+            </div>
+            <div>
+              <label for="height" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Высота
+                (cm)</label>
+              <input type="number" id="height" name="height" min="1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value="" required />
+            </div>
+            <div>
+              <label for="weight" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Вес (kg)</label>
+              <input type="number" id="weight" name="weight" min="1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="" required />
+            </div>
+            <div>
+              <label for="activity-level" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Уровень
+                активности</label>
 
-                <select
-                  id="activity-level"
-                  name="activity_level"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option selected>Выбирать</option>
-                  <option value="1">
-                    Мало активный (менее 1-го раза в неделю)
-                  </option>
-                  <option value="2">
-                    Умеренно активный (1-3 раза в неделю)
-                  </option>
-                  <option value="3">Очень активный (3-5) раз в неделю</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  for="phone-number"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Телефон</label
-                >
-                <input
-                  type="text"
-                  id="phone-number"
-                  name="phone_number"
-                  min="1"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 remove-arrow"
-                  placeholder=""
-                  required
-                />
-              </div>
-              <!-- TODO: add profile pic -->
+              <select id="activity-level" name="activity_level"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option selected>Выбирать</option>
+                <option value="1">
+                  Мало активный (менее 1-го раза в неделю)
+                </option>
+                <option value="2">
+                  Умеренно активный (1-3 раза в неделю)
+                </option>
+                <option value="3">Очень активный (3-5) раз в неделю</option>
+              </select>
             </div>
+            <div>
+              <label for="phone-number"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Телефон</label>
+              <input type="text" id="phone-number" name="phone_number" min="1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 remove-arrow"
+                placeholder="" required />
+            </div>
+            <!-- TODO: add profile pic -->
+          </div>
+          <div class="flex justify-center">
             <button type="submit" class="primary-btn">Изменить</button>
           </div>
-        </form>
+        </div>
+      </form>
+    </div>
+
+    <section id="toasts">
+      <div id="toast-success"
+        class="fixed top-[15%] right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        role="alert" style="display: none">
+        <div
+          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+          </svg>
+          <span class="sr-only">Тревога</span>
+        </div>
+        <div class="ms-3 text-sm font-normal" id="toast-success-text"></div>
+        <button type="button"
+          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          data-dismiss-target="#toast-success" aria-label="Close" onclick="closeToast('toast-success')">
+          <span class="sr-only">Закрывать</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+        </button>
       </div>
-
-      <section id="toasts">
+      <div id="toast-danger"
+        class="fixed top-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        role="alert" style="display: none">
         <div
-          id="toast-success"
-          class="fixed top-[15%] right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
-          role="alert"
-          style="display: none"
-        >
-          <div
-            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
-          >
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-              />
-            </svg>
-            <span class="sr-only">Тревога</span>
-          </div>
-          <div class="ms-3 text-sm font-normal" id="toast-success-text"></div>
-          <button
-            type="button"
-            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-            data-dismiss-target="#toast-success"
-            aria-label="Close"
-            onclick="closeToast('toast-success')"
-          >
-            <span class="sr-only">Закрывать</span>
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
-          </button>
+          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+          </svg>
+          <span class="sr-only">Тревога</span>
         </div>
-        <div
-          id="toast-danger"
-          class="fixed top-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
-          role="alert"
-          style="display: none"
-        >
-          <div
-            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200"
-          >
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"
-              />
-            </svg>
-            <span class="sr-only">Тревога</span>
-          </div>
-          <div class="ms-3 text-sm font-normal" id="toast-danger-text"></div>
-          <button
-            type="button"
-            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-            data-dismiss-target="#toast-danger"
-            aria-label="Close"
-            onclick="closeToast('toast-danger')"
-          >
-            <span class="sr-only">Закрывать</span>
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
-          </button>
-        </div>
-      </section>
-    </main>
+        <div class="ms-3 text-sm font-normal" id="toast-danger-text"></div>
+        <button type="button"
+          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          data-dismiss-target="#toast-danger" aria-label="Close" onclick="closeToast('toast-danger')">
+          <span class="sr-only">Закрывать</span>
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+        </button>
+      </div>
+    </section>
+  </main>
 
-    <script>
-      (async () => {
-        let accessToken = localStorage.getItem("access_token");
-        let { res, data } = await getUser(accessToken);
-        if (res.status === 401) {
-          window.location.href = "/login";
-        }
-
-        if (data.profile_picture_url === "") {
-          document
-            .getElementById("profile-pic")
-            .setAttribute(
-              "src",
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8AtmjZZlbJfH2Xqps-lRFOQuTysOO4n7FTlNtyVuzA&s"
-            );
-        } else {
-          document
-            .getElementById("profile-pic")
-            .setAttribute(
-              "src",
-              `../../static/uploads/${data.profile_picture_url}`
-            );
-        }
-        document.getElementById("email").value = data.email;
-        document.getElementById("username").value = data.username ?? "";
-
-        let genderTag = document.getElementById("gender");
-        let genders = [...genderTag.options].map((o) => o.text);
-        let gender = data.gender ?? "";
-        if (gender !== "" && genders.includes(data.gender.toLowerCase())) {
-          genderTag.value = gender;
-        }
-
-        document.getElementById("height").value = data.height ?? 0;
-        document.getElementById("weight").value = data.weight ?? 0;
-        document.getElementById("phone-number").value = data.phone_number ?? "";
-
-        let activityLevelTag = document.getElementById("activity-level");
-        let activityLevels = [...activityLevelTag.options].map((o) =>
-          parseInt(o.value)
-        );
-        let activityLevel = data.activity_level ?? 0;
-        if (
-          activityLevel != 0 &&
-          activityLevels.includes(data.activity_level)
-        ) {
-          activityLevelTag.value = activityLevel;
-        }
-      })();
-
-      document.getElementById("logout").addEventListener("click", () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
+  <script>
+    (async () => {
+      let accessToken = localStorage.getItem("access_token");
+      let { res, data } = await getUser(accessToken);
+      if (res.status === 401) {
         window.location.href = "/login";
-      });
-
-      document.getElementById("phone-number").addEventListener("input", (e) => {
-        let phoneNumber = e.target.value;
-
-        if (!phoneNumber.includes("+7")) {
-          phoneNumber = "+7" + phoneNumber;
-        }
-
-        phoneNumber = phoneNumber.replace(/\D/g, "");
-        phoneNumber = "+" + phoneNumber;
-
-        if (phoneNumber.length > 13) {
-          phoneNumber = phoneNumber.slice(0, 12);
-        }
-
-        event.target.value = phoneNumber;
-      });
-
-      function closeToast(id) {
-        document.getElementById(id).style.display = "none";
-      }
-    </script>
-
-    <script src="../static/js/profile.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
-    <script>
-      const fileInput = document.getElementById("file-input");
-      const profilePic = document.getElementById("profile-pic");
-
-      profilePic.addEventListener("click", () => {
-        fileInput.click();
-      });
-
-      fileInput.addEventListener("change", async (event) => {
-        console.log(";klchbjvs");
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          profilePic.src = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
-
-        const formData = new FormData();
-        formData.append("photo", file);
-
-        const accessToken = localStorage.getItem("access_token");
-
-        const res = await fetch("/api/v1/users/photo", {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: formData,
-        });
-
-        if (res.status === 401) {
-          window.location.href = "/login";
-        }
-
-        if (res.status === 409) {
-          document.getElementById("toast-success").style.display = "none";
-          document.getElementById("toast-danger").style.display = "";
-          document.getElementById("toast-danger-text").innerText =
-            "Недопустимый тип файла";
-        } else if (res.status === 200) {
-          document.getElementById("toast-danger").style.display = "none";
-          document.getElementById("toast-success").style.display = "";
-          document.getElementById("toast-success-text").innerText =
-            "Фотография профиля успешно обновлена";
-        }
-      });
-    </script>
-
-    <style>
-      /* Removes the increment and decrement arrow from the default input:number tag */
-      .remove-arrow::-webkit-inner-spin-button,
-      .remove-arrow::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
       }
 
-      .remove-arrow {
-        -moz-appearance: textfield;
-        appearance: textfield;
+      if (data.profile_picture_url === "") {
+        document
+          .getElementById("profile-pic")
+          .setAttribute(
+            "src",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8AtmjZZlbJfH2Xqps-lRFOQuTysOO4n7FTlNtyVuzA&s"
+          );
+      } else {
+        document
+          .getElementById("profile-pic")
+          .setAttribute(
+            "src",
+            `../../static/uploads/${data.profile_picture_url}`
+          );
+      }
+      document.getElementById("email").value = data.email;
+      document.getElementById("username").value = data.username ?? "";
+
+      let genderTag = document.getElementById("gender");
+      let genders = [...genderTag.options].map((o) => o.text);
+      let gender = data.gender ?? "";
+      if (gender !== "" && genders.includes(data.gender.toLowerCase())) {
+        genderTag.value = gender;
       }
 
-      #profile-pic-container {
-        position: relative;
-        display: inline-block;
+      document.getElementById("height").value = data.height ?? 0;
+      document.getElementById("weight").value = data.weight ?? 0;
+      document.getElementById("phone-number").value = data.phone_number ?? "";
+
+      let activityLevelTag = document.getElementById("activity-level");
+      let activityLevels = [...activityLevelTag.options].map((o) =>
+        parseInt(o.value)
+      );
+      let activityLevel = data.activity_level ?? 0;
+      if (
+        activityLevel != 0 &&
+        activityLevels.includes(data.activity_level)
+      ) {
+        activityLevelTag.value = activityLevel;
       }
-    </style>
-  </body>
+    })();
+
+    document.getElementById("logout").addEventListener("click", () => {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      window.location.href = "/login";
+    });
+
+    document.getElementById("phone-number").addEventListener("input", (e) => {
+      let phoneNumber = e.target.value;
+
+      if (!phoneNumber.includes("+7")) {
+        phoneNumber = "+7" + phoneNumber;
+      }
+
+      phoneNumber = phoneNumber.replace(/\D/g, "");
+      phoneNumber = "+" + phoneNumber;
+
+      if (phoneNumber.length > 13) {
+        phoneNumber = phoneNumber.slice(0, 12);
+      }
+
+      event.target.value = phoneNumber;
+    });
+
+    function closeToast(id) {
+      document.getElementById(id).style.display = "none";
+    }
+  </script>
+
+  <script src="../static/js/profile.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+  <script>
+    const fileInput = document.getElementById("file-input");
+    const profilePic = document.getElementById("profile-pic");
+
+    profilePic.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", async (event) => {
+      console.log(";klchbjvs");
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        profilePic.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append("photo", file);
+
+      const accessToken = localStorage.getItem("access_token");
+
+      const res = await fetch("/api/v1/users/photo", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+
+      if (res.status === 401) {
+        window.location.href = "/login";
+      }
+
+      if (res.status === 409) {
+        document.getElementById("toast-success").style.display = "none";
+        document.getElementById("toast-danger").style.display = "";
+        document.getElementById("toast-danger-text").innerText =
+          "Недопустимый тип файла";
+      } else if (res.status === 200) {
+        document.getElementById("toast-danger").style.display = "none";
+        document.getElementById("toast-success").style.display = "";
+        document.getElementById("toast-success-text").innerText =
+          "Фотография профиля успешно обновлена";
+      }
+    });
+  </script>
+
+  <style>
+    /* Removes the increment and decrement arrow from the default input:number tag */
+    .remove-arrow::-webkit-inner-spin-button,
+    .remove-arrow::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .remove-arrow {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    #profile-pic-container {
+      position: relative;
+      display: inline-block;
+    }
+  </style>
+</body>
+
 </html>
