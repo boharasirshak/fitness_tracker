@@ -15,17 +15,17 @@ from app.models.exercises import Exercise
 
 class TempFileResponse(FileResponse):
     def __init__(self, path: str, filename: str, *args, **kwargs):
-        super().__init__(path, *args, **kwargs)
+        super().__init__(path, filename=filename, *args, **kwargs)
         self.temp_file_path = path
         self.background = BackgroundTask(self.cleanup_temp_file)
 
     async def cleanup_temp_file(self):
-        os.remove(self.temp_file_path)
-        print(f"Temporary file {self.temp_file_path} has been deleted.")
+        if os.path.exists(self.temp_file_path):
+            os.remove(self.temp_file_path)
+            print(f"Temporary file {self.temp_file_path} has been deleted.")
 
     async def __call__(self, scope, receive, send):
         await super().__call__(scope, receive, send)
-        await self.background()
 
 
 def generate_random_password(length: int):
@@ -34,10 +34,7 @@ def generate_random_password(length: int):
 
 
 async def compress_and_save_image(
-        file: UploadFile,
-        save_path: str,
-        quality: int = 50,
-        size: tuple = (400, 400)
+    file: UploadFile, save_path: str, quality: int = 50, size: tuple = (400, 400)
 ):
     image = Image.open(BytesIO(await file.read()))
     image = image.resize(size)
@@ -57,7 +54,7 @@ async def insert_default_data():
             name="High Knees",
             video_link="high_knees.mov",
             description="Бег на месте с высоким поднятием коленей - это как игра в ловкие ниндзя! Отличный способ "
-                        "пробудить тело и дать заряд бодрости на весь день."
+            "пробудить тело и дать заряд бодрости на весь день.",
         )
         db.add(high_knees)
 
@@ -71,11 +68,10 @@ async def insert_default_data():
             name="Jumping Jacks",
             video_link="jumping_jacks.mp4",
             description="Прыжки с разведением рук и ног, как звездочка, взлетающая в небо! Это не только весело, "
-                        "но и отлично закачивает энергией на весь день."
+            "но и отлично закачивает энергией на весь день.",
         )
         db.add(jumping_jacks)
-        
-        
+
     # noinspection PyTypeChecker
     result = db.execute(select(Exercise).where(Exercise.id == "custom"))
     exists = result.scalars().first()
@@ -85,7 +81,7 @@ async def insert_default_data():
             id="custom",
             name="Пользовательская",
             video_link="",
-            description="Индивидуальное упражнение, выполненное по вашей собственной воле. Повторы засчитываться не будут."
+            description="Индивидуальное упражнение, выполненное по вашей собственной воле. Повторы засчитываться не будут.",
         )
         db.add(jumping_jacks)
 
