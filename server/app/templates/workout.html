@@ -48,7 +48,7 @@
 
     <main class="mar-100">
       <div class="work-card">
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-2 gap-8" id="video-container">
           <div class="flex flex-col w-[70%] gap-6 rec-video">
             <video
               id="video"
@@ -56,7 +56,7 @@
               autoplay
               muted
               playsinline
-              style="background: red"
+              style="object-fit: cover"
             ></video>
             <div>
               <button class="primary-btn" id="download-button">
@@ -71,7 +71,7 @@
           </div>
         </div> -->
           <div class="player">
-            <div class="imgbx">
+            <div class="imgbx" id="helper-video-container">
               <video
                 id="helper-video"
                 src=""
@@ -91,23 +91,31 @@
         <div class="workout-detail">
           <div class="icon-wraps">
             <i class="fa-solid fa-dumbbell"></i>
-            <div>Название тренировки: <span id="workout-name"></span></div>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Название тренировки <span id="workout-name"></span>
+            </div>
           </div>
           <div class="icon-wraps">
             <i class="fa-solid fa-person-walking"></i>
-            <div>Название упражнения: <span id="exercise-name"></span></div>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Название упражнения <span id="exercise-name"></span>
+            </div>
           </div>
           <div class="icon-wraps">
             <i class="fa-solid fa-clock"></i>
 
-            <div>Таймер: <span id="timer">0:00</span></div>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Таймер <span id="timer">0:00</span>
+            </div>
             <div hidden id="rest-timer-container">
-              Время отдыха: <span id="rest-timer">0</span>
+              Время отдыха <span id="rest-timer">0</span>
             </div>
           </div>
           <div class="icon-wraps">
             <i class="fa-solid fa-repeat"></i>
-            <div>Повторение: <span id="repetition-count">0</span></div>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Повторение <span id="repetition-count">0</span>
+            </div>
           </div>
         </div>
       </div>
@@ -223,6 +231,11 @@
 
         if (workout.exercise.id === "custom") {
           isCustom = true;
+          document
+            .getElementById("video-container")
+            .classList.replace("grid-cols-2", "grid-cols-1");
+          document.getElementById("helper-video-container").style.display =
+            "none";
         }
 
         document.getElementById("workout-name").innerText = data.name;
