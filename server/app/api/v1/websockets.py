@@ -263,6 +263,8 @@ async def workout_connection(websocket: WebSocket):
 
 @router.get("/download_video")
 async def download_video(connection_id: str):
+    global connections
+
     logger.info(f"Downloading video for {connection_id}")
     connection = connections.get(connection_id)
     if not connection:
