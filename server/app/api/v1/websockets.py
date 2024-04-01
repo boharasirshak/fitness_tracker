@@ -26,7 +26,7 @@ pose = mp_pose.Pose(
     static_image_mode=False,
     model_complexity=0,
     smooth_landmarks=False,
-    enable_segmentation=False
+    enable_segmentation=False,
 )
 mp_draw = mp.solutions.drawing_utils
 
@@ -36,17 +36,18 @@ DESIRED_FPS = 30
 
 
 def process_high_knees(frame, session_data: dict):
-    if 'jump_started' not in session_data:
-        session_data.update({'jump_started': False, 'repetitions_count': 0, 'p_time': 0})
+    if "jump_started" not in session_data:
+        session_data.update(
+            {"jump_started": False, "repetitions_count": 0, "p_time": 0}
+        )
 
-    jump_started, repetitions_count, p_time \
-        = session_data['jump_started'], session_data['repetitions_count'], session_data['p_time']
-
-    cv2.resize(
-        frame,
-        (NEW_WIDTH, NEW_HEIGHT),
-        interpolation=cv2.INTER_NEAREST
+    jump_started, repetitions_count, p_time = (
+        session_data["jump_started"],
+        session_data["repetitions_count"],
+        session_data["p_time"],
     )
+
+    cv2.resize(frame, (NEW_WIDTH, NEW_HEIGHT), interpolation=cv2.INTER_NEAREST)
 
     img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(img_rgb)
@@ -62,9 +63,9 @@ def process_high_knees(frame, session_data: dict):
         point_14_y = results.pose_landmarks.landmark[14].y
 
         if (
-                (point_30_y < point_25_y or point_29_y < point_26_y) and
-                (point_15_y < point_13_y and point_16_y < point_14_y) and
-                not jump_started
+            (point_30_y < point_25_y or point_29_y < point_26_y)
+            and (point_15_y < point_13_y and point_16_y < point_14_y)
+            and not jump_started
         ):
             jump_started = True
             repetitions_count += 1
@@ -72,11 +73,7 @@ def process_high_knees(frame, session_data: dict):
         elif point_30_y >= point_25_y and point_29_y >= point_26_y:
             jump_started = False
 
-        mp_draw.draw_landmarks(
-            frame,
-            results.pose_landmarks,
-            mp_pose.POSE_CONNECTIONS
-        )
+        mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
         for _, lm in enumerate(results.pose_landmarks.landmark):
             h, w, _ = frame.shape
             cx, cy = int(lm.x * w), int(lm.y * h)
@@ -86,48 +83,80 @@ def process_high_knees(frame, session_data: dict):
     fps = 1 / (current_time - p_time)
     p_time = current_time
 
-    frame = cv2.putText(frame, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    frame = cv2.putText(
+        frame,
+        f"FPS: {int(fps)}",
+        (10, 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (0, 255, 0),
+        2,
+    )
 
-    session_data.update({
-        'jump_started': jump_started,
-        'repetitions_count': repetitions_count,
-        'p_time': p_time
-    })
+    session_data.update(
+        {
+            "jump_started": jump_started,
+            "repetitions_count": repetitions_count,
+            "p_time": p_time,
+        }
+    )
 
     return frame, fps, repetitions_count
 
 
 def process_jumping_jacks(frame, session_data: dict):
-    if 'jump_started' not in session_data:
-        session_data.update({'jump_started': False, 'repetitions_count': 0, 'p_time': 0})
+    if "jump_started" not in session_data:
+        session_data.update(
+            {"jump_started": False, "repetitions_count": 0, "p_time": 0}
+        )
 
-    jump_started, repetitions_count, p_time \
-        = session_data['jump_started'], session_data['repetitions_count'], session_data['p_time']
-
-    cv2.resize(
-        frame,
-        (NEW_WIDTH, NEW_HEIGHT),
-        interpolation=cv2.INTER_NEAREST
+    jump_started, repetitions_count, p_time = (
+        session_data["jump_started"],
+        session_data["repetitions_count"],
+        session_data["p_time"],
     )
+
+    cv2.resize(frame, (NEW_WIDTH, NEW_HEIGHT), interpolation=cv2.INTER_NEAREST)
 
     img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(img_rgb)
 
     if results.pose_landmarks:
-        left_shoulder_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER].y
+        left_shoulder_y = results.pose_landmarks.landmark[
+            mp_pose.PoseLandmark.LEFT_SHOULDER
+        ].y
         left_hand_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].y
-        right_shoulder_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y
-        right_hand_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].y
-        left_ankle_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE].y
-        right_ankle_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE].y
+        right_shoulder_y = results.pose_landmarks.landmark[
+            mp_pose.PoseLandmark.RIGHT_SHOULDER
+        ].y
+        right_hand_y = results.pose_landmarks.landmark[
+            mp_pose.PoseLandmark.RIGHT_WRIST
+        ].y
+        left_ankle_y = results.pose_landmarks.landmark[
+            mp_pose.PoseLandmark.LEFT_ANKLE
+        ].y
+        right_ankle_y = results.pose_landmarks.landmark[
+            mp_pose.PoseLandmark.RIGHT_ANKLE
+        ].y
 
-        if left_hand_y > left_shoulder_y and right_hand_y > right_shoulder_y and not jump_started:
-            if left_hand_y > left_shoulder_y and right_hand_y > right_shoulder_y and \
-                    left_ankle_y > right_ankle_y and not jump_started:
+        if (
+            left_hand_y > left_shoulder_y
+            and right_hand_y > right_shoulder_y
+            and not jump_started
+        ):
+            if (
+                left_hand_y > left_shoulder_y
+                and right_hand_y > right_shoulder_y
+                and left_ankle_y > right_ankle_y
+                and not jump_started
+            ):
                 jump_started = True
                 repetitions_count += 1
-        elif left_hand_y <= left_shoulder_y and right_hand_y <= right_shoulder_y and \
-                left_ankle_y <= right_ankle_y:
+        elif (
+            left_hand_y <= left_shoulder_y
+            and right_hand_y <= right_shoulder_y
+            and left_ankle_y <= right_ankle_y
+        ):
             jump_started = False
 
         # This is no longer needed as we are sending the count only
@@ -144,11 +173,13 @@ def process_jumping_jacks(frame, session_data: dict):
 
     # frame = cv2.putText(frame, f'FPS: {int(fps)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    session_data.update({
-        'jump_started': jump_started,
-        'repetitions_count': repetitions_count,
-        'p_time': p_time
-    })
+    session_data.update(
+        {
+            "jump_started": jump_started,
+            "repetitions_count": repetitions_count,
+            "p_time": p_time,
+        }
+    )
 
     return frame, fps, repetitions_count
 
@@ -159,7 +190,7 @@ async def workout_connection(websocket: WebSocket):
 
     connection_id = str(uuid.uuid4())
     await websocket.accept()
-    
+
     connections[connection_id] = {"websocket": websocket, "video_frames": []}
 
     try:
@@ -169,7 +200,7 @@ async def workout_connection(websocket: WebSocket):
 
             if "type" not in data_json:
                 continue
-            
+
             if data_json["type"] == "reset":
                 connections[connection_id]["repetitions_count"] = 0
                 continue
@@ -184,14 +215,20 @@ async def workout_connection(websocket: WebSocket):
             connections[connection_id]["video_frames"].append(img)
 
             if exercise_type == "high_knees":
-                _, _, repetitions_count = process_high_knees(img, connections[connection_id])
+                _, _, repetitions_count = process_high_knees(
+                    img, connections[connection_id]
+                )
             elif exercise_type == "jumping_jacks":
-                _, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
+                _, _, repetitions_count = process_jumping_jacks(
+                    img, connections[connection_id]
+                )
             else:
-                _, _, repetitions_count = process_jumping_jacks(img, connections[connection_id])
+                _, _, repetitions_count = process_jumping_jacks(
+                    img, connections[connection_id]
+                )
 
             # This is no longer needed as we are sending the count only
-            
+
             # _, buffer = cv2.imencode('.jpg', r_img)
             # b64_img = base64.b64encode(buffer.tobytes()).decode('utf-8')
             # await websocket.send_json({
@@ -199,12 +236,14 @@ async def workout_connection(websocket: WebSocket):
             #     "data": b64_img,
             #     "connection_id": connection_id
             # })
-            
-            await websocket.send_json({
-                "type": "count",
-                "data": repetitions_count,
-                "connection_id": connection_id
-            })
+
+            await websocket.send_json(
+                {
+                    "type": "count",
+                    "data": repetitions_count,
+                    "connection_id": connection_id,
+                }
+            )
 
     except WebSocketDisconnect:
         del connections[connection_id]
@@ -221,47 +260,55 @@ async def download_video(connection_id: str):
     if not connection:
         return JSONResponse(
             status_code=404,
-            content=jsonable_encoder({
-                "detail": "Connection not found",
-            })
+            content=jsonable_encoder(
+                {
+                    "detail": "Connection not found",
+                }
+            ),
         )
 
     video_frames = connection["video_frames"]
     if not video_frames:
         return JSONResponse(
             status_code=404,
-            content=jsonable_encoder({
-                "detail": "Video frames not found",
-            })
+            content=jsonable_encoder(
+                {
+                    "detail": "Video frames not found",
+                }
+            ),
         )
-        
+
     path = generate_video(video_frames)
     if not path:
         return JSONResponse(
             status_code=500,
-            content=jsonable_encoder({
-                "detail": "Failed to generate video",
-            })
+            content=jsonable_encoder(
+                {
+                    "detail": "Failed to generate video",
+                }
+            ),
         )
-    
+
     return TempFileResponse(
-        path=path, 
-        filename=f"video_{connection_id}.mp4", 
-        media_type='video/mp4',
+        path=path,
+        filename=f"video_{connection_id}.mp4",
+        media_type="video/mp4",
     )
 
 
 def generate_video(frame_data) -> str:
     if not frame_data:
         return None
-    
-    with NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
-        temp_file_path = temp_file.name
-    
-    sample_frame = cv2.imdecode(np.frombuffer(frame_data[0], np.uint8), cv2.IMREAD_COLOR)
+
+    temp_file = NamedTemporaryFile(delete=False, suffix=".mp4")
+    temp_file_path = temp_file.name
+
+    sample_frame = cv2.imdecode(
+        np.frombuffer(frame_data[0], np.uint8), cv2.IMREAD_COLOR
+    )
     height, width, _ = sample_frame.shape
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # For MP4 format
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # For MP4 format
     video = cv2.VideoWriter(temp_file_path, fourcc, DESIRED_FPS, (width, height))
 
     for frame_bytes in frame_data:
@@ -269,5 +316,5 @@ def generate_video(frame_data) -> str:
         video.write(frame)
 
     video.release()
+
     return temp_file_path
-    
