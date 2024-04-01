@@ -2,7 +2,7 @@ import json
 import time
 import uuid
 import base64
-import shutil
+import logging
 from tempfile import NamedTemporaryFile
 
 import cv2
@@ -20,6 +20,9 @@ from app.core.utils import TempFileResponse
 
 router = APIRouter(prefix="/ws", tags=["Websockets"])
 connections = {}
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("websockets")
 
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(
@@ -192,7 +195,7 @@ async def workout_connection(websocket: WebSocket):
     await websocket.accept()
 
     connections[connection_id] = {"websocket": websocket, "video_frames": []}
-    print(f"New WebSocket connection: {connection_id}")
+    logger.info(f"New WebSocket connection: {connection_id}")
 
     try:
         while True:
@@ -248,7 +251,7 @@ async def workout_connection(websocket: WebSocket):
 
     except WebSocketDisconnect:
         del connections[connection_id]
-        print("WebSocket connection closed")
+        logger.info(f"WebSocket connection closed: {connection_id}")
         try:
             await websocket.close()
         except:
