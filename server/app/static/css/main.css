@@ -97,6 +97,12 @@ nav {
   width: 140%;
 }
 
+.primary-btn:disabled {
+  background: #ccc;
+  color: #000;
+  cursor: not-allowed;
+}
+
 .md\:text-blue-700 {
   color: #7A6FF1;
 }
