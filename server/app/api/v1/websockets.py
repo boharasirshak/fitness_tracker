@@ -192,6 +192,7 @@ async def workout_connection(websocket: WebSocket):
     await websocket.accept()
 
     connections[connection_id] = {"websocket": websocket, "video_frames": []}
+    print(f"New WebSocket connection: {connection_id}")
 
     try:
         while True:
