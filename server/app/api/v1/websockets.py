@@ -19,6 +19,9 @@ from app.core.utils import TempFileResponse
 
 
 router = APIRouter(prefix="/ws", tags=["Websockets"])
+
+# currently active connections. Currently stable and working fine.
+# Use Redis in case the application scales and set gunicorn workers to more than 1
 connections = {}
 
 logging.basicConfig(level=logging.INFO)
