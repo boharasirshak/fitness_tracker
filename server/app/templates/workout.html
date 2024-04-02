@@ -225,7 +225,11 @@
           "none";
         document.getElementById("download-button").disabled = true;
       }
-
+      else {
+        document
+          .getElementById("video-container")
+          .classList.replace("grid-cols-2", "grid-cols-2");
+      }
       document.getElementById("workout-name").innerText = data.name;
       document.getElementById("exercise-name").innerText = data.exercise.name;
 
