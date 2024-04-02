@@ -1,415 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Отслеживание тренировок | фитнеса</title>
+    <link
+      rel="shortcut icon"
+      href="../../static/favicon.ico"
+      type="image/x-icon"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Отслеживание тренировок | фитнеса</title>
-  <link rel="shortcut icon" href="../../static/favicon.ico" type="image/x-icon" />
+    <script src="../../static/js/lib.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+    />
+    <link href="../../static/css/main.css" rel="stylesheet" />
+  </head>
 
-  <script src="../../static/js/lib.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
-  <link href="../../static/css/main.css" rel="stylesheet" />
-</head>
+  <body>
+    <div class="mob-nav-link">
+      <ul class="mob-nav-list">
+        <li>
+          <a href="/dashboard"
+            ><i class="fa-solid fa-chart-simple"></i> Панель приборов</a
+          >
+        </li>
+        <li>
+          <a href="/workouts/new"
+            ><i class="fa-solid fa-dumbbell"></i> Новая тренировка
+          </a>
+        </li>
+        <li>
+          <a href="/profile"><i class="fa-solid fa-user"></i>Профиль</a>
+        </li>
+      </ul>
+    </div>
+    <div class="back-wraps">
+      <a href="/dashboard" class="back-to"
+        ><i class="fa-solid fa-angle-left"></i>Назад</a
+      >
+    </div>
 
-<body>
-  <div class="mob-nav-link">
-    <ul class="mob-nav-list">
-      <li>
-        <a href="/dashboard"><i class="fa-solid fa-chart-simple"></i> Панель приборов</a>
-      </li>
-      <li>
-        <a href="/workouts/new"><i class="fa-solid fa-dumbbell"></i> Новая тренировка
-        </a>
-      </li>
-      <li>
-        <a href="/profile"><i class="fa-solid fa-user"></i>Профиль</a>
-      </li>
-    </ul>
-  </div>
-  <div class="back-wraps">
-    <a href="/dashboard" class="back-to"><i class="fa-solid fa-angle-left"></i>Назад</a>
-  </div>
-
-  <main class="mar-100">
-
-
-    <div class="work-card">
-      <div class=" rotater">
-        <div class="flex  items-center gap-2 font-medium text-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="512"
-            height="512" x="0" y="0" viewBox="0 0 24 24" style="enable-background:new 0 0 512 512" xml:space="preserve"
-            class="rotate">
-            <g>
-              <path
-                d="m22.432 7.344-.688-.688-4.401-4.401-.688-.688c-.834-.834-2.288-.737-3.242.216L1.784 13.415c-.953.953-1.05 2.407-.216 3.242l5.776 5.776c.834.834 2.288.737 3.242-.216l11.631-11.631c.953-.954 1.05-2.408.215-3.242zm-1.473 2.298L9.642 20.959c-.347.347-.875.382-1.179.079l-5.501-5.501c-.304-.304-.269-.832.079-1.179L14.358 3.041c.347-.347.875-.382 1.179-.079l.275.275c.304.304.269.832-.079 1.179-.347.347-.382.875-.079 1.179l2.751 2.751c.304.304.832.269 1.179-.079.347-.347.875-.382 1.179-.079l.275.275c.303.304.268.832-.079 1.179zM13.836 24a.836.836 0 0 1-.592-1.427l2.38-2.38a.833.833 0 0 1 1.239.062l.882 1.079c2.697-1.433 4.555-4.265 4.581-7.504a.836.836 0 0 1 .836-.83h.007a.837.837 0 0 1 .83.843c-.043 5.556-4.6 10.113-10.156 10.157h-.007zM10.164 0a.836.836 0 0 1 .592 1.427l-2.38 2.38a.837.837 0 0 1-1.24-.062l-.882-1.079C3.557 4.099 1.699 6.931 1.673 10.17a.837.837 0 0 1-.837.83H.829A.837.837 0 0 1 0 10.157C.044 4.601 4.601.044 10.157 0z"
-                fill="#ffffff" opacity="1" data-original="#000000" class=""></path>
-            </g>
-          </svg>
-          rotate your phone for easier viewing of the training
-        </div>
-      </div>
-
-
-      <div class="grid grid-cols-2 gap-8" id="video-container">
-        <div class="flex flex-col w-[70%] gap-6 rec-video">
-          <video id="video" class="h-100" autoplay muted playsinline style="object-fit: cover"></video>
-          <div>
-            <button class="primary-btn" id="download-button">
-              <i class="fa-solid fa-arrow-down"></i>Скачать
-            </button>
+    <main class="mar-100">
+      <div class="work-card">
+        <div class="rotater">
+          <div class="flex items-center gap-2 font-medium text-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="512"
+              height="512"
+              x="0"
+              y="0"
+              viewBox="0 0 24 24"
+              style="enable-background: new 0 0 512 512"
+              xml:space="preserve"
+              class="rotate"
+            >
+              <g>
+                <path
+                  d="m22.432 7.344-.688-.688-4.401-4.401-.688-.688c-.834-.834-2.288-.737-3.242.216L1.784 13.415c-.953.953-1.05 2.407-.216 3.242l5.776 5.776c.834.834 2.288.737 3.242-.216l11.631-11.631c.953-.954 1.05-2.408.215-3.242zm-1.473 2.298L9.642 20.959c-.347.347-.875.382-1.179.079l-5.501-5.501c-.304-.304-.269-.832.079-1.179L14.358 3.041c.347-.347.875-.382 1.179-.079l.275.275c.304.304.269.832-.079 1.179-.347.347-.382.875-.079 1.179l2.751 2.751c.304.304.832.269 1.179-.079.347-.347.875-.382 1.179-.079l.275.275c.303.304.268.832-.079 1.179zM13.836 24a.836.836 0 0 1-.592-1.427l2.38-2.38a.833.833 0 0 1 1.239.062l.882 1.079c2.697-1.433 4.555-4.265 4.581-7.504a.836.836 0 0 1 .836-.83h.007a.837.837 0 0 1 .83.843c-.043 5.556-4.6 10.113-10.156 10.157h-.007zM10.164 0a.836.836 0 0 1 .592 1.427l-2.38 2.38a.837.837 0 0 1-1.24-.062l-.882-1.079C3.557 4.099 1.699 6.931 1.673 10.17a.837.837 0 0 1-.837.83H.829A.837.837 0 0 1 0 10.157C.044 4.601 4.601.044 10.157 0z"
+                  fill="#ffffff"
+                  opacity="1"
+                  data-original="#000000"
+                  class=""
+                ></path>
+              </g>
+            </svg>
+            rotate your phone for easier viewing of the training
           </div>
         </div>
-        <!-- <div class="flex w-[20%] video-card ">
+
+        <div class="grid grid-cols-2 gap-8" id="video-container">
+          <div class="flex flex-col w-[70%] gap-6 rec-video">
+            <video
+              id="video"
+              class="h-100"
+              autoplay
+              muted
+              playsinline
+              style="object-fit: cover"
+            ></video>
+            <div>
+              <button class="primary-btn" id="download-button">
+                <i class="fa-solid fa-arrow-down"></i>Скачать
+              </button>
+            </div>
+          </div>
+          <!-- <div class="flex w-[20%] video-card ">
           <video id="helper-video" src="" class="" loop autoplay controls muted playsinline></video>
           <div class="audio">
             <audio src="../../static/audio/track-1.mp3" controls loop></audio>
           </div>
         </div> -->
-        <div class="player">
-          <div class="imgbx" id="helper-video-container">
-            <video id="helper-video" src="" class="" loop autoplay controls muted playsinline></video>
+          <div class="player">
+            <div class="imgbx" id="helper-video-container">
+              <video
+                id="helper-video"
+                src=""
+                class=""
+                loop
+                autoplay
+                controls
+                muted
+                playsinline
+              ></video>
+            </div>
+            <audio controls>
+              <source src="../../static/audio/track-1.mp3" controls loop />
+            </audio>
           </div>
-          <audio controls>
-            <source src="../../static/audio/track-1.mp3" controls loop />
-          </audio>
+        </div>
+        <div class="workout-detail">
+          <div class="icon-wraps">
+            <i class="fa-solid fa-dumbbell"></i>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Название тренировки <span id="workout-name"></span>
+            </div>
+          </div>
+          <div class="icon-wraps">
+            <i class="fa-solid fa-person-walking"></i>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Название упражнения <span id="exercise-name"></span>
+            </div>
+          </div>
+          <div class="icon-wraps">
+            <i class="fa-solid fa-clock"></i>
+
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Таймер <span id="timer">0:00</span>
+            </div>
+            <div hidden id="rest-timer-container">
+              Время отдыха <span id="rest-timer">0</span>
+            </div>
+          </div>
+          <div class="icon-wraps">
+            <i class="fa-solid fa-repeat"></i>
+            <div class="flex flex-col items-center gap-2 font-medium">
+              Повторение <span id="repetition-count">0</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="workout-detail">
-        <div class="icon-wraps">
-          <i class="fa-solid fa-dumbbell"></i>
-          <div class="flex flex-col items-center gap-2 font-medium">
-            Название тренировки <span id="workout-name"></span>
-          </div>
-        </div>
-        <div class="icon-wraps">
-          <i class="fa-solid fa-person-walking"></i>
-          <div class="flex flex-col items-center gap-2 font-medium">
-            Название упражнения <span id="exercise-name"></span>
-          </div>
-        </div>
-        <div class="icon-wraps">
-          <i class="fa-solid fa-clock"></i>
+    </main>
 
-          <div class="flex flex-col items-center gap-2 font-medium">
-            Таймер <span id="timer">0:00</span>
-          </div>
-          <div hidden id="rest-timer-container">
-            Время отдыха <span id="rest-timer">0</span>
-          </div>
-        </div>
-        <div class="icon-wraps">
-          <i class="fa-solid fa-repeat"></i>
-          <div class="flex flex-col items-center gap-2 font-medium">
-            Повторение <span id="repetition-count">0</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    let workout;
-    let startTime;
-    let endTime;
-    let seconds = 0;
-    let minutes = 0;
-    let isResting = false;
-    let restTimer = 0;
-    let repetitions = 0;
-    const fps = 30;
-    const interval = 1000 / fps;
-    const accessToken = localStorage.getItem("access_token");
-    const workoutId = window.location.pathname.split("/").pop();
-    const video = document.getElementById("video");
-    const repetitionsCountElement =
-      document.getElementById("repetition-count");
-    const restTimerElement = document.getElementById("rest-timer");
-    const timerElement = document.getElementById("timer");
-    const downloadButton = document.getElementById("download-button");
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    let isCustom = false;
-    const ws = new WebSocket(
-      `${protocol}://${window.location.host}/api/v1/ws`
-    );
-
-    // This is no longer required as we are not displaying the received image
-    // const receivedImg = document.getElementById("received-img");
-
-    let connectionId = "";
-
-    if (!accessToken) {
-      console.error("Access token not found");
-      alert("Access token not found");
-      window.location.href = "/login";
-    }
-
-    if (Number.isNaN(parseInt(workoutId))) {
-      console.error("Invalid workout id");
-      alert("Invalid workout id");
-      window.location.href = "/dashboard";
-    }
-
-    function updateTimer() {
-      if (isResting) {
-        return;
-      }
-
-      let timeSpentSeconds = (Date.now() - startTime) / 1000;
-      let displaySeconds = 0;
-
-      if (timeSpentSeconds >= 60) {
-        displaySeconds = 0;
-        minutes++;
-      } else {
-        displaySeconds = Math.round(timeSpentSeconds);
-      }
-
-      timerElement.innerText = `${minutes}:${displaySeconds < 10 ? "0" : ""
-        }${displaySeconds}`;
-
-      if (startTime === undefined) {
-        return;
-      }
-
-      if (isCustom) {
-        return;
-      }
-
-      if (timeSpentSeconds >= workout.total_time && !isResting) {
-        endTime = Date.now();
-        isResting = true;
-        startRestPeriod();
-
-        fetch(`/api/v1/workouts/sessions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            workout_id: workout.id,
-            start_time: new Date(startTime).toISOString(),
-            end_time: new Date(endTime).toISOString(),
-            repetitions: repetitions,
-          }),
-        })
-          .then((res) => {
-            if (res.status !== 200) {
-              // handle token expiration
-            }
-          })
-          .catch((err) => {
-            console.error("Failed to complete workout", err);
-          });
-      }
-    }
-
-    (async () => {
-      let { res, data } = await getWorkoutData(accessToken, workoutId);
-      if (res.status !== 200) {
-        console.error("Failed to get workout data");
-        alert((data && data.detail) || "Failed to get workout data");
-        window.location.href = "/dashboard";
-        return;
-      }
-      workout = data;
-
-      if (workout.exercise.id === "custom") {
-        isCustom = true;
-        document
-          .getElementById("video-container")
-          .classList.replace("grid-cols-2", "grid-cols-1");
-        document.getElementById("helper-video-container").style.display =
-          "none";
-        document.getElementById("download-button").disabled = true;
-      }
-      else {
-        document
-          .getElementById("video-container")
-          .classList.replace("grid-cols-2", "grid-cols-2");
-      }
-      document.getElementById("workout-name").innerText = data.name;
-      document.getElementById("exercise-name").innerText = data.exercise.name;
-
-      document.getElementById(
-        "helper-video"
-      ).src = `../../static/videos/${data.exercise.video_link}`;
-      restTimer = data.rest_time;
-
-      // start the video stream when we have the workout data
-      if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-          .getUserMedia({ video: true })
-          .then(function (stream) {
-            video.srcObject = stream;
-          })
-          .catch(function (err) {
-            if (err.name === "NotAllowedError") {
-              alert(
-                "Пожалуйста, разрешите доступ к камере и микрофону, чтобы начать тренировку"
-              );
-            } else {
-              console.error(
-                "An error occurred while accessing camera and microphone:",
-                err
-              );
-            }
-          });
-      }
-    })();
-
-    ws.onmessage = function (event) {
-      const message = JSON.parse(event.data);
-
-      if (message.type === "image") {
-        // This is no longer required as we are not displaying the received image
-        // receivedImg.src = `data:image/jpeg;base64,${message.data}`;
-      } else if (message.type === "count") {
-        repetitions = parseInt(message.data);
-        repetitionsCountElement.innerText = repetitions;
-      }
-      connectionId = message.connection_id;
-    };
-
-    function startRestPeriod() {
-      isResting = true;
-      document
-        .getElementById("rest-timer-container")
-        .removeAttribute("hidden");
-      // debug this.
-      document.getElementById("helper-video").pause();
-      updateRestTimer();
-    }
-
-    function updateRestTimer() {
-      restTimerElement.innerText = `${restTimer}s`;
-      if (restTimer > 0) {
-        setTimeout(() => {
-          restTimer--;
-          updateRestTimer();
-        }, 1000);
-      } else {
-        endRestPeriod();
-      }
-    }
-
-    function endRestPeriod() {
-      isResting = false;
-      document
-        .getElementById("rest-timer-container")
-        .setAttribute("hidden", "");
-      console.log("Resting complete..");
-      startTime = Date.now();
-      restTimer = workout.rest_time;
-      repetitions = 0;
-      ws.send(
-        JSON.stringify({
-          type: "reset",
-          connection_id: connectionId,
-        })
+    <script>
+      let workout;
+      let startTime;
+      let endTime;
+      let seconds = 0;
+      let minutes = 0;
+      let isResting = false;
+      let restTimer = 0;
+      let repetitions = 0;
+      const fps = 30;
+      const interval = 1000 / fps;
+      const accessToken = localStorage.getItem("access_token");
+      const workoutId = window.location.pathname.split("/").pop();
+      const video = document.getElementById("video");
+      const repetitionsCountElement =
+        document.getElementById("repetition-count");
+      const restTimerElement = document.getElementById("rest-timer");
+      const timerElement = document.getElementById("timer");
+      const downloadButton = document.getElementById("download-button");
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      let isCustom = false;
+      const ws = new WebSocket(
+        `${protocol}://${window.location.host}/api/v1/ws`
       );
-      document.getElementById("helper-video").play();
-    }
 
-    video.addEventListener("play", () => {
-      startTime = Date.now();
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+      // This is no longer required as we are not displaying the received image
+      // const receivedImg = document.getElementById("received-img");
 
-      const sendFrame = () => {
-        if (video.paused || video.ended) {
-          console.log("Video paused, ended.");
+      let connectionId = "";
+
+      if (!accessToken) {
+        console.error("Access token not found");
+        alert("Access token not found");
+        window.location.href = "/login";
+      }
+
+      if (Number.isNaN(parseInt(workoutId))) {
+        console.error("Invalid workout id");
+        alert("Invalid workout id");
+        window.location.href = "/dashboard";
+      }
+
+      function updateTimer() {
+        if (isResting) {
           return;
         }
 
-        const aspectRatio = video.videoWidth / video.videoHeight;
-        let targetHeight = 120;
-        let targetWidth = aspectRatio * targetHeight;
+        let timeSpentSeconds = (Date.now() - startTime) / 1000;
+        let displaySeconds = 0;
 
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
+        if (timeSpentSeconds >= 60) {
+          displaySeconds = 0;
+          minutes++;
+        } else {
+          displaySeconds = Math.round(timeSpentSeconds);
+        }
 
-        context.drawImage(video, 0, 0, targetWidth, targetHeight);
-        canvas.toBlob(
-          (blob) => {
-            blob.arrayBuffer().then((buffer) => {
-              const b64Data = bufferToBase64(buffer);
-              const data = JSON.stringify({
-                type: workout.exercise.id,
-                data: b64Data,
-              });
-              ws.send(data);
+        timerElement.innerText = `${minutes}:${
+          displaySeconds < 10 ? "0" : ""
+        }${displaySeconds}`;
+
+        if (startTime === undefined) {
+          return;
+        }
+
+        if (isCustom) {
+          return;
+        }
+
+        if (timeSpentSeconds >= workout.total_time && !isResting) {
+          endTime = Date.now();
+          isResting = true;
+          startRestPeriod();
+
+          fetch(`/api/v1/workouts/sessions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              workout_id: workout.id,
+              start_time: new Date(startTime).toISOString(),
+              end_time: new Date(endTime).toISOString(),
+              repetitions: repetitions,
+            }),
+          })
+            .then((res) => {
+              if (res.status !== 200) {
+                // handle token expiration
+              }
+            })
+            .catch((err) => {
+              console.error("Failed to complete workout", err);
             });
-          },
-          "image/jpeg",
-          0.7
-        );
-        setTimeout(sendFrame, interval);
+        }
+      }
+
+      (async () => {
+        let { res, data } = await getWorkoutData(accessToken, workoutId);
+        if (res.status !== 200) {
+          console.error("Failed to get workout data");
+          alert((data && data.detail) || "Failed to get workout data");
+          window.location.href = "/dashboard";
+          return;
+        }
+        workout = data;
+
+        if (workout.exercise.id === "custom") {
+          isCustom = true;
+          document
+            .getElementById("video-container")
+            .classList.replace("grid-cols-2", "grid-cols-1");
+          document.getElementById("helper-video-container").style.display =
+            "none";
+          document.getElementById("download-button").disabled = true;
+        } else {
+          document
+            .getElementById("video-container")
+            .classList.replace("grid-cols-2", "grid-cols-2");
+        }
+        document.getElementById("workout-name").innerText = data.name;
+        document.getElementById("exercise-name").innerText = data.exercise.name;
+
+        document.getElementById(
+          "helper-video"
+        ).src = `../../static/videos/${data.exercise.video_link}`;
+        restTimer = data.rest_time;
+
+        // start the video stream when we have the workout data
+        if (navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then(function (stream) {
+              video.srcObject = stream;
+            })
+            .catch(function (err) {
+              if (err.name === "NotAllowedError") {
+                alert(
+                  "Пожалуйста, разрешите доступ к камере и микрофону, чтобы начать тренировку"
+                );
+              } else {
+                console.error(
+                  "An error occurred while accessing camera and microphone:",
+                  err
+                );
+              }
+            });
+        }
+      })();
+
+      ws.onmessage = function (event) {
+        const message = JSON.parse(event.data);
+
+        if (message.type === "image") {
+          // This is no longer required as we are not displaying the received image
+          // receivedImg.src = `data:image/jpeg;base64,${message.data}`;
+        } else if (message.type === "count") {
+          repetitions = parseInt(message.data);
+          repetitionsCountElement.innerText = repetitions;
+        }
+        connectionId = message.connection_id;
       };
 
-      setInterval(updateTimer, 1000);
-
-      // do not send data if the exercise is custom
-      if (workout.exercise.id === "custom") {
-        return;
+      function startRestPeriod() {
+        isResting = true;
+        document
+          .getElementById("rest-timer-container")
+          .removeAttribute("hidden");
+        // debug this.
+        document.getElementById("helper-video").pause();
+        updateRestTimer();
       }
 
-      sendFrame();
-    });
-
-    function bufferToBase64(buffer) {
-      let binary = "";
-      const bytes = new Uint8Array(buffer);
-      const len = bytes.byteLength;
-      for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
+      function updateRestTimer() {
+        restTimerElement.innerText = `${restTimer}s`;
+        if (restTimer > 0) {
+          setTimeout(() => {
+            restTimer--;
+            updateRestTimer();
+          }, 1000);
+        } else {
+          endRestPeriod();
+        }
       }
-      return window.btoa(binary);
-    }
 
-    document
-      .getElementById("download-button")
-      .addEventListener("click", async () => {
-        document.getElementById("download-button").disabled = true;
-        document.getElementById("download-button").innerText =
-          "Скачивание...";
+      function endRestPeriod() {
+        isResting = false;
+        document
+          .getElementById("rest-timer-container")
+          .setAttribute("hidden", "");
+        console.log("Resting complete..");
+        startTime = Date.now();
+        restTimer = workout.rest_time;
+        repetitions = 0;
+        ws.send(
+          JSON.stringify({
+            type: "reset",
+            connection_id: connectionId,
+          })
+        );
+        document.getElementById("helper-video").play();
+      }
 
-        try {
-          const response = await fetch(
-            `/api/v1/ws/download_video?connection_id=${connectionId}`,
-            {
-              method: "GET",
-            }
-          );
-          if (!response.ok) {
-            const data = await response.json();
-            alert(data.detail);
-            document.getElementById("download-button").disabled = false;
-            document.getElementById("download-button").innerText = "Скачать";
+      video.addEventListener("play", () => {
+        startTime = Date.now();
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        const sendFrame = () => {
+          if (video.paused || video.ended) {
+            console.log("Video paused, ended.");
             return;
           }
 
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "video.mp4";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(downloadUrl);
-        } catch (error) {
-          console.error("Could not download video:", error);
-        } finally {
-          document.getElementById("download-button").disabled = false;
-          document.getElementById("download-button").innerText = "Скачать";
+          const aspectRatio = video.videoWidth / video.videoHeight;
+          let targetHeight = 240;
+          let targetWidth = aspectRatio * targetHeight;
+
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+
+          context.drawImage(video, 0, 0, targetWidth, targetHeight);
+          canvas.toBlob(
+            (blob) => {
+              blob.arrayBuffer().then((buffer) => {
+                const b64Data = bufferToBase64(buffer);
+                const data = JSON.stringify({
+                  type: workout.exercise.id,
+                  data: b64Data,
+                  is_resting: isResting,
+                });
+                ws.send(data);
+              });
+            },
+            "image/jpeg",
+            0.9
+          );
+          setTimeout(sendFrame, interval);
+        };
+
+        setInterval(updateTimer, 1000);
+
+        // do not send data if the exercise is custom
+        if (workout.exercise.id === "custom") {
+          return;
         }
+
+        sendFrame();
       });
-  </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-</body>
+      function bufferToBase64(buffer) {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+      }
 
+      document
+        .getElementById("download-button")
+        .addEventListener("click", async () => {
+          document.getElementById("download-button").disabled = true;
+          document.getElementById("download-button").innerText =
+            "Скачивание...";
+
+          try {
+            const response = await fetch(
+              `/api/v1/ws/download_video?connection_id=${connectionId}`,
+              {
+                method: "GET",
+              }
+            );
+            if (!response.ok) {
+              const data = await response.json();
+              alert(data.detail);
+              document.getElementById("download-button").disabled = false;
+              document.getElementById("download-button").innerText = "Скачать";
+              return;
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "video.mp4";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(downloadUrl);
+          } catch (error) {
+            console.error("Could not download video:", error);
+          } finally {
+            document.getElementById("download-button").disabled = false;
+            document.getElementById("download-button").innerText = "Скачать";
+          }
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
 </html>

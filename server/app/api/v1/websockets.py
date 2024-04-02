@@ -210,6 +210,21 @@ async def workout_connection(websocket: WebSocket):
 
             if data_json["type"] == "reset":
                 connections[connection_id]["repetitions_count"] = 0
+                await websocket.send_json(
+                    {
+                        "type": "reset",
+                        "connection_id": connection_id,
+                    }
+                )
+                continue
+
+            if data_json.get("is_resting", False):
+                await websocket.send_json(
+                    {
+                        "type": "rest",
+                        "connection_id": connection_id,
+                    }
+                )
                 continue
 
             exercise_type = data_json["type"]
