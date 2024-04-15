@@ -1,4 +1,5 @@
 from aiosmtplib.errors import SMTPException
+from smtplib import SMTPException as SyncSMTPException
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
@@ -18,8 +19,8 @@ from app.schemas.users import (
 )
 from app.core.emails import (
     read_email_template,
-    # send_mail_sync,
-    send_mail_async,
+    send_mail_sync,
+    # send_mail_async,
 )
 from app.core.utils import generate_random_password
 from app.core.security import verify_password, get_password_hash
@@ -45,7 +46,7 @@ router = APIRouter(prefix="/auth", tags=["Авторизация"])
 async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     # noinspection PyTypeChecker
     query = select(User).where(User.email == data.email)
-    result = db.execute(query)
+    result = await db.execute(query)
     user = result.scalars().first()
 
     if not user or not verify_password(data.password, user.hashed_password):
@@ -87,7 +88,7 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
 async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db)):
     # noinspection PyTypeChecker
     query = select(User).where(User.email == data.email)
-    result = db.execute(query)
+    result = await db.execute(query)
     user = result.scalars().first()
 
     if user:
@@ -105,15 +106,15 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
     html = html.replace("{{login_url}}", f"{BASE_URL}/login")
 
     try:
-        await send_mail_async(to=data.email, subject="Ваш временный пароль", html=html)
+        send_mail_sync(to=data.email, subject="Ваш временный пароль", html=html)
 
         # first send the email, then only register the user.
         user = User(email=data.email, hashed_password=hashed_password)
         db.add(user)
-        db.commit()
-        db.refresh(user)
+        await db.commit()
+        await db.refresh(user)
 
-    except SMTPException as e:
+    except (SMTPException, SyncSMTPException) as e:
         print(e)
         return JSONResponse(
             status_code=500,
