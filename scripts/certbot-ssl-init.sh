@@ -3,4 +3,4 @@ docker run -it --rm \
 -v "$(pwd)/certbot/www:/var/www/certbot" \
 certbot/certbot certonly \
 --webroot --webroot-path=/var/www/certbot \
--d your.domain.com -m your-email@example.com --agree-tos --no-eff-email
+-d sirshak.tech -m boharasirshak@gmail.com --agree-tos --no-eff-email
