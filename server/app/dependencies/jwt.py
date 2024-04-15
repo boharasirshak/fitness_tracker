@@ -26,7 +26,7 @@ async def jwt_verify(
 
     # noinspection PyTypeChecker
     query = select(User).where(User.id == user_id)
-    result = db.execute(query)
+    result = await db.execute(query)
     user = result.scalar()
     if not user:
         raise HTTPException(status_code=404, detail="Пользователь не найден")

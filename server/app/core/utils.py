@@ -5,11 +5,14 @@ from io import BytesIO
 
 from PIL import Image
 from sqlalchemy.sql import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from fastapi import UploadFile
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 
-from app.core.database import SessionLocal
+from app.core.database import AsyncSessionFactory
+
 from app.models.exercises import Exercise
 
 
@@ -42,10 +45,9 @@ async def compress_and_save_image(
 
 
 async def insert_default_data():
-    db = SessionLocal()
-
+    db: AsyncSession = AsyncSessionFactory()
     # noinspection PyTypeChecker
-    result = db.execute(select(Exercise).where(Exercise.id == "high_knees"))
+    result = await db.execute(select(Exercise).where(Exercise.id == "high_knees"))
     exists = result.scalars().first()
 
     if not exists:
@@ -59,7 +61,7 @@ async def insert_default_data():
         db.add(high_knees)
 
     # noinspection PyTypeChecker
-    result = db.execute(select(Exercise).where(Exercise.id == "jumping_jacks"))
+    result = await db.execute(select(Exercise).where(Exercise.id == "jumping_jacks"))
     exists = result.scalars().first()
 
     if not exists:
@@ -73,7 +75,7 @@ async def insert_default_data():
         db.add(jumping_jacks)
 
     # noinspection PyTypeChecker
-    result = db.execute(select(Exercise).where(Exercise.id == "custom"))
+    result = await db.execute(select(Exercise).where(Exercise.id == "custom"))
     exists = result.scalars().first()
 
     if not exists:
@@ -85,4 +87,5 @@ async def insert_default_data():
         )
         db.add(jumping_jacks)
 
-    db.commit()
+    await db.commit()
+    await db.close()

@@ -70,13 +70,13 @@ async def change_user_data(
 ):
     # noinspection PyTypeChecker
     query = select(User).where(User.id == user.id)
-    result = db.execute(query)
+    result = await db.execute(query)
     new_user = result.scalar()
     
     # check for the phone_number
     if data.phone_number:
         query = select(User).where(User.phone_number == data.phone_number)
-        result = db.execute(query)
+        result = await db.execute(query)
         existing_user = result.scalar()
         if existing_user and existing_user.id != user.id:
             return JSONResponse(
@@ -92,8 +92,8 @@ async def change_user_data(
             value = value.value
         setattr(new_user, key, value)
 
-    db.commit()
-    db.refresh(new_user)
+    await db.commit()
+    await db.refresh(new_user)
 
     return UserSchema(
         email=new_user.email,
@@ -179,8 +179,8 @@ async def change_user_picture(
         os.remove(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url))
 
     user.profile_picture_url = filename
-    db.commit()
-    db.refresh(user)
+    await db.commit()
+    await db.refresh(user)
 
     return FileUploadResponseSchema(
         file_id=filename

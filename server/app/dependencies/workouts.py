@@ -21,7 +21,7 @@ async def workout_verify(
 
     # noinspection PyTypeChecker
     query = select(Workout).where(Workout.id == workout_id)
-    result = db.execute(query)
+    result = await db.execute(query)
     workout = result.scalar()
     if not workout:
         raise HTTPException(status_code=404, detail="Тренировка не найдена")

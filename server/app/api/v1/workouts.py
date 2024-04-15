@@ -47,7 +47,7 @@ async def get_all_users_workouts(
 
     # noinspection PyTypeChecker
     query = select(Workout).where(Workout.user_id == user.id)
-    result = db.execute(query)
+    result = await db.execute(query)
     workouts = result.scalars().all()
     if not workouts:
         return AllWorkoutsSchema(workouts=[])
@@ -55,7 +55,7 @@ async def get_all_users_workouts(
     for workout in workouts:
         # noinspection PyTypeChecker, DuplicatedCode
         query = select(Exercise).where(Exercise.id == workout.exercise_id)
-        result = db.execute(query)
+        result = await db.execute(query)
         exercise = result.scalars().first()
 
         if not exercise:
@@ -79,7 +79,7 @@ async def get_all_users_workouts(
             WorkoutSession.workout_id == workout.id,
             WorkoutSession.user_id == user.id
         ))
-        result = db.execute(query)
+        result = await db.execute(query)
         sessions = result.scalars().all()
         workout_sessions: list[WorkoutSessionSchema] = []
 
@@ -130,7 +130,7 @@ async def get_single_workout(
         Workout.id == workout_id,
         Workout.user_id == user.id
     ))
-    result = db.execute(query)
+    result = await db.execute(query)
     workout = result.scalars().first()
 
     if not workout:
@@ -143,7 +143,7 @@ async def get_single_workout(
 
     # noinspection PyTypeChecker
     query = select(Exercise).where(Exercise.id == workout.exercise_id)
-    result = db.execute(query)
+    result = await db.execute(query)
     exercise = result.scalars().first()
 
     if not exercise:
@@ -164,7 +164,7 @@ async def get_single_workout(
 
     # noinspection PyTypeChecker
     query = select(WorkoutSession).where(WorkoutSession.workout_id == workout.id)
-    result = db.execute(query)
+    result = await db.execute(query)
     sessions = result.scalars().all()
     workout_sessions: list[WorkoutSessionSchema] = []
 
@@ -211,7 +211,7 @@ async def create_new_workout(
 ):
     # noinspection PyTypeChecker
     query = select(Exercise).where(Exercise.id == data.exercise_id)
-    result = db.execute(query)
+    result = await db.execute(query)
     exercise = result.scalars().first()
 
     if not exercise:
@@ -232,8 +232,8 @@ async def create_new_workout(
     )
 
     db.add(new_workout)
-    db.commit()
-    db.refresh(new_workout)
+    await db.commit()
+    await db.refresh(new_workout)
 
     return CreateWorkoutResponseSchema(
         workout=WorkoutSchema(
@@ -268,7 +268,7 @@ async def add_new_workout_session(
 ):
     # noinspection PyTypeChecker
     query = select(Workout).where(Workout.id == data.workout_id)
-    result = db.execute(query)
+    result = await db.execute(query)
     workout = result.scalars().first()
 
     if not workout:
@@ -288,8 +288,8 @@ async def add_new_workout_session(
     )
 
     db.add(new_workout_session)
-    db.commit()
-    db.refresh(new_workout_session)
+    await db.commit()
+    await db.refresh(new_workout_session)
 
     return CreateWorkoutSessionResponseSchema(
         session=WorkoutSessionSchema(
