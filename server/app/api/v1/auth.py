@@ -126,10 +126,25 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
     #     )
 
     try:
-        user = User(email=data.email, name=data.name, password=data.password)
+        hashed_password = get_password_hash(data.password)
+        user = User(
+            email=data.email, username=data.name, hashed_password=hashed_password
+        )
         db.add(user)
         await db.commit()
         await db.refresh(user)
+        subject = {"email": user.email, "user_id": user.id}
+
+        access_token = access_security.create_access_token(subject=subject)
+        refresh_token = refresh_security.create_refresh_token(subject=subject)
+
+        return UserRegisterResponseSchema(
+            username=user.username,
+            email=user.email,
+            access_token=access_token,
+            refresh_token=refresh_token,
+            message="User registered successfully",
+        )
 
     except Exception as e:
         print(e)
@@ -141,7 +156,3 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
                 }
             ),
         )
-
-    return UserRegisterResponseSchema(
-        message="Временные данные отправлены на ваш электронный адрес."
-    )

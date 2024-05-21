@@ -32,5 +32,7 @@ class User(Base):
     weight = Column(Integer, nullable=True, default=0)
     profile_picture_url = Column(String, nullable=True, default="")
     phone_number = Column(String, nullable=True, unique=True, index=True)
-    activity_level = Column(Integer, nullable=True, default=ActivityLevel.NOT_GIVEN.value)
+    activity_level = Column(
+        Integer, nullable=True, default=ActivityLevel.NOT_GIVEN.value
+    )
     created_at = Column(DateTime(timezone=True), default=func.now())
