@@ -97,33 +97,39 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
             content=jsonable_encoder({"detail": "Электронная почта уже существует"}),
         )
 
-    temp_password = generate_random_password(20)
-    hashed_password = get_password_hash(temp_password)
+    """Old Code"""
+    # temp_password = generate_random_password(20)
+    # hashed_password = get_password_hash(temp_password)
 
-    html = read_email_template("temporary-password.html")
-    html = html.replace("{{email}}", data.email)
-    html = html.replace("{{temporary_password}}", temp_password)
-    html = html.replace("{{login_url}}", f"{BASE_URL}/login")
+    # html = read_email_template("temporary-password.html")
+    # html = html.replace("{{email}}", data.email)
+    # html = html.replace("{{temporary_password}}", temp_password)
+    # html = html.replace("{{login_url}}", f"{BASE_URL}/login")
+
+    #     send_mail_sync(to=data.email, subject="Ваш временный пароль", html=html)
+
+    #     # first send the email, then only register the user.
+    #     user = User(email=data.email, hashed_password=hashed_password)
+    #     db.add(user)
+    #     await db.commit()
+    #     await db.refresh(user)
+
+    # except (SMTPException, SyncSMTPException) as e:
+    #     print(e)
+    #     return JSONResponse(
+    #         status_code=500,
+    #         content=jsonable_encoder(
+    #             {
+    #                 "detail": "Сообщение об ошибке при отправке на этот адрес электронной почты!"
+    #             }
+    #         ),
+    #     )
 
     try:
-        send_mail_sync(to=data.email, subject="Ваш временный пароль", html=html)
-
-        # first send the email, then only register the user.
-        user = User(email=data.email, hashed_password=hashed_password)
+        user = User(email=data.email, name=data.name, password=data.password)
         db.add(user)
         await db.commit()
         await db.refresh(user)
-
-    except (SMTPException, SyncSMTPException) as e:
-        print(e)
-        return JSONResponse(
-            status_code=500,
-            content=jsonable_encoder(
-                {
-                    "detail": "Сообщение об ошибке при отправке на этот адрес электронной почты!"
-                }
-            ),
-        )
 
     except Exception as e:
         print(e)
