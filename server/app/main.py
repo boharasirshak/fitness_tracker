@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.emails import init_smtp
+# from app.core.emails import init_smtp
 from app.models.workouts import Workout
 from app.core.utils import insert_default_data
 from app.dependencies.workouts import workout_verify
@@ -25,14 +25,14 @@ from app.core.database import (
     # drop_tables
 )
 
-logging.getLogger('passlib').setLevel(logging.ERROR)
+logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     # Warning: This will drop all tables, so use only in dev
     # asyncio.create_task(drop_tables())
-    asyncio.create_task(init_smtp())
+    # asyncio.create_task(init_smtp())
     asyncio.create_task(create_tables())
     asyncio.create_task(insert_default_data())
     yield
@@ -84,14 +84,11 @@ def new_workout(request: Request):
 
 @app.get("/workouts/start/{workout_id}")
 def start_workout(
-    workout_id: int, 
-    request: Request,
-    workout: Workout = Depends(workout_verify)
+    workout_id: int, request: Request, workout: Workout = Depends(workout_verify)
 ):
-    return templates.TemplateResponse("workout.html", {
-        "request": request,
-        "workout": workout
-    })
+    return templates.TemplateResponse(
+        "workout.html", {"request": request, "workout": workout}
+    )
 
 
 app.include_router(auth_router, prefix="/api/v1")
