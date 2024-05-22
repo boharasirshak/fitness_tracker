@@ -42,8 +42,4 @@ refresh_security = JwtRefreshBearer(
     access_expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRATION),
 )
 
-smtp = aiosmtplib.SMTP(
-    hostname=SMTP_HOST,
-    port=SMTP_PORT,
-    start_tls=False
-)
+smtp = aiosmtplib.SMTP(hostname=SMTP_HOST, port=SMTP_PORT, start_tls=False)
