@@ -13,6 +13,8 @@ class UserLoginSchema(BaseModel):
 
 class UserRegisterSchema(BaseModel):
     email: str
+    password: str
+    name: str
 
 
 class UserDataUpdateSchema(BaseModel):
@@ -48,6 +50,10 @@ class UserLoginResponseSchema(BaseModel):
 
 
 class UserRegisterResponseSchema(BaseModel):
+    email: str
+    access_token: str
+    refresh_token: str
+    username: str
     message: str
 
 
