@@ -126,7 +126,6 @@ async function getUserWorkouts(token) {
   }
 }
 
-
 async function getWorkoutData(token, workout_id) {
   const res = await fetch(`/api/v1/workouts/${workout_id}`, {
     method: "GET",
