@@ -20,10 +20,7 @@ from app.api.v1.exercises import router as exercises_router
 from app.api.v1.workouts import router as workouts_router
 from app.api.v1.websockets import router as websockets_router
 
-from app.core.database import (
-    create_tables,
-    # drop_tables
-)
+from app.core.database import create_tables, drop_tables
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
@@ -77,9 +74,14 @@ def profile_page(request: Request):
     return templates.TemplateResponse("profile.html", {"request": request})
 
 
+@app.get("/workouts/")
+def new_workout(request: Request):
+    return templates.TemplateResponse("workouts.html", {"request": request})
+
+
 @app.get("/workouts/new")
 def new_workout(request: Request):
-    return templates.TemplateResponse("new-workouts.html", {"request": request})
+    return templates.TemplateResponse("new-workout.html", {"request": request})
 
 
 @app.get("/workouts/start/{workout_id}")
