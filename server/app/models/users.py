@@ -31,8 +31,10 @@ class User(Base):
     height = Column(Integer, nullable=True, default=0)
     weight = Column(Integer, nullable=True, default=0)
     profile_picture_url = Column(String, nullable=True, default="")
-    phone_number = Column(String, nullable=True, unique=True, index=True)
     activity_level = Column(
         Integer, nullable=True, default=ActivityLevel.NOT_GIVEN.value
     )
+    age = Column(Integer, nullable=True, default=0)
+    desired_weight = Column(Integer, nullable=True, default=0)
+    gender = Column(String, nullable=True, default="male")
     created_at = Column(DateTime(timezone=True), default=func.now())

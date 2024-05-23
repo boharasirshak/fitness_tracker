@@ -24,7 +24,8 @@ class UserDataUpdateSchema(BaseModel):
     weight: Optional[int] = None
     activity_level: Optional[ActivityLevel] = None
     password: Optional[str] = None
-    phone_number: Optional[str] = None
+    age: Optional[int] = None
+    desired_weight: Optional[int] = None
 
     # Throws an error if any extra fields are present
     class Config:
@@ -33,13 +34,14 @@ class UserDataUpdateSchema(BaseModel):
 
 class UserSchema(BaseModel):
     email: str
+    age: int
     gender: str
     username: str
     height: int
     weight: int
-    activity_level: ActivityLevel | int
-    phone_number: str
+    desired_weight: int
     profile_picture_url: str
+    activity_level: ActivityLevel | int
 
 
 class UserLoginResponseSchema(BaseModel):

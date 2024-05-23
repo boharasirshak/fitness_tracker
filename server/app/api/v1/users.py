@@ -14,11 +14,7 @@ from app.dependencies.jwt import jwt_verify
 from app.models.users import User
 from app.core.database import get_db
 from app.schemas import ErrorResponseSchema
-from app.schemas.users import (
-    UserDataUpdateSchema,
-    UserSchema,
-    FileUploadResponseSchema
-)
+from app.schemas.users import UserDataUpdateSchema, UserSchema, FileUploadResponseSchema
 
 router = APIRouter(prefix="/users", tags=["Пользователи"])
 UPLOAD_DIRECTORY = "app/static/uploads"
@@ -30,14 +26,14 @@ os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
     response_description="Получает данные пользователя",
     responses={
         200: {"model": UserSchema, "description": "Все данные пользователя"},
-        401: {"model": ErrorResponseSchema,
-              "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        401: {
+            "model": ErrorResponseSchema,
+            "description": "Токен недействителен, срок действия истек или не предоставлен",
+        },
         404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"},
-    }
+    },
 )
-async def get_user_data(
-        user: User = Depends(jwt_verify)
-):
+async def get_user_data(user: User = Depends(jwt_verify)):
     return UserSchema(
         email=user.email,
         username=user.username,
@@ -45,8 +41,9 @@ async def get_user_data(
         height=user.height,
         weight=user.weight,
         activity_level=user.activity_level,
-        phone_number=user.phone_number or "",
-        profile_picture_url=user.profile_picture_url or ""
+        profile_picture_url=user.profile_picture_url or "",
+        age=user.age,
+        desired_weight=user.desired_weight,
     )
 
 
@@ -56,35 +53,30 @@ async def get_user_data(
     # NGINX redrections are clashing with each other.
     response_description="Обновляет данные пользователя",
     responses={
-        200: {"model": UserSchema, "description": "Все обновленные данные пользователя"},
-        401: {"model": ErrorResponseSchema,
-              "description": "Токен недействителен, срок действия истек или не предоставлен"},
-        409: {"model": ErrorResponseSchema, "description": "Номер телефона уже существует!"},
+        200: {
+            "model": UserSchema,
+            "description": "Все обновленные данные пользователя",
+        },
+        401: {
+            "model": ErrorResponseSchema,
+            "description": "Токен недействителен, срок действия истек или не предоставлен",
+        },
+        409: {
+            "model": ErrorResponseSchema,
+            "description": "Номер телефона уже существует!",
+        },
         404: {"model": ErrorResponseSchema, "description": "Пользователь не найден"},
-    }
+    },
 )
 async def change_user_data(
-        data: UserDataUpdateSchema,
-        db: AsyncSession = Depends(get_db),
-        user: User = Depends(jwt_verify)
+    data: UserDataUpdateSchema,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(jwt_verify),
 ):
     # noinspection PyTypeChecker
     query = select(User).where(User.id == user.id)
     result = await db.execute(query)
     new_user = result.scalar()
-    
-    # check for the phone_number
-    if data.phone_number:
-        query = select(User).where(User.phone_number == data.phone_number)
-        result = await db.execute(query)
-        existing_user = result.scalar()
-        if existing_user and existing_user.id != user.id:
-            return JSONResponse(
-                status_code=409,
-                content=jsonable_encoder({
-                    "detail": "Номер телефона уже существует!"
-                })
-            )
 
     update_data = data.model_dump(exclude_none=True)
     for key, value in update_data.items():
@@ -102,8 +94,9 @@ async def change_user_data(
         height=new_user.height,
         weight=new_user.weight,
         activity_level=new_user.activity_level,
-        phone_number=new_user.phone_number,
-        profile_picture_url=new_user.profile_picture_url
+        age=new_user.age,
+        desired_weight=new_user.desired_weight,
+        profile_picture_url=new_user.profile_picture_url,
     )
 
 
@@ -113,61 +106,69 @@ async def change_user_data(
     response_class=FileResponse,
     responses={
         200: {"description": "Successfully uploaded and saved a file"},
-        404: {"model": ErrorResponseSchema,
-              "description": "User does not have profile picture or User does not exists"},
-        401: {"model": ErrorResponseSchema,
-              "description": "Токен недействителен, срок действия истек или не предоставлен"},
-    }
+        404: {
+            "model": ErrorResponseSchema,
+            "description": "User does not have profile picture or User does not exists",
+        },
+        401: {
+            "model": ErrorResponseSchema,
+            "description": "Токен недействителен, срок действия истек или не предоставлен",
+        },
+    },
 )
-async def get_user_picture(
-        user: User = Depends(jwt_verify)
-):
-    if not user.profile_picture_url or not os.path.exists(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)):
+async def get_user_picture(user: User = Depends(jwt_verify)):
+    if not user.profile_picture_url or not os.path.exists(
+        os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)
+    ):
         return JSONResponse(
             status_code=404,
-            content=jsonable_encoder({
-                "detail": "User profile picture does not exists!"
-            })
+            content=jsonable_encoder(
+                {"detail": "User profile picture does not exists!"}
+            ),
         )
 
     file_path = os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)
 
     content_type = "application/octet-stream"
-    if user.profile_picture_url.endswith(".jpg") or user.profile_picture_url.endswith(".jpeg"):
+    if user.profile_picture_url.endswith(".jpg") or user.profile_picture_url.endswith(
+        ".jpeg"
+    ):
         content_type = "image/jpeg"
     elif user.profile_picture_url.endswith(".png"):
         content_type = "image/png"
     elif user.profile_picture_url.endswith(".gif"):
         content_type = "image/gif"
 
-    return FileResponse(
-        file_path,
-        media_type=content_type
-    )
+    return FileResponse(file_path, media_type=content_type)
 
 
 @router.put(
     "/photo",
     response_description="Обновляет фото пользователя",
     responses={
-        200: {"model": FileUploadResponseSchema, "description": "Successfully uploaded and saved a file"},
-        401: {"model": ErrorResponseSchema,
-              "description": "Токен недействителен, срок действия истек или не предоставлен"},
+        200: {
+            "model": FileUploadResponseSchema,
+            "description": "Successfully uploaded and saved a file",
+        },
+        401: {
+            "model": ErrorResponseSchema,
+            "description": "Токен недействителен, срок действия истек или не предоставлен",
+        },
         409: {"model": ErrorResponseSchema, "description": "Invalid file type"},
-    }
+    },
 )
 async def change_user_picture(
-        db: AsyncSession = Depends(get_db),
-        user: User = Depends(jwt_verify),
-        photo: UploadFile = File(...)
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(jwt_verify),
+    photo: UploadFile = File(...),
 ):
     extension = photo.filename.split(".")[-1]
     if extension not in ["jpg", "jpeg", "png"]:
         return JSONResponse(
             status_code=409,
-            content=jsonable_encoder({
-                "detail": "Valid extensions are jpg, jpeg, png only!"
-            })
+            content=jsonable_encoder(
+                {"detail": "Valid extensions are jpg, jpeg, png only!"}
+            ),
         )
 
     filename = f"{uuid.uuid4()}.{extension}"
@@ -175,13 +176,13 @@ async def change_user_picture(
 
     await compress_and_save_image(photo, file_path)
 
-    if user.profile_picture_url and os.path.exists(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)):
+    if user.profile_picture_url and os.path.exists(
+        os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url)
+    ):
         os.remove(os.path.join(UPLOAD_DIRECTORY, user.profile_picture_url))
 
     user.profile_picture_url = filename
     await db.commit()
     await db.refresh(user)
 
-    return FileUploadResponseSchema(
-        file_id=filename
-    )
+    return FileUploadResponseSchema(file_id=filename)
