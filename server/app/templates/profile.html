@@ -92,22 +92,22 @@
             </li>
             <li>
               <h6>Рост</h6>
-              <span> <input type="text" name="name" id="height" /> см </span>
+              <span> <input type="text" name="height" id="height" /> см </span>
             </li>
             <li>
               <h6>Вес</h6>
-              <span> <input type="text" name="name" id="weight" /> кг </span>
+              <span> <input type="text" name="weight" id="weight" /> кг </span>
             </li>
             <li>
               <h6>Желаемый вес</h6>
               <span>
-                <input type="text" name="name" id="desired-weight" />
+                <input type="text" name="desired-weight" id="desired-weight" />
               </span>
             </li>
             <li>
               <h6>Сколько вам лет?</h6>
               <span>
-                <input type="text" name="name" id="age" />
+                <input type="text" name="age" id="age" />
               </span>
             </li>
           </ul>
@@ -298,6 +298,8 @@
 
         document.getElementById("height").value = data.height;
         document.getElementById("weight").value = data.weight;
+        document.getElementById("age").value = data.age;
+        document.getElementById("desired-weight").value = data.desired_weight;
 
         let activityLevel = data.activity_level ?? 0;
 
