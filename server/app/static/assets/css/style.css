@@ -1344,9 +1344,12 @@ a {
     padding-right: 17px;
   }
   .dashboard-page .wrokouts-flexed .workout-coolection .workout-image {
-    padding: 12px;
+    padding: 0px;
   }
   .dashboard-page .wrokouts-flexed .workout-coolection .workout-image img {
+    width: 104px;
+  }
+  .dashboard-page .wrokouts-flexed .workout-coolection .workout-image video {
     width: 104px;
   }
   .dashboard-page .wrokouts-flexed .workout-coolection .workout-name-wrap {
