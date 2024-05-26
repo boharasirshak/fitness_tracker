@@ -202,12 +202,7 @@
           window.location.href = "/login";
         }
 
-        if (
-          data.username === "" ||
-          data.height === 0 ||
-          data.weight === 0 ||
-          !String(data.phone_number).includes("+7")
-        ) {
+        if (data.username === "" || data.height === 0 || data.weight === 0) {
           document.getElementById("toast-danger").style.display = "";
           document.getElementById("toast-danger-text").innerText =
             "Пожалуйста, заполните всю вашу информацию на странице профиля!";

@@ -15,7 +15,6 @@ let workout;
   data.workouts.forEach((workout) => {
     const li = document.createElement("div");
 
-    // TODO: in future, the exercises will have multiple links, so loop those links
     li.innerHTML = `
       <div class="workout-coolection">
         <div class="workout-image">
@@ -27,7 +26,6 @@ let workout;
             autoplay
             muted
             loop
-            class="object-cover"
         />
         </div>
         <div class="workout-name-wrap">
