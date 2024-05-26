@@ -325,6 +325,7 @@ a {
   align-items: center;
   justify-content: center;
   gap: 20px;
+  cursor: pointer;
 }
 .dashboard-page .day-wraps ul li .day {
   font-family: "Montserrat", sans-serif;
