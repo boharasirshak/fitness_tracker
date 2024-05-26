@@ -147,4 +147,6 @@ document.getElementById("submit").addEventListener("click", async () => {
   document.getElementById("toast-success").style.display = "";
   document.getElementById("toast-success-text").innerText =
     "Данные успешно обновлены";
+
+  window.location.href = "/dashboard";
 });
