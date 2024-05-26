@@ -1,5 +1,13 @@
 let workouts;
 let workout;
+const daysOfWeeks = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+const today = new Date();
+var lastSevenDays = Array.from({ length: 7 }, (_, i) => {
+  const date = new Date(today);
+  date.setDate(today.getDate() - i);
+  return date;
+}).reverse();
+let prevActiveDate;
 
 (async () => {
   let accessToken = localStorage.getItem("access_token");
@@ -9,8 +17,10 @@ let workout;
     window.location.href = "/login";
   }
   workouts = data.workouts;
+  console.log(workouts);
 
   const workoutContainer = document.getElementById("workouts");
+  const weekContainer = document.getElementById("week-container");
 
   data.workouts.forEach((workout) => {
     const li = document.createElement("div");
@@ -42,86 +52,78 @@ let workout;
     workoutContainer.appendChild(li);
   });
 
-  const groupedData = {};
-  const weekContainer = document.getElementById("week-container");
-  const today = new Date();
-  const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-  // if (workouts.length === 0) {
-  //   const element = document.createElement("div");
-  //   element.innerHTML = `
-  //     <li>
-  //       <div class="day">No sessions</div>
-  //       <div class="date">No sessions</div>
-  //     </li>
-  //   `;
-  //   weekContainer.appendChild(element);
-  // }
-
-  for (const workout in workouts) {
-  }
-
-  for (const session of workouts.sessions) {
-    const startTime = new Date(session.start_time);
-    const dayOfMonth = getDayOfMonth(session.start_time);
-    const dayOfWeek = getDayOfWeek(session.start_time);
-
-    if (startTime >= lastWeek) {
-      if (!groupedData[dayOfMonth]) {
-        groupedData[dayOfMonth] = {
-          dayOfWeek: dayOfWeek,
-          sessions: [],
-        };
+  for (const day of lastSevenDays) {
+    const element = document.createElement("li");
+    element.onclick = () => {
+      if (prevActiveDate) {
+        prevActiveDate.classList.remove("active");
       }
-      groupedData[dayOfMonth].sessions.push({
-        start_time: session.start_time,
-        end_time: session.end_time,
-      });
-    }
+      prevActiveDate = element;
+      element.classList.add("active");
+      displayGraph(day, element);
+    };
 
-    for (const [day, dayData] of Object.entries(groupedData)) {
-      const element = document.createElement("div");
-      element.innerHTML = `
-        <li onclick="displayGraph('${JSON.stringify(dayData.sessions)}')>
-          <div class="day">${dayData.dayOfWeek}</div>
-          <div class="date">${day}</div>
-        </li>
-      `;
-      weekContainer.appendChild(element);
+    element.innerHTML = `
+      <div class="day">${daysOfWeeks[day.getDay()]}</div>
+      <div class="date">${day.getDate()}</div>
+    `;
+    if (day.getDate() === today.getDate()) {
+      element.click();
     }
+    weekContainer.appendChild(element);
   }
 })();
 
-function displayGraph(sessionsData) {
-  const sessions = JSON.parse(sessionsData);
+function displayGraph(intentedDay, newElement) {
+  const groupedData = {};
+  const labels = [];
+  const datasets = [];
 
-  const labels = sessions.map((session) =>
-    new Date(session.start_time).toLocaleTimeString()
-  );
+  for (const workout of workouts) {
+    groupedData[workout.id] = {
+      name: workout.name,
+      sessions: [],
+    };
 
-  const data = sessions.map((session) => {
-    const startTime = new Date(session.start_time);
-    const endTime = new Date(session.end_time);
-    const duration = endTime.getTime() - startTime.getTime();
-    return duration / (1000 * 60); // Convert duration to minutes
-  });
+    for (const session of workout.sessions) {
+      const startDay = new Date(session.start_time).getDate();
 
-  const ctx = document.getElementById("chart").getContext("2d");
+      if (startDay === intentedDay.getDate()) {
+        groupedData[workout.id].sessions.push({
+          start_time: formatDateTime(session.start_time),
+          end_time: formatDateTime(session.end_time),
+        });
+      }
+    }
+  }
+
+  for (const workoutId in groupedData) {
+    const workout = groupedData[workoutId];
+    const data = [];
+
+    for (const session of workout.sessions) {
+      data.push({
+        x: session.start_time,
+        y: session.repetitions,
+      });
+    }
+
+    datasets.push({
+      label: workout.name,
+      data: data,
+      borderColor: "rgba(75, 192, 192, 1)",
+      fill: false,
+    });
+  }
+
+  clearCanvas();
+
+  const ctx = document.getElementById("workout-chart").getContext("2d");
   new Chart(ctx, {
     type: "line",
     data: {
       labels: labels,
-      datasets: [
-        {
-          label: "Duration (minutes)",
-          data: data,
-          pointRadius: data.map((entry) => (entry === 0 ? 0 : 3)),
-          fill: false,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-        },
-      ],
+      datasets: datasets,
     },
     options: {
       responsive: true,
@@ -131,7 +133,7 @@ function displayGraph(sessionsData) {
         },
         title: {
           display: true,
-          text: "Time / Duration",
+          text: "Количество повторений за сеанс",
         },
       },
       scales: {
@@ -139,13 +141,13 @@ function displayGraph(sessionsData) {
           beginAtZero: true,
           title: {
             display: true,
-            text: "Duration (minutes)",
+            text: "Повторения",
           },
         },
         x: {
           title: {
             display: true,
-            text: "Session Start Time",
+            text: "Время начала сеанса",
           },
         },
       },
@@ -162,28 +164,4 @@ function clearCanvas() {
   const canvas = document.getElementById("workout-chart");
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function getDayOfMonth(dateString) {
-  const date = new Date(dateString);
-  return date.getDate();
-}
-
-function getDayOfWeek(dateString) {
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const date = new Date(dateString);
-  return daysOfWeek[date.getDay()];
-}
-
-function formatDateTime(dateTimeStr) {
-  const dateTime = luxon.DateTime.fromISO(dateTimeStr);
-  return dateTime.toFormat("h':'mm a");
 }

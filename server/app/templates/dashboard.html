@@ -19,7 +19,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.0.2/luxon.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
@@ -52,8 +51,12 @@
           </div>
         </div>
         <div class="day-wraps">
-          <ul id="week-container">
-            <!-- Days of week will be here -->
+          <ul>
+            <div class="day-wraps">
+              <ul id="week-container">
+                <!-- Week days -->
+              </ul>
+            </div>
           </ul>
         </div>
 
@@ -219,216 +222,6 @@
     </script>
 
     <script>
-      // let workouts;
-      // let workout;
-
-      // (async () => {
-      //   let accessToken = localStorage.getItem("access_token");
-
-      //   let { res, data } = await getUserWorkouts(accessToken);
-      //   if (res.status === 401) {
-      //     window.location.href = "/login";
-      //   }
-      //   workouts = data.workouts;
-
-      //   const workoutTag = document.getElementById("workouts");
-      //   data.workouts.forEach((workout) => {
-      //     const li = document.createElement("li");
-      //     li.innerHTML = `
-      //     <button
-      //       onclick="chooseWorkout(${workout.id})"
-      //       class="flex flex-col item-center content-center content-fit flex-flow w-full p-6 bg-grad border border-gray-200 rounded-lg shadow transition-all	 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-all	"
-      //     >
-      //     <div class="work-btn-wrapper">
-      //       <i class="fa-solid fa-dumbbell"></i>
-      //     <div class="work-content">
-      //       <h4
-      //         class="mb-2 text-2xl font-sm tracking-tight text-gray-900 dark:text-white text-gray-900	"
-      //       >
-      //         ${workout.name}
-      //       </h4>
-      //       <p class="text-l text-gray-700 dark:text-gray-400">${String(
-      //         workout.description
-      //       ).substring(0, 40)}...</p>
-      // </div>
-      // </div>
-      //     </button>
-      //   `;
-      //     workoutTag.appendChild(li);
-      //   });
-
-      //   if (workouts.length > 0) {
-      //     workout = changeWorkout(workouts[0]);
-      //   } else {
-      //     document.getElementById("workout-data").innerHTML = `
-      //   <div class="flex flex-col items-center justify-center h-screen">
-      //     <h1 class="text-3xl font-semibold text-gray-900 dark:text-white">Нет тренировок</h1>
-      //     <a href="/workouts/new" class="mt-4 primary-btn">Добавить тренировку</a>
-      //   </div>
-      // `;
-      //   }
-      // })();
-
-      // function changeWorkout(workout) {
-      //   const range = document.getElementById("timeRange");
-
-      //   document.getElementById("workout-name").innerText = workout.name;
-      //   document.getElementById("workout-description").innerText =
-      //     workout.exercise.description;
-
-      //   document
-      //     .getElementById("workout-url")
-      //     .setAttribute("href", `/workouts/start/${workout.id}`);
-
-      //   document.getElementById("workout-video").innerHTML = `
-      // <video
-      //   src="../static/videos/${workout.exercise.video_link}"
-      //   alt="exercise video"
-      //   playsinline
-      //   autoplay
-      //   controls
-      //   muted
-      //   loop class="object-cover"
-      // /> </video>
-      // `;
-
-      //   clearCanvas();
-      //   const ctx = document.getElementById("workout-chart").getContext("2d");
-
-      //   const allLabels = workout.sessions.map(
-      //     (entry) =>
-      //       `${formatDateTime(entry.start_time)} - ${formatDateTime(
-      //         entry.end_time
-      //       )}`
-      //   );
-
-      //   let labelWidth = 5;
-      //   if (window.innerWidth > 768) {
-      //     labelWidth = 20;
-      //   } else {
-      //     labelWidth = 5;
-      //   }
-
-      //   const labels = allLabels.slice(0, labelWidth);
-      //   const data = workout.sessions
-      //     .map((entry) => entry.repetitions)
-      //     .slice(0, labelWidth);
-
-      //   const chart = new Chart(ctx, {
-      //     type: "line",
-      //     data: {
-      //       labels: labels,
-      //       datasets: [
-      //         {
-      //           label: "Повторения",
-      //           data: data,
-      //           pointRadius: data.map((entry) => (entry === 0 ? 0 : 3)),
-      //           fill: false,
-      //           backgroundColor: "rgba(75, 192, 192, 0.2)",
-      //           borderColor: "rgba(75, 192, 192, 1)",
-      //           borderWidth: 1,
-      //         },
-      //       ],
-      //     },
-      //     options: {
-      //       responsive: true,
-      //       plugins: {
-      //         legend: {
-      //           position: "top",
-      //         },
-      //         title: {
-      //           display: true,
-      //           text: "Дата / Повторы",
-      //         },
-      //       },
-      //       scales: {
-      //         y: {
-      //           beginAtZero: true,
-      //           title: {
-      //             display: true,
-      //             text: "Повторения",
-      //           },
-      //         },
-      //         x: {
-      //           title: {
-      //             display: true,
-      //             text: "Время тренировки",
-      //           },
-      //         },
-      //       },
-      //     },
-      //   });
-
-      //   document.getElementById(
-      //     "workout-total-time"
-      //   ).innerHTML = `${workout.total_time} sec`;
-      //   document.getElementById(
-      //     "workout-rest-time"
-      //   ).innerHTML = `${workout.rest_time} sec`;
-      //   document.getElementById("workout-description-text").innerText =
-      //     workout.description;
-
-      //   range.innerHTML = "";
-
-      //   for (let i = 0; i < allLabels.length; i += labelWidth) {
-      //     const option = document.createElement("option");
-      //     option.value = i;
-      //     option.text = `До ${allLabels[i]}`;
-      //     range.appendChild(option);
-      //   }
-
-      //   function updateTimeRange(selectedTimeRange) {
-      //     chart.data.datasets[0].data = workout.sessions
-      //       .map((entry) => entry.repetitions)
-      //       .slice(selectedTimeRange, selectedTimeRange + labelWidth);
-
-      //     chart.data.labels = workout.sessions
-      //       .map(
-      //         (entry) =>
-      //           `${formatDateTime(entry.start_time)} - ${formatDateTime(
-      //             entry.end_time
-      //           )}`
-      //       )
-      //       .slice(selectedTimeRange, selectedTimeRange + labelWidth);
-
-      //     chart.update();
-      //   }
-
-      //   document
-      //     .getElementById("timeRange")
-      //     .addEventListener("change", function (event) {
-      //       const selectedTimeRange = event.target.value;
-      //       updateTimeRange(parseInt(selectedTimeRange));
-      //     });
-      // }
-
-      // function chooseWorkout(id) {
-      //   workout = workouts.find((workout) => workout.id === id);
-      //   changeWorkout(workout);
-      // }
-
-      // function clearCanvas() {
-      //   const existingChart = Chart.getChart("workout-chart");
-      //   if (existingChart) {
-      //     existingChart.destroy();
-      //   }
-
-      //   const canvas = document.getElementById("workout-chart");
-      //   const ctx = canvas.getContext("2d");
-      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // }
-
-      // function formatDateTime(dateTimeStr) {
-      //   const dateTime = luxon.DateTime.fromISO(dateTimeStr);
-      //   return dateTime.toFormat("h':'mm a");
-      // }
-
-      // document.getElementById("logout").addEventListener("click", () => {
-      //   localStorage.removeItem("access_token");
-      //   localStorage.removeItem("refresh_token");
-      //   window.location.href = "/login";
-      // });
-
       function closeToast(id) {
         document.getElementById(id).style.display = "none";
       }
