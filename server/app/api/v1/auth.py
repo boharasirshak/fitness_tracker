@@ -1,3 +1,6 @@
+import uuid
+from datetime import datetime, timedelta, timezone
+
 from aiosmtplib.errors import SMTPException
 from smtplib import SMTPException as SyncSMTPException
 
@@ -9,20 +12,26 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from app.models.users import User
+from app.models.reset_password_token import ResetPasswordToken
 from app.core.database import get_db
+from app.dependencies.jwt import jwt_verify
+from app.config import FORGOT_PASSWORD_TOKEN_EXPIRATION
 from app.schemas import ErrorResponseSchema
 from app.schemas.users import (
     UserLoginSchema,
     UserRegisterSchema,
     UserRegisterResponseSchema,
     UserLoginResponseSchema,
+    ForgotPasswordSchema,
+    ForgotPasswordResponseSchema,
+    ResetUserPasswordSchema,
+    ResetUserPasswordResponseSchema,
 )
 from app.core.emails import (
     read_email_template,
     send_mail_sync,
     # send_mail_async,
 )
-from app.core.utils import generate_random_password
 from app.core.security import verify_password, get_password_hash
 from app.config import access_security, refresh_security, BASE_URL
 
@@ -63,7 +72,7 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     refresh_token = refresh_security.create_refresh_token(subject=subject)
 
     return UserLoginResponseSchema(
-        username=user.username,
+        name=user.name,
         email=user.email,
         access_token=access_token,
         refresh_token=refresh_token,
@@ -97,39 +106,9 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
             content=jsonable_encoder({"detail": "Электронная почта уже существует"}),
         )
 
-    """Old Code"""
-    # temp_password = generate_random_password(20)
-    # hashed_password = get_password_hash(temp_password)
-
-    # html = read_email_template("temporary-password.html")
-    # html = html.replace("{{email}}", data.email)
-    # html = html.replace("{{temporary_password}}", temp_password)
-    # html = html.replace("{{login_url}}", f"{BASE_URL}/login")
-
-    #     send_mail_sync(to=data.email, subject="Ваш временный пароль", html=html)
-
-    #     # first send the email, then only register the user.
-    #     user = User(email=data.email, hashed_password=hashed_password)
-    #     db.add(user)
-    #     await db.commit()
-    #     await db.refresh(user)
-
-    # except (SMTPException, SyncSMTPException) as e:
-    #     print(e)
-    #     return JSONResponse(
-    #         status_code=500,
-    #         content=jsonable_encoder(
-    #             {
-    #                 "detail": "Сообщение об ошибке при отправке на этот адрес электронной почты!"
-    #             }
-    #         ),
-    #     )
-
     try:
         hashed_password = get_password_hash(data.password)
-        user = User(
-            email=data.email, username=data.name, hashed_password=hashed_password
-        )
+        user = User(email=data.email, name=data.name, hashed_password=hashed_password)
         db.add(user)
         await db.commit()
         await db.refresh(user)
@@ -139,7 +118,7 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         refresh_token = refresh_security.create_refresh_token(subject=subject)
 
         return UserRegisterResponseSchema(
-            username=user.username,
+            name=user.name,
             email=user.email,
             access_token=access_token,
             refresh_token=refresh_token,
@@ -156,3 +135,103 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
                 }
             ),
         )
+
+
+@router.post(
+    "/forgot-password",
+    response_description="Send email with temporary token to reset password",
+    responses={
+        200: {
+            "model": UserRegisterResponseSchema,
+            "description": "Регистрация прошла успешно, пароль отправлен на электронную почту",
+        },
+        409: {
+            "model": ErrorResponseSchema,
+            "description": "Электронная почта уже существует",
+        },
+    },
+)
+async def forgot_password(
+    data: ForgotPasswordSchema, db: AsyncSession = Depends(get_db)
+):
+    query = select(User).where(User.email == data.email)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    if not user:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({"detail": "User with provided email not found."}),
+        )
+
+    reset_token = str(uuid.uuid4())
+    expiration = datetime.now(timezone.utc) + timedelta(
+        hours=FORGOT_PASSWORD_TOKEN_EXPIRATION
+    )
+    token = ResetPasswordToken(
+        email=user.email, token=reset_token, expiration=expiration
+    )
+    db.add(token)
+    await db.commit()
+
+    return ForgotPasswordResponseSchema(
+        message="Password reset token sent successfully", token=reset_token
+    )
+    # Send email with reset token
+
+
+@router.post(
+    "/reset-password",
+    response_description="Resets the password of the user using the temporary token",
+    responses={
+        200: {
+            "model": UserRegisterResponseSchema,
+            "description": "Регистрация прошла успешно, пароль отправлен на электронную почту",
+        },
+        409: {
+            "model": ErrorResponseSchema,
+            "description": "Электронная почта уже существует",
+        },
+    },
+)
+async def reset_password(
+    data: ResetUserPasswordSchema, db: AsyncSession = Depends(get_db)
+):
+    query = select(ResetPasswordToken).where(
+        ResetPasswordToken.token == data.reset_token
+    )
+    result = await db.execute(query)
+    token = result.scalars().first()
+
+    if not token:
+        return JSONResponse(
+            status_code=409,
+            content=jsonable_encoder({"detail": "Reset token invalid"}),
+        )
+
+    if token.expiration < datetime.now(timezone.utc):
+        return JSONResponse(
+            status_code=409,
+            content=jsonable_encoder({"detail": "Reset token expired"}),
+        )
+
+    query = select(User).where(User.email == token.email)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    if not user:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder(
+                {"detail": "User assaigned with that token not found"}
+            ),
+        )
+
+    user.hashed_password = get_password_hash(data.new_password)
+    await db.commit()
+    await db.refresh(user)
+
+    await db.delete(token)
+    await db.commit()
+
+    return ResetUserPasswordResponseSchema(message="Password reset successfully")
