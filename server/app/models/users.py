@@ -25,7 +25,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String, nullable=False, index=True, unique=True)
-    username = Column(String, nullable=True, default="")
+    name = Column(String, nullable=True, default="")
     hashed_password: str = Column(String, nullable=False)
     gender = Column(String, nullable=True, default="")
     height = Column(Integer, nullable=True, default=0)
