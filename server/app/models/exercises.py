@@ -14,5 +14,6 @@ class Exercise(Base):
     id = Column(String, primary_key=True)
     name = Column(String, nullable=False)
     video_link = Column(String, nullable=False)
+    gif_link = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
