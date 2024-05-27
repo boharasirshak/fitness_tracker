@@ -57,6 +57,7 @@ async def insert_default_data():
             video_link="high_knees.mov",
             description="Бег на месте с высоким поднятием коленей - это как игра в ловкие ниндзя! Отличный способ "
             "пробудить тело и дать заряд бодрости на весь день.",
+            gif_link="high_knees.gif",
         )
         db.add(high_knees)
 
@@ -71,6 +72,7 @@ async def insert_default_data():
             video_link="jumping_jacks.mp4",
             description="Прыжки с разведением рук и ног, как звездочка, взлетающая в небо! Это не только весело, "
             "но и отлично закачивает энергией на весь день.",
+            gif_link="jumping_jacks.gif",
         )
         db.add(jumping_jacks)
 
@@ -84,6 +86,7 @@ async def insert_default_data():
             name="Пользовательская",
             video_link="",
             description="Индивидуальное упражнение, выполненное по вашей собственной воле. Повторы засчитываться не будут.",
+            gif_link="",
         )
         db.add(jumping_jacks)
 
