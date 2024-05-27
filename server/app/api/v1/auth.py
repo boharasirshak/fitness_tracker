@@ -205,8 +205,8 @@ async def reset_password(
 
     if not token:
         return JSONResponse(
-            status_code=409,
-            content=jsonable_encoder({"detail": "Reset token invalid"}),
+            status_code=404,
+            content=jsonable_encoder({"detail": "Reset token not found"}),
         )
 
     if token.expiration < datetime.now(timezone.utc):
