@@ -61,3 +61,21 @@ class UserRegisterResponseSchema(BaseModel):
 
 class FileUploadResponseSchema(BaseModel):
     file_id: str
+
+
+class ForgotPasswordSchema(BaseModel):
+    email: str
+
+
+class ForgotPasswordResponseSchema(BaseModel):
+    message: str
+    token: str
+
+
+class ResetUserPasswordSchema(BaseModel):
+    new_password: str
+    reset_token: str
+
+
+class ResetUserPasswordResponseSchema(BaseModel):
+    message: str
