@@ -7,22 +7,13 @@ from app.schemas.exercises import ExerciseSchema
 
 class WorkoutSessionSchema(BaseModel):
     id: int
-    user_id: int
-    workout_id: int
-    start_time: datetime
-    end_time: datetime
     repetitions: int
 
 
-class DetailedWorkoutSchema(BaseModel):
+class WorkoutExerciseSchema(BaseModel):
     id: int
-    name: str
-    description: str
     total_time: int
     rest_time: int
-    user_id: int
-    exercise_id: str
-    efficiency: int
     created_at: datetime
 
     exercise: ExerciseSchema
@@ -33,38 +24,39 @@ class WorkoutSchema(BaseModel):
     id: int
     name: str
     description: str
-    total_time: int
-    rest_time: int
     efficiency: int
-    user_id: int
-    exercise_id: str
     created_at: datetime
+
+    exercises: list[WorkoutExerciseSchema]
 
 
 class AllWorkoutsSchema(BaseModel):
-    workouts: list[DetailedWorkoutSchema]
+    workouts: list[WorkoutSchema]
+
+
+class CreateWorkoutExerciseSchema(BaseModel):
+    exercise_id: int
+    total_time: int
+    rest_time: int = 0
+
+
+class CreateWorkoutSessionSchema(BaseModel):
+    user_id: int
+    workout_exercise_id: int
+    repetitions: int
 
 
 class CreateWorkoutSchema(BaseModel):
     name: str
     description: str
     total_time: int
-    rest_time: int
-    exercise_id: str
-
-
-class CreateWorkoutSessionSchema(BaseModel):
-    workout_id: int
-    start_time: datetime
-    end_time: datetime
-    repetitions: int
+    user_id: int
+    exercises: list[CreateWorkoutExerciseSchema]
 
 
 class CreateWorkoutResponseSchema(BaseModel):
-    workout: WorkoutSchema
     message: str
 
 
 class CreateWorkoutSessionResponseSchema(BaseModel):
-    session: WorkoutSessionSchema
     message: str

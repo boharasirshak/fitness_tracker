@@ -18,7 +18,7 @@ class UserRegisterSchema(BaseModel):
 
 
 class UserDataUpdateSchema(BaseModel):
-    username: Optional[str] = None
+    name: Optional[str] = None
     gender: Optional[str] = None
     height: Optional[int] = None
     weight: Optional[int] = None
@@ -36,7 +36,7 @@ class UserSchema(BaseModel):
     email: str
     age: int
     gender: str
-    username: str
+    name: str
     height: int
     weight: int
     desired_weight: int
@@ -48,14 +48,14 @@ class UserLoginResponseSchema(BaseModel):
     email: str
     access_token: str
     refresh_token: str
-    username: str
+    name: str
 
 
 class UserRegisterResponseSchema(BaseModel):
     email: str
     access_token: str
     refresh_token: str
-    username: str
+    name: str
     message: str
 
 

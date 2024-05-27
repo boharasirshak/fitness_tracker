@@ -8,6 +8,7 @@ class ExerciseSchema(BaseModel):
     name: str
     description: str
     video_link: str
+    gif_link: str
     description: str
     created_at: datetime
 
