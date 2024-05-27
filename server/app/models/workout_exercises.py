@@ -9,6 +9,6 @@ class WorkoutExercise(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     workout_id = Column(Integer, ForeignKey("workouts.id"), nullable=False)
     exercise_id = Column(String, ForeignKey("exercises.id"), nullable=False)
-    total_time = Column(Integer, nullable=False, nullable=False)
+    total_time = Column(Integer, nullable=False)
     rest_time = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime(timezone=True), default=func.now())
