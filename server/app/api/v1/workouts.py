@@ -16,6 +16,8 @@ from app.schemas.workouts import (
     WorkoutSchema,
     CreateWorkoutSchema,
     CreateWorkoutResponseSchema,
+    CreateWorkoutSessionSchema,
+    CreateWorkoutSessionResponseSchema,
     workout_to_schema,
 )
 
@@ -184,60 +186,61 @@ async def create_new_workout(
     )
 
 
-# @router.post(
-#     "/sessions",
-#     response_description="Добавьте новый тренировочный сеанс к тренировке",
-#     responses={
-#         200: {
-#             "model": CreateWorkoutSessionResponseSchema,
-#             "description": "Тренировка успешно добавлена",
-#         },
-#         401: {
-#             "model": ErrorResponseSchema,
-#             "description": "Токен недействителен, срок действия истек или не предоставлен",
-#         },
-#         404: {
-#             "model": ErrorResponseSchema,
-#             "description": "Пользователь или тренировка не найдены",
-#         },
-#     },
-# )
-# async def add_new_workout_session(
-#     data: CreateWorkoutSessionSchema,
-#     db: AsyncSession = Depends(get_db),
-#     user: User = Depends(jwt_verify),
-# ):
-#     # noinspection PyTypeChecker
-#     query = select(Workout).where(Workout.id == data.workout_id)
-#     result = await db.execute(query)
-#     workout = result.scalars().first()
+@router.post(
+    "/sessions",
+    response_description="Добавьте новый тренировочный сеанс к тренировке",
+    responses={
+        200: {
+            "model": CreateWorkoutSessionResponseSchema,
+            "description": "Тренировка успешно добавлена",
+        },
+        401: {
+            "model": ErrorResponseSchema,
+            "description": "Токен недействителен, срок действия истек или не предоставлен",
+        },
+        404: {
+            "model": ErrorResponseSchema,
+            "description": "Пользователь или тренировка не найдены",
+        },
+    },
+)
+async def add_new_workout_session(
+    data: CreateWorkoutSessionSchema,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(jwt_verify),
+):
+    query = select(Workout).where(
+        Workout.id == data.workout_id, Workout.user_id == user.id
+    )
+    result = await db.execute(query)
+    workout = result.scalars().first()
 
-#     if not workout:
-#         return JSONResponse(
-#             status_code=404,
-#             content=jsonable_encoder({"detail": "Тренировка не найдена"}),
-#         )
+    if not workout:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({"detail": "Workout not found"}),
+        )
 
-#     new_workout_session = WorkoutSession(
-#         user_id=user.id,
-#         workout_id=data.workout_id,
-#         start_time=data.start_time,
-#         end_time=data.end_time,
-#         repetitions=data.repetitions,
-#     )
+    query = select(WorkoutExercise).where(
+        WorkoutExercise.id == data.workout_exercise_id
+    )
+    result = await db.execute(query)
+    workout_exercise = result.scalars().first()
 
-#     db.add(new_workout_session)
-#     await db.commit()
-#     await db.refresh(new_workout_session)
+    if not workout_exercise:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({"detail": "Workout Exercise not found"}),
+        )
 
-#     return CreateWorkoutSessionResponseSchema(
-#         session=WorkoutSessionSchema(
-#             id=new_workout_session.id,
-#             user_id=new_workout_session.user_id,
-#             workout_id=new_workout_session.workout_id,
-#             end_time=new_workout_session.end_time,
-#             repetitions=new_workout_session.repetitions,
-#             start_time=new_workout_session.start_time,
-#         ),
-#         message="Тренировка успешно завершена.",
-#     )
+    new_workout_session = WorkoutSession(
+        user_id=user.id,
+        workout_exercise_id=data.workout_exercise_id,
+        repetitions=data.repetitions,
+    )
+
+    db.add(new_workout_session)
+    await db.commit()
+    await db.refresh(new_workout_session)
+
+    return CreateWorkoutSessionResponseSchema(message="Тренировка успешно завершена.")
