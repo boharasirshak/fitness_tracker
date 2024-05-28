@@ -36,7 +36,7 @@ os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
 async def get_user_data(user: User = Depends(jwt_verify)):
     return UserSchema(
         email=user.email,
-        username=user.username,
+        name=user.name,
         gender=user.gender,
         height=user.height,
         weight=user.weight,
@@ -89,7 +89,7 @@ async def change_user_data(
 
     return UserSchema(
         email=new_user.email,
-        username=new_user.username,
+        name=new_user.name,
         gender=new_user.gender,
         height=new_user.height,
         weight=new_user.weight,
