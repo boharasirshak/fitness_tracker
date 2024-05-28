@@ -111,7 +111,7 @@ async def get_single_workout(
             content=jsonable_encoder({"detail": "Тренировка не найдена"}),
         )
 
-    return workout
+    return workout_to_schema(workout)
 
 
 @router.post(
