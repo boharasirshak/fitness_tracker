@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 
 class WorkoutSession(Base):
@@ -13,3 +14,8 @@ class WorkoutSession(Base):
     )
     repetitions = Column(Integer, nullable=True, default=0)
     created_at = Column(DateTime(timezone=True), default=func.now())
+
+    user = relationship("User")
+    workout_exercise = relationship(
+        "WorkoutExercise", back_populates="workout_sessions"
+    )

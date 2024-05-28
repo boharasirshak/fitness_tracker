@@ -8,6 +8,7 @@ from sqlalchemy import (
     DateTime,
 )
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -38,3 +39,5 @@ class User(Base):
     desired_weight = Column(Integer, nullable=True, default=0)
     gender = Column(String, nullable=True, default="male")
     created_at = Column(DateTime(timezone=True), default=func.now())
+
+    workouts = relationship("Workout", back_populates="user")
