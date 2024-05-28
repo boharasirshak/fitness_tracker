@@ -21,6 +21,9 @@ class WorkoutExerciseSchema(BaseModel):
 
     sessions: list[WorkoutSessionSchema]
 
+    class Config:
+        json_encoders = {datetime: lambda dt: dt.isoformat()}
+
 
 class WorkoutSchema(BaseModel):
     id: int
@@ -30,6 +33,9 @@ class WorkoutSchema(BaseModel):
     created_at: datetime
 
     exercises: list[WorkoutExerciseSchema]
+
+    class Config:
+        json_encoders = {datetime: lambda dt: dt.isoformat()}
 
 
 class AllWorkoutsSchema(BaseModel):
