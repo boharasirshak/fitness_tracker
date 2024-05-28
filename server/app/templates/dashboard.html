@@ -4,40 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../static/assets/css/style.css" />
     <link
       rel="shortcut icon"
       href="../static/favicon.ico"
       type="image/x-icon"
     />
-    <script src="../static/js/lib.js"></script>
+    <link href="../static/css/style.css" rel="stylesheet" />
     <link href="../static/css/main.css" rel="stylesheet" />
     <link href="../static/css/tailwind.css" rel="stylesheet" />
+    <link href="../static/css/toasts.css" rel="stylesheet" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
-    />
+    <script src="../static/js/toasts.js" type="text/javascript"></script>
+    <script src="../static/js/lib.js"></script>
   </head>
-
   <body>
-    <!-- DASHBOARD PAGE START HERE -->
     <section class="dashboard-page">
       <div class="container">
         <div class="site-logo">
-          <img src="../static/assets/images/purple-logo.svg" alt="logo" />
+          <img src="../static/images/purple-logo.svg" alt="logo" />
         </div>
         <div class="profile-wraps">
           <div class="profile-name-wraps">
             <div class="profile-img">
               <a href="/profile">
                 <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8AtmjZZlbJfH2Xqps-lRFOQuTysOO4n7FTlNtyVuzA&s"
+                  src="../static/images/default-profile.png"
                   alt="profile-pic"
                   class="img-responsive"
                   id="profile-pic"
@@ -47,7 +38,7 @@
             <span id="name">...</span>
           </div>
           <div class="calendar-wraps">
-            <img src="../static/assets/images/calendar.svg" alt="" />
+            <img src="../static/images/calendar.svg" alt="" />
           </div>
         </div>
         <div class="day-wraps">
@@ -74,8 +65,20 @@
             <button class="btn">Начать тренировку</button>
           </div>
         </div>
-        <div class="wrokouts-flexed" id="workouts">
-          <!-- Workouts will be shown here  -->
+        <div class="wrokouts-flexed">
+          {% for workout in workouts %}
+          <div class="workout-coolection">
+            <div class="workout-image">
+              <img src="../static/images/squat.png" alt="exercise video" />
+            </div>
+            <div class="workout-name-wrap">
+              <h5>{{workout.name}}</h5>
+              <a href="/workouts/start/{{workout.id}}">
+                <img src="../static/images/gradient-arrow.svg" alt="arrow" />
+              </a>
+            </div>
+          </div>
+          {% endfor %}
         </div>
         <div class="three-btn-wraps">
           <a href="">
@@ -90,143 +93,11 @@
         </div>
       </div>
     </section>
-    <!-- DASHBOARD PAGE END HERE -->
-
-    <section id="toasts">
-      <div
-        id="toast-success"
-        class="fixed top-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 z-20"
-        role="alert"
-        style="display: none"
-      >
-        <div
-          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
-        >
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-            />
-          </svg>
-          <span class="sr-only">Значок проверки</span>
-        </div>
-        <div class="ms-3 text-sm font-normal" id="toast-success-text">
-          Вход в систему выполнен успешно.
-        </div>
-        <button
-          type="button"
-          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-          data-dismiss-target="#toast-success"
-          aria-label="Close"
-          onclick="closeToast('toast-success')"
-        >
-          <span class="sr-only">Закрывать</span>
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-        </button>
-      </div>
-      <div
-        id="toast-danger"
-        class="fixed top-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 z-20"
-        role="alert"
-        style="display: none"
-      >
-        <div
-          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200"
-        >
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"
-            />
-          </svg>
-          <span class="sr-only">Значок ошибки</span>
-        </div>
-        <div class="ms-3 text-sm font-normal" id="toast-danger-text">
-          Неверное имя пользователя и пароль
-        </div>
-        <button
-          type="button"
-          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-          data-dismiss-target="#toast-danger"
-          aria-label="Close"
-          onclick="closeToast('toast-danger')"
-        >
-          <span class="sr-only">Закрывать</span>
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-        </button>
-      </div>
-    </section>
 
     <script>
-      (async () => {
-        await authFlow(null, "/login");
-
-        let accessToken = localStorage.getItem("access_token");
-        let { res, data } = await getUser(accessToken);
-        if (res.status === 401) {
-          window.location.href = "/login";
-        }
-
-        if (data.username === "" || data.height === 0 || data.weight === 0) {
-          document.getElementById("toast-danger").style.display = "";
-          document.getElementById("toast-danger-text").innerText =
-            "Пожалуйста, заполните всю вашу информацию на странице профиля!";
-        }
-
-        if (data.profile_picture_url !== "") {
-          document.getElementById(
-            "profile-pic"
-          ).src = `../../static/uploads/${data.profile_picture_url}`;
-        }
-
-        document.getElementById("name").innerText = data.username;
-      })();
+      var workouts = {{ workouts|tojson }};
     </script>
 
-    <script>
-      function closeToast(id) {
-        document.getElementById(id).style.display = "none";
-      }
-    </script>
-
-    <script src="../static/js/dashboard.js"></script>
+    <script src="../static/js/dashboard.js" defer></script>
   </body>
 </html>
