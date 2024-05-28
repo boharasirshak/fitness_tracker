@@ -1,13 +1,33 @@
+document.getElementById("check").addEventListener("click", () => {
+  if (document.getElementById("check").checked) {
+    document.getElementById("submit").disabled = false;
+  } else {
+    document.getElementById("submit").disabled = true;
+  }
+});
+
+document.getElementById("eye").addEventListener("click", () => {
+  let password = document.getElementById("password");
+  let eye = document.getElementById("eye");
+
+  if (password.type === "password") {
+    password.type = "text";
+  } else {
+    password.type = "password";
+  }
+});
+
 document.getElementById("submit")?.addEventListener("click", async (e) => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   if (!email || !password) {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText =
-      "Требуется адрес электронной почты и пароль!";
-    return;
+    return iziToast.show({
+      color: "yellow", // blue, red, green, yellow
+      position: "topRight",
+      timeout: 5000,
+      message: "Требуется адрес электронной почты и пароль!",
+    });
   }
 
   const response = await fetch("/api/v1/auth/login", {
@@ -20,33 +40,35 @@ document.getElementById("submit")?.addEventListener("click", async (e) => {
 
   try {
     const data = await response.json();
+
     if (response.status >= 400) {
-      console.log(response.status, data.detail);
-      document.getElementById("toast-success").style.display = "none";
-      document.getElementById("toast-danger").style.display = "";
-      if (typeof data.detail === "string") {
-        document.getElementById("toast-danger-text").innerText = data.detail;
-      } else {
-        // get the first error of the FastAPI 422 validation error
-        document.getElementById("toast-danger-text").innerText =
-          data.detail[0].msg;
-      }
-      return;
+      let message =
+        typeof data.detail === "string" ? data.detail : data.detail[0].msg;
+
+      return iziToast.show({
+        color: "red",
+        position: "topRight",
+        timeout: 5000,
+        message: message,
+      });
     }
 
-    document.getElementById("toast-danger").style.display = "none";
-    document.getElementById("toast-success").style.display = "";
-    document.getElementById("toast-success-text").innerText =
-      "Пользователь успешно вошел в систему. Перенаправление на панель мониторинга...";
+    iziToast.show({
+      color: "green",
+      position: "topRight",
+      timeout: 5000,
+      message:
+        "Пользователь успешно вошел в систему. Перенаправление на панель мониторинга...",
+    });
 
-    localStorage.setItem("access_token", data.access_token);
-    localStorage.setItem("refresh_token", data.refresh_token);
-
+    setCookie("access_token", data.access_token);
     window.location.href = "/dashboard";
   } catch {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText =
-      "Внутренняя ошибка сервера. Пожалуйста, повторите попытку позже.";
+    return iziToast.show({
+      color: "red",
+      position: "topRight",
+      timeout: 5000,
+      message: "Внутренняя ошибка сервера. Пожалуйста, повторите попытку позже",
+    });
   }
 });

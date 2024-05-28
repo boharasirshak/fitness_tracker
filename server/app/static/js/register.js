@@ -1,14 +1,33 @@
-document.getElementById("submit")?.addEventListener("click", async (e) => {
+document.getElementById("check").addEventListener("click", () => {
+  if (document.getElementById("check").checked) {
+    document.getElementById("submit").disabled = false;
+  } else {
+    document.getElementById("submit").disabled = true;
+  }
+});
+
+document.getElementById("eye").addEventListener("click", () => {
+  let password = document.getElementById("password");
+
+  if (password.type === "password") {
+    password.type = "text";
+  } else {
+    password.type = "password";
+  }
+});
+
+document.getElementById("submit").addEventListener("click", async (e) => {
   const email = document.getElementById("email").value;
   const name = document.getElementById("name").value;
   const password = document.getElementById("password").value;
 
   if (!email || !name || !password) {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText =
-      "Все поля обязательны для заполнения";
-    return;
+    return iziToast.show({
+      color: "yellow", // blue, red, green, yellow
+      position: "topRight",
+      timeout: 5000,
+      message: "Все поля обязательны для заполнения!",
+    });
   }
 
   const response = await fetch("/api/v1/auth/register", {
@@ -27,29 +46,32 @@ document.getElementById("submit")?.addEventListener("click", async (e) => {
     const data = await response.json();
 
     if (response.status >= 400) {
-      document.getElementById("toast-success").style.display = "none";
-      document.getElementById("toast-danger").style.display = "";
-      if (typeof data.detail === "string") {
-        document.getElementById("toast-danger-text").innerText = data.detail;
-      } else {
-        // get the first error of the FastAPI 422 validation error
-        document.getElementById("toast-danger-text").innerText =
-          data.detail[0].msg;
-      }
-      return;
+      let message =
+        typeof data.detail === "string" ? data.detail : data.detail[0].msg;
+
+      return iziToast.show({
+        color: "red",
+        position: "topRight",
+        timeout: 5000,
+        message: message,
+      });
     }
 
-    const message = data.message;
-    document.getElementById("toast-danger").style.display = "none";
-    document.getElementById("toast-success").style.display = "";
-    document.getElementById("toast-success-text").innerText = message;
-    localStorage.setItem("access_token", data.access_token);
-    localStorage.setItem("refresh_token", data.refresh_token);
+    iziToast.show({
+      color: "green",
+      position: "topRight",
+      timeout: 5000,
+      message: data.message,
+    });
 
+    setCookie("access_token", data.access_token);
     window.location.href = "/dashboard";
   } catch {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText = data.detail;
+    return iziToast.show({
+      color: "red",
+      position: "topRight",
+      timeout: 5000,
+      message: "Error during registeration",
+    });
   }
 });
