@@ -42,7 +42,8 @@ router = APIRouter(prefix="/workouts", tags=["Тренировки"])
     },
 )
 async def get_all_users_workouts(
-    user: User = Depends(jwt_verify), db: AsyncSession = Depends(get_db)
+    user: User = Depends(jwt_verify),
+    db: AsyncSession = Depends(get_db),
 ):
     all_workouts: list[WorkoutSchema] = []
 
