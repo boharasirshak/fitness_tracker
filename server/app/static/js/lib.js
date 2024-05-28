@@ -96,3 +96,13 @@ async function getWorkoutData(token, workout_id) {
     };
   }
 }
+
+function setCookie(name, value, expiryDays) {
+  const d = new Date();
+  if (expiryDays) {
+    d.setTime(d.getTime() + 60 * 60 * 24 * expiry);
+    document.cookie = `${name}=${value};expires=${d.toUTCString()}`;
+  } else {
+    document.cookie = `${name}=${value};expires=Tue, 19 Jan 2038 04:14:07 GMT`;
+  }
+}
