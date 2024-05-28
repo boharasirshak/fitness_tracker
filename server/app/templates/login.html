@@ -18,19 +18,6 @@
     <script src="../static/js/lib.js"></script>
   </head>
   <body>
-    {% if access_token %}
-    <script>
-      const accessToken = "{{ access_token }}";
-
-      verifyJwtToken(accessToken).then((valid) => {
-        if (valid) {
-          window.location.href = "/dashboard";
-        }
-      });
-    </script>
-
-    {% endif %}
-
     <!-- LOGIN PAGE START HERE -->
     <section class="login-page">
       <div class="top-logo-part">
