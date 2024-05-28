@@ -47,14 +47,12 @@ class UserSchema(BaseModel):
 class UserLoginResponseSchema(BaseModel):
     email: str
     access_token: str
-    refresh_token: str
     name: str
 
 
 class UserRegisterResponseSchema(BaseModel):
     email: str
     access_token: str
-    refresh_token: str
     name: str
     message: str
 

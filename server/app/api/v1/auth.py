@@ -33,7 +33,7 @@ from app.core.emails import (
     # send_mail_async,
 )
 from app.core.security import verify_password, get_password_hash
-from app.config import access_security, refresh_security, BASE_URL
+from app.config import access_security, BASE_URL
 
 router = APIRouter(prefix="/auth", tags=["Авторизация"])
 
@@ -69,13 +69,9 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     subject = {"email": user.email, "user_id": user.id}
 
     access_token = access_security.create_access_token(subject=subject)
-    refresh_token = refresh_security.create_refresh_token(subject=subject)
 
     return UserLoginResponseSchema(
-        name=user.name,
-        email=user.email,
-        access_token=access_token,
-        refresh_token=refresh_token,
+        name=user.name, email=user.email, access_token=access_token
     )
 
 
@@ -115,13 +111,11 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         subject = {"email": user.email, "user_id": user.id}
 
         access_token = access_security.create_access_token(subject=subject)
-        refresh_token = refresh_security.create_refresh_token(subject=subject)
 
         return UserRegisterResponseSchema(
             name=user.name,
             email=user.email,
             access_token=access_token,
-            refresh_token=refresh_token,
             message="User registered successfully",
         )
 
