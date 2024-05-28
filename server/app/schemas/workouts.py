@@ -43,7 +43,7 @@ class CreateWorkoutExerciseSchema(BaseModel):
 
 
 class CreateWorkoutSessionSchema(BaseModel):
-    user_id: int
+    workout_id: int
     workout_exercise_id: int
     repetitions: int
 
