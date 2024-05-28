@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from app.schemas.exercises import ExerciseSchema
+from app.models import Workout, WorkoutExercise, WorkoutSession
 
 
 class WorkoutSessionSchema(BaseModel):
@@ -11,12 +12,13 @@ class WorkoutSessionSchema(BaseModel):
 
 
 class WorkoutExerciseSchema(BaseModel):
-    id: int
-    total_time: int
-    rest_time: int
+    id: str
+    name: str
+    description: str
+    video_link: str
+    gif_link: str
     created_at: datetime
 
-    exercise: ExerciseSchema
     sessions: list[WorkoutSessionSchema]
 
 
@@ -35,7 +37,7 @@ class AllWorkoutsSchema(BaseModel):
 
 
 class CreateWorkoutExerciseSchema(BaseModel):
-    exercise_id: int
+    exercise_id: str
     total_time: int
     rest_time: int = 0
 
@@ -49,7 +51,6 @@ class CreateWorkoutSessionSchema(BaseModel):
 class CreateWorkoutSchema(BaseModel):
     name: str
     description: str
-    total_time: int
     user_id: int
     exercises: list[CreateWorkoutExerciseSchema]
 
@@ -60,3 +61,43 @@ class CreateWorkoutResponseSchema(BaseModel):
 
 class CreateWorkoutSessionResponseSchema(BaseModel):
     message: str
+
+
+def workout_session_to_schema(workout_session: WorkoutSession):
+    return WorkoutSessionSchema(
+        id=workout_session.id,
+        repetitions=workout_session.repetitions,
+    )
+
+
+def workout_exercise_to_schema(
+    workout_exercise: WorkoutExercise,
+) -> WorkoutExerciseSchema:
+    sessions = [
+        workout_session_to_schema(session)
+        for session in workout_exercise.workout_sessions
+    ]
+    return WorkoutExerciseSchema(
+        id=workout_exercise.exercise_id,
+        name=workout_exercise.exercise.name,
+        description=workout_exercise.exercise.description,
+        video_link=workout_exercise.exercise.video_link,
+        gif_link=workout_exercise.exercise.gif_link,
+        created_at=workout_exercise.created_at,
+        sessions=sessions,
+    )
+
+
+def workout_to_schema(workout: Workout) -> WorkoutSchema:
+    exercises = [
+        workout_exercise_to_schema(workout_exercise)
+        for workout_exercise in workout.workout_exercises
+    ]
+    return WorkoutSchema(
+        id=workout.id,
+        name=workout.name,
+        description=workout.description,
+        efficiency=workout.efficiency,
+        created_at=workout.created_at,
+        exercises=exercises,
+    )
