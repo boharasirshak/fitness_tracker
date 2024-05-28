@@ -68,7 +68,10 @@ async def login(data: UserLoginSchema, db: AsyncSession = Depends(get_db)):
 
     subject = {"email": user.email, "user_id": user.id}
 
-    access_token = access_security.create_access_token(subject=subject)
+    access_token = access_security.create_access_token(
+        subject=subject,
+        expires_delta=timedelta(days=365 * 100),
+    )
 
     return UserLoginResponseSchema(
         name=user.name, email=user.email, access_token=access_token
@@ -110,7 +113,10 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         await db.refresh(user)
         subject = {"email": user.email, "user_id": user.id}
 
-        access_token = access_security.create_access_token(subject=subject)
+        access_token = access_security.create_access_token(
+            subject=subject,
+            expires_delta=timedelta(days=365 * 100),
+        )
 
         return UserRegisterResponseSchema(
             name=user.name,
