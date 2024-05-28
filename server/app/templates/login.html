@@ -24,7 +24,6 @@
 
       verifyJwtToken(accessToken).then((valid) => {
         if (valid) {
-          window.localStorage.setItem("access_token", accessToken);
           window.location.href = "/dashboard";
         }
       });
