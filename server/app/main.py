@@ -17,8 +17,8 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
 from app.api.v1.tokens import router as tokens_router
 from app.api.v1.exercises import router as exercises_router
-from app.api.v1.workouts import router as workouts_router
 from app.api.v1.websockets import router as websockets_router
+from app.api.v1.workouts import router as workouts_router
 
 from app.core.database import create_tables, drop_tables
 
@@ -28,8 +28,8 @@ logging.getLogger("passlib").setLevel(logging.ERROR)
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     # Warning: This will drop all tables, so use only in dev
-    # asyncio.create_task(drop_tables())
     # asyncio.create_task(init_smtp())
+    # asyncio.create_task(drop_tables())
     asyncio.create_task(create_tables())
     asyncio.create_task(insert_default_data())
     yield
@@ -97,5 +97,5 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
 app.include_router(tokens_router, prefix="/api/v1")
 app.include_router(exercises_router, prefix="/api/v1")
-app.include_router(workouts_router, prefix="/api/v1")
 app.include_router(websockets_router, prefix="/api/v1")
+app.include_router(workouts_router, prefix="/api/v1")
