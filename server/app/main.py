@@ -212,10 +212,26 @@ async def profile_page(request: Request, db: AsyncSession = Depends(get_db)):
 #     )
 
 
-# @app.get("/workouts/new")
-# def new_workout(request: Request):
-#     access_token = request.cookies.get("access_token", None)
-#     return templates.TemplateResponse("new-workout.html.html", {"request": request, "access_token": access_token})
+@app.get("/workouts/new")
+def new_workout(request: Request):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        return RedirectResponse(url="/login")
+
+    token = is_valid_jwt(access_token)
+
+    if not token or token.get("subject", {}).get("user_id") is None:
+        resp = RedirectResponse(url="/login")
+        resp.delete_cookie("access_token")
+        return resp
+
+    return templates.TemplateResponse(
+        "add-workout.html",
+        {
+            "request": request,
+            "access_token": access_token,
+        },
+    )
 
 
 # @app.get("/workouts/start/{workout_id}")
