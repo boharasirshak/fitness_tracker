@@ -106,3 +106,14 @@ function setCookie(name, value, expiryDays) {
     document.cookie = `${name}=${value};expires=Tue, 19 Jan 2038 04:14:07 GMT`;
   }
 }
+
+function getCookie(cName) {
+  const name = cName + "=";
+  const cDecoded = decodeURIComponent(document.cookie);
+  const cArr = cDecoded.split("; ");
+  let res;
+  cArr.forEach((val) => {
+    if (val.indexOf(name) === 0) res = val.substring(name.length);
+  });
+  return res;
+}
