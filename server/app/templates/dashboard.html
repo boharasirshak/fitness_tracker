@@ -27,15 +27,26 @@
           <div class="profile-name-wraps">
             <div class="profile-img">
               <a href="/profile">
+                {% if user.profile_picture_url %}
+                <img
+                  src="../static/uploads/{{ user.profile_picture_url }}"
+                  alt="profile-pic"
+                  class="img-responsive"
+                  id="profile-pic"
+                />
+
+                {% else %}
                 <img
                   src="../static/images/default-profile.png"
                   alt="profile-pic"
                   class="img-responsive"
                   id="profile-pic"
                 />
+
+                {% endif %}
               </a>
             </div>
-            <span id="name">...</span>
+            <span id="name">{{ user.name }}</span>
           </div>
           <div class="calendar-wraps">
             <img src="../static/images/calendar.svg" alt="" />
