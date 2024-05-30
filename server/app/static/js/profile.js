@@ -41,7 +41,7 @@ fileInput.addEventListener("change", async (event) => {
   const formData = new FormData();
   formData.append("photo", file);
 
-  const accessToken = localStorage.getItem("access_token");
+  const accessToken = getCookie("access_token");
 
   const res = await fetch("/api/v1/users/photo", {
     method: "PUT",
@@ -56,16 +56,20 @@ fileInput.addEventListener("change", async (event) => {
   }
 
   if (res.status === 409) {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText =
-      "Недопустимый тип файла";
-  } else if (res.status === 200) {
-    document.getElementById("toast-danger").style.display = "none";
-    document.getElementById("toast-success").style.display = "";
-    document.getElementById("toast-success-text").innerText =
-      "Фотография профиля успешно обновлена";
+    return iziToast.show({
+      color: "red", // blue, red, green, yellow
+      position: "topRight",
+      timeout: 5000,
+      message: "Недопустимый тип файла!",
+    });
   }
+
+  return iziToast.show({
+    color: "green",
+    position: "topRight",
+    timeout: 5000,
+    message: "Фотография профиля успешно обновлена",
+  });
 });
 
 document.getElementById("submit").addEventListener("click", async () => {
@@ -83,11 +87,12 @@ document.getElementById("submit").addEventListener("click", async () => {
     Number.isNaN(parseInt(desiredWeight)) ||
     Number.isNaN(parseInt(age))
   ) {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText =
-      "Все поля обязательны для заполнения";
-    return;
+    return iziToast.show({
+      color: "yellow",
+      position: "topRight",
+      timeout: 5000,
+      message: "Все поля обязательны для заполнения",
+    });
   }
 
   activityLevel = parseInt(activityLevel);
@@ -96,7 +101,7 @@ document.getElementById("submit").addEventListener("click", async () => {
   desiredWeight = parseInt(desiredWeight);
   age = parseInt(age);
 
-  const accessToken = localStorage.getItem("access_token");
+  const accessToken = getCookie("access_token");
   if (!accessToken) {
     window.location.href = "/login";
     return;
@@ -106,10 +111,10 @@ document.getElementById("submit").addEventListener("click", async () => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
-      username: name,
+      name,
       gender,
       height,
       weight,
@@ -122,23 +127,29 @@ document.getElementById("submit").addEventListener("click", async () => {
   if (response.status >= 500) {
     try {
       const res = await response.json();
-      document.getElementById("toast-success").style.display = "none";
-      document.getElementById("toast-danger").style.display = "";
-      document.getElementById("toast-danger-text").innerText = res.message;
+      return iziToast.show({
+        color: "yellow",
+        position: "topRight",
+        timeout: 5000,
+        message: res.message,
+      });
     } catch {
-      document.getElementById("toast-success").style.display = "none";
-      document.getElementById("toast-danger").style.display = "";
-      document.getElementById("toast-danger-text").innerText =
-        "Произошла ошибка на сервере. Попробуйте позже";
+      return iziToast.show({
+        color: "red",
+        position: "topRight",
+        timeout: 5000,
+        message: "Произошла ошибка на сервере. Попробуйте позже",
+      });
     }
   }
 
   if (response.status === 409) {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText =
-      "Номер телефона уже существует!";
-    return;
+    return iziToast.show({
+      color: "red",
+      position: "topRight",
+      timeout: 5000,
+      message: "Номер телефона уже существует!",
+    });
   }
 
   if (response.status === 401) {
@@ -147,16 +158,22 @@ document.getElementById("submit").addEventListener("click", async () => {
   }
 
   if (response.status === 422) {
-    document.getElementById("toast-success").style.display = "none";
-    document.getElementById("toast-danger").style.display = "";
-    document.getElementById("toast-danger-text").innerText = "Неверные данные";
-    return;
+    return iziToast.show({
+      color: "green",
+      position: "topRight",
+      timeout: 5000,
+      message: "Данные успешно обновлены",
+    });
   }
 
-  document.getElementById("toast-danger").style.display = "none";
-  document.getElementById("toast-success").style.display = "";
-  document.getElementById("toast-success-text").innerText =
-    "Данные успешно обновлены";
+  iziToast.show({
+    color: "green",
+    position: "topRight",
+    timeout: 5000,
+    message: "Неверные данные!",
+  });
 
-  window.location.href = "/dashboard";
+  setTimeout(() => {
+    window.location.href = "/login";
+  }, 5000);
 });
