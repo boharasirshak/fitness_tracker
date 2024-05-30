@@ -62,12 +62,15 @@ document.getElementById("submit")?.addEventListener("click", async (e) => {
     });
 
     setCookie("access_token", data.access_token);
-    window.location.href = "/dashboard";
+
+    setTimeout(() => {
+      window.location.href = "/dashboard";
+    }, 2000);
   } catch {
     return iziToast.show({
       color: "red",
       position: "topRight",
-      timeout: 5000,
+      timeout: 2000,
       message: "Внутренняя ошибка сервера. Пожалуйста, повторите попытку позже",
     });
   }
