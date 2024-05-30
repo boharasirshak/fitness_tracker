@@ -14,6 +14,16 @@ function changeActivityLevel(level) {
   });
 }
 
+document.getElementById("male").addEventListener("click", () => {
+  document.getElementById("female").checked = false;
+  document.getElementById("male").checked = true;
+});
+
+document.getElementById("female").addEventListener("click", () => {
+  document.getElementById("male").checked = false;
+  document.getElementById("female").checked = true;
+});
+
 profilePic.addEventListener("click", () => {
   fileInput.click();
 });
