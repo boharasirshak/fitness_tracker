@@ -132,12 +132,32 @@ async def dashboard_page(request: Request, db: AsyncSession = Depends(get_db)):
     for workout in data:
         workouts.append(json.loads(workout_to_schema(workout).model_dump_json()))
 
+    query = select(User).where(User.id == token["subject"]["user_id"])
+    result = await db.execute(query)
+    user = result.scalar()
+
+    if not user:
+        resp = RedirectResponse(url="/login")
+        resp.delete_cookie("access_token")
+        return resp
+
     return templates.TemplateResponse(
         "dashboard.html",
         {
             "request": request,
             "access_token": access_token,
             "workouts": workouts,
+            "user": UserSchema(
+                email=user.email,
+                name=user.name,
+                gender=user.gender,
+                height=user.height,
+                weight=user.weight,
+                activity_level=user.activity_level,
+                profile_picture_url=user.profile_picture_url or "",
+                age=user.age,
+                desired_weight=user.desired_weight,
+            ),
         },
     )
 
