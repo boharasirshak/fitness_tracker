@@ -175,5 +175,5 @@ document.getElementById("submit").addEventListener("click", async () => {
 
   setTimeout(() => {
     window.location.href = "/login";
-  }, 5000);
+  }, 2000);
 });
