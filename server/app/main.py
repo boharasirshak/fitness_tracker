@@ -15,10 +15,10 @@ from sqlalchemy.sql import select
 from sqlalchemy.orm import joinedload
 
 # from app.core.emails import init_smtp
-from app.models import Workout, WorkoutExercise, User
 from app.schemas.workouts import workout_to_schema
 from app.core.utils import insert_default_data
 from app.core.security import is_valid_jwt
+from app.models import Workout, WorkoutExercise, User, Exercise
 
 from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
@@ -29,6 +29,7 @@ from app.api.v1.workouts import router as workouts_router
 
 from app.core.database import create_tables, drop_tables, get_db
 from app.schemas.users import UserSchema
+from app.schemas.exercises import ExerciseSchema
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
@@ -208,12 +209,12 @@ async def profile_page(request: Request, db: AsyncSession = Depends(get_db)):
 # def new_workout(request: Request):
 #     access_token = request.cookies.get("access_token", None)
 #     return templates.TemplateResponse(
-#         "workouts.html", {"request": request, "access_token": access_token}
+#         "new-workout.html", {"request": request, "access_token": access_token}
 #     )
 
 
 @app.get("/workouts/new")
-def new_workout(request: Request):
+async def new_workout(request: Request, db: AsyncSession = Depends(get_db)):
     access_token = request.cookies.get("access_token")
     if not access_token:
         return RedirectResponse(url="/login")
@@ -225,11 +226,31 @@ def new_workout(request: Request):
         resp.delete_cookie("access_token")
         return resp
 
+    exercises: list[ExerciseSchema] = []
+
+    query = select(Exercise)
+    result = await db.execute(query)
+    results = result.scalars().all()
+    for exercise in results:
+        exercises.append(
+            json.loads(
+                ExerciseSchema(
+                    id=exercise.id,
+                    name=exercise.name,
+                    description=exercise.description,
+                    video_link=exercise.video_link,
+                    gif_link=exercise.gif_link,
+                    created_at=exercise.created_at,
+                ).model_dump_json()
+            )
+        )
+
     return templates.TemplateResponse(
         "add-workout.html",
         {
             "request": request,
             "access_token": access_token,
+            "exercises": exercises,
         },
     )
 
