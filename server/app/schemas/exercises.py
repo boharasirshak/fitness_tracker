@@ -12,6 +12,9 @@ class ExerciseSchema(BaseModel):
     description: str
     created_at: datetime
 
+    class Config:
+        json_encoders = {datetime: lambda dt: dt.isoformat()}
+
 
 class AllExercisesResponse(BaseModel):
     exercises: list[ExerciseSchema]
