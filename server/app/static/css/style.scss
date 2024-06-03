@@ -135,6 +135,33 @@ a {
       }
     }
   }
+  .top-part-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .back-btn {
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+      img {
+        width: 12px;
+        filter: brightness(1) invert(1);
+      }
+      h3 {
+        font-family: $monst;
+        font-size: 25px;
+        font-weight: 500;
+        line-height: 18.29px;
+        color: #fff;
+      }
+    }
+    .logo-wrap {
+      img {
+        width: 46.5px;
+      }
+    }
+  }
   .main-login-section {
     .company-name {
       margin-top: 20px;
@@ -167,7 +194,7 @@ a {
         font-size: 18px;
         font-weight: 400;
         line-height: 15.6px;
-        text-align: left;
+        text-align: center;
         color: #fff;
       }
     }
@@ -468,6 +495,16 @@ a {
       gap: 50px;
     }
   }
+  .topic{
+    margin-top: 20px;
+    text-align: center;
+    h3 {
+      font-family: $monst;
+      font-size: 25px;
+      font-weight: 500;
+      line-height: 18.29px;
+    }
+  }
   .workout-card {
     width: 80%;
     margin: auto;
@@ -488,7 +525,14 @@ a {
     img {
       width: 40px;
     }
+    .exercise-img{
+      width: 100px;
+    }
+    &.new{
+      justify-content: space-between;
+    }
   }
+  
   .workout-name-wraps {
     display: flex;
     flex-direction: column;
@@ -887,6 +931,31 @@ a {
 }
 // PROFILE PAGE END HERE
 // EDIT WORKOUT PAGE START HERE
+.top-part-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .back-btn {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+    img {
+      width: 12px;
+    }
+    h3 {
+      font-family: $monst;
+      font-size: 25px;
+      font-weight: 500;
+      line-height: 18.29px;
+    }
+  }
+  .logo-wrap {
+    img {
+      width: 46.5px;
+    }
+  }
+}
 .edit-workout-page {
   padding-top: 60px;
   padding-bottom: 60px;
@@ -1166,6 +1235,22 @@ a {
         }
       }
     }
+    .top-part-wrap {
+      .back-btn {
+        gap: 8px;
+        img {
+          width: 8.7px;
+        }
+        h3 {
+          font-size: 15px;
+        }
+      }
+      .logo-wrap {
+        img {
+          width: 24px;
+        }
+      }
+    }
     .main-login-section {
       .company-name {
         margin-top: 4px;
@@ -1363,6 +1448,13 @@ a {
         gap: 15px;
       }
     }
+    .topic{
+      margin-top: 16px;
+      text-align: center;
+      h3 {
+        font-size: 20px;
+      }
+    }
     .workout-card {
       width: 95%;
       padding: 30px;
@@ -1372,6 +1464,9 @@ a {
       }
       img {
         width: 23px;
+      }
+      .exercise-img{
+        width: 60px;
       }
     }
     .workout-name-wraps {
@@ -1603,6 +1698,22 @@ a {
 
   // PROFILE PAGE END HERE
   // EDIT WORKOUT PAGE START HERE
+  .top-part-wrap {
+    .back-btn {
+      gap: 13px;
+      img {
+        width: 12.7px;
+      }
+      h3 {
+        font-size: 15px;
+      }
+    }
+    .logo-wrap {
+      img {
+        width: 24px;
+      }
+    }
+  }
   .edit-workout-page {
     padding-top: 36px;
     padding-bottom: 60px;

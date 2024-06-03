@@ -150,6 +150,30 @@ a {
 .login-page .top-logo-part .main-logo img {
   width: 46.5px;
 }
+.login-page .top-part-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.login-page .top-part-wrap .back-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.login-page .top-part-wrap .back-btn img {
+  width: 12px;
+  filter: brightness(1) invert(1);
+}
+.login-page .top-part-wrap .back-btn h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 18.29px;
+  color: #fff;
+}
+.login-page .top-part-wrap .logo-wrap img {
+  width: 46.5px;
+}
 .login-page .main-login-section .company-name {
   margin-top: 20px;
 }
@@ -182,7 +206,7 @@ a {
   font-size: 18px;
   font-weight: 400;
   line-height: 15.6px;
-  text-align: left;
+  text-align: center;
   color: #fff;
 }
 .login-page .main-login-section .white-form {
@@ -325,7 +349,6 @@ a {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  cursor: pointer;
 }
 .dashboard-page .day-wraps ul li .day {
   font-family: "Montserrat", sans-serif;
@@ -483,6 +506,16 @@ a {
   flex-direction: column;
   gap: 50px;
 }
+.workout-page .topic {
+  margin-top: 20px;
+  text-align: center;
+}
+.workout-page .topic h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 18.29px;
+}
 .workout-page .workout-card {
   width: 80%;
   margin: auto;
@@ -503,6 +536,12 @@ a {
 }
 .workout-page .workout-card img {
   width: 40px;
+}
+.workout-page .workout-card .exercise-img {
+  width: 100px;
+}
+.workout-page .workout-card.new {
+  justify-content: space-between;
 }
 .workout-page .workout-name-wraps {
   display: flex;
@@ -801,21 +840,11 @@ a {
 }
 .profile-page .profile-details ul li span {
   font-family: "Montserrat", sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 400;
   line-height: 14.63px;
   text-align: left;
 }
-.profile-page .profile-details ul li input {
-  background: none;
-  border: none;
-  font-family: "Montserrat", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 14.63px;
-  text-align: left;
-}
-
 .profile-page .skill-level-wrap {
   margin-top: 60px;
   text-align: center;
@@ -909,6 +938,29 @@ a {
 
 .gender-switcher input[type="radio"]:checked + label {
   color: #fff;
+}
+
+.top-part-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.top-part-wrap .back-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.top-part-wrap .back-btn img {
+  width: 12px;
+}
+.top-part-wrap .back-btn h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 18.29px;
+}
+.top-part-wrap .logo-wrap img {
+  width: 46.5px;
 }
 
 .edit-workout-page {
@@ -1194,6 +1246,18 @@ a {
   .login-page .top-logo-part .main-logo img {
     width: 16.5px;
   }
+  .login-page .top-part-wrap .back-btn {
+    gap: 8px;
+  }
+  .login-page .top-part-wrap .back-btn img {
+    width: 8.7px;
+  }
+  .login-page .top-part-wrap .back-btn h3 {
+    font-size: 15px;
+  }
+  .login-page .top-part-wrap .logo-wrap img {
+    width: 24px;
+  }
   .login-page .main-login-section .company-name {
     margin-top: 4px;
   }
@@ -1345,12 +1409,9 @@ a {
     padding-right: 17px;
   }
   .dashboard-page .wrokouts-flexed .workout-coolection .workout-image {
-    padding: 0px;
+    padding: 12px;
   }
   .dashboard-page .wrokouts-flexed .workout-coolection .workout-image img {
-    width: 104px;
-  }
-  .dashboard-page .wrokouts-flexed .workout-coolection .workout-image video {
     width: 104px;
   }
   .dashboard-page .wrokouts-flexed .workout-coolection .workout-name-wrap {
@@ -1384,6 +1445,13 @@ a {
     margin-top: 15px;
     gap: 15px;
   }
+  .workout-page .topic {
+    margin-top: 16px;
+    text-align: center;
+  }
+  .workout-page .topic h3 {
+    font-size: 20px;
+  }
   .workout-page .workout-card {
     width: 95%;
     padding: 30px;
@@ -1394,6 +1462,9 @@ a {
   }
   .workout-page .workout-card img {
     width: 23px;
+  }
+  .workout-page .workout-card .exercise-img {
+    width: 60px;
   }
   .workout-page .workout-name-wraps {
     gap: 15px;
@@ -1614,6 +1685,18 @@ a {
     left: 5px;
     height: 21px;
     width: 49.5%;
+  }
+  .top-part-wrap .back-btn {
+    gap: 13px;
+  }
+  .top-part-wrap .back-btn img {
+    width: 12.7px;
+  }
+  .top-part-wrap .back-btn h3 {
+    font-size: 15px;
+  }
+  .top-part-wrap .logo-wrap img {
+    width: 24px;
   }
   .edit-workout-page {
     padding-top: 36px;
