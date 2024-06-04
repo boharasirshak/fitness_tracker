@@ -104,6 +104,12 @@ function createWorkoutCard(exercise) {
     };
     customExercises.push(newExercise);
     console.log(customExercises);
+    return iziToast.show({
+      color: "green", // blue, red, green, yellow
+      position: "topRight",
+      timeout: 1000,
+      message: `Added ${exercise.name}`,
+    });
   });
 }
 
