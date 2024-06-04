@@ -159,7 +159,7 @@ document.getElementById("submit").addEventListener("click", async () => {
 
   if (response.status === 422) {
     return iziToast.show({
-      color: "green",
+      color: "yellow",
       position: "topRight",
       timeout: 5000,
       message: "Данные успешно обновлены",
@@ -170,7 +170,7 @@ document.getElementById("submit").addEventListener("click", async () => {
     color: "green",
     position: "topRight",
     timeout: 5000,
-    message: "Неверные данные!",
+    message: "Done!",
   });
 
   setTimeout(() => {
