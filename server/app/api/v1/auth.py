@@ -138,7 +138,7 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
 
 
 @router.post(
-    "/forgot-password",
+    "/forget-password",
     response_description="Send email with temporary token to reset password",
     responses={
         200: {
@@ -168,6 +168,21 @@ async def forgot_password(
     expiration = datetime.now(timezone.utc) + timedelta(
         hours=FORGOT_PASSWORD_TOKEN_EXPIRATION
     )
+
+    html = read_email_template("reset-password.html")
+    html = html.replace("{{link}}", f"{BASE_URL}/reset-password?token={reset_token}")
+
+    try:
+        send_mail_sync(user.email, "Password Reset", html)
+
+    except SyncSMTPException as e:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder(
+                {"detail": "Error sending email to this email address!"}
+            ),
+        )
+
     token = ResetPasswordToken(
         email=user.email, token=reset_token, expiration=expiration
     )
