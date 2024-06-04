@@ -1,7 +1,7 @@
 import json
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from contextlib import asynccontextmanager
 
 from fastapi.responses import RedirectResponse
@@ -18,7 +18,7 @@ from sqlalchemy.orm import joinedload
 from app.schemas.workouts import workout_to_schema
 from app.core.utils import insert_default_data
 from app.core.security import is_valid_jwt
-from app.models import Workout, WorkoutExercise, User, Exercise
+from app.models import Workout, WorkoutExercise, User, Exercise, ResetPasswordToken
 
 from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
@@ -93,6 +93,89 @@ def login_page(request: Request):
         "login.html",
         {
             "request": request,
+        },
+    )
+    if access_token:
+        response.delete_cookie("access_token")
+
+    return response
+
+
+@app.get("/forget-password")
+def forget_password_page(request: Request):
+    access_token = request.cookies.get("access_token")
+
+    if access_token and is_valid_jwt(access_token):
+        return RedirectResponse(url="/dashboard")
+
+    response = templates.TemplateResponse(
+        "forget-password.html",
+        {
+            "request": request,
+        },
+    )
+    if access_token:
+        response.delete_cookie("access_token")
+
+    return response
+
+
+@app.get("/reset-password")
+async def reset_password_page(
+    request: Request, token: str, db: AsyncSession = Depends(get_db)
+):
+    access_token = request.cookies.get("access_token")
+
+    if access_token and is_valid_jwt(access_token):
+        return RedirectResponse(url="/dashboard")
+
+    query = select(ResetPasswordToken).where(ResetPasswordToken.token == token)
+    result = await db.execute(query)
+    tkn = result.scalars().first()
+
+    if not tkn:
+        response = templates.TemplateResponse(
+            "reset-password.html",
+            {
+                "request": request,
+                "valid": False,
+                "message": "Reset token not found",
+            },
+        )
+        if access_token:
+            response.delete_cookie("access_token")
+        return response
+
+    if tkn.expiration < datetime.now(timezone.utc):
+        response = templates.TemplateResponse(
+            "reset-password.html",
+            {
+                "request": request,
+                "valid": False,
+                "message": "Reset token expired",
+            },
+        )
+
+    query = select(User).where(User.email == tkn.email)
+    result = await db.execute(query)
+    user = result.scalars().first()
+
+    if not user:
+        response = templates.TemplateResponse(
+            "reset-password.html",
+            {
+                "request": request,
+                "valid": False,
+                "message": "User assaigned with that token not found",
+            },
+        )
+
+    response = templates.TemplateResponse(
+        "reset-password.html",
+        {
+            "request": request,
+            "valid": True,
+            "message": "",
         },
     )
     if access_token:
