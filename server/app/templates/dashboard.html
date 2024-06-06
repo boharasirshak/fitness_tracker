@@ -70,14 +70,14 @@
         <div class="workout-wrapper">
           <div class="workout-name">
             <h6>Планка</h6>
-            <div class="workout-btn">Тренировка № 1</div>
+            <div class="workout-btn">{{ workouts[0].name }}</div>
           </div>
           <div class="btn-wrap">
             <button class="btn">Начать тренировку</button>
           </div>
         </div>
         <div class="wrokouts-flexed">
-          {% for workout in workouts %}
+          {% for workout in workouts[:3] %}
           <div class="workout-coolection">
             <div class="workout-image">
               <img src="../static/images/squat.png" alt="exercise video" />
