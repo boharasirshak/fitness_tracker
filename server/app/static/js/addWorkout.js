@@ -13,6 +13,133 @@ observer.observe(document.getElementById("edit-workout-page"), {
   attributeFilter: ["style"],
 });
 
+document
+  .getElementById("add-workout-submit")
+  .addEventListener("click", async () => {
+    let exercises = [];
+    let name = document.getElementById("workout-name").value;
+
+    if (!name) {
+      return iziToast.show({
+        color: "yellow",
+        position: "topRight",
+        timeout: 1500,
+        message: "Workout name is required",
+      });
+    }
+
+    document
+      .querySelectorAll("#custom-exercises .timer-edit")
+      .forEach((element) => {
+        const type = element.querySelector("input[type='type']").value;
+        const duration = parseInt(
+          element.querySelector("input[type='duration']").value
+        );
+
+        if (Number.isNaN(duration) || duration <= 0) {
+          return iziToast.show({
+            color: "yellow",
+            position: "topRight",
+            timeout: 1500,
+            message: "Time must be a integer",
+          });
+        }
+
+        if (type === "rest" && exercises.length > 0) {
+          let lastExercise = exercises.pop();
+          lastExercise.rest_time = duration;
+          exercises.push(lastExercise);
+          return;
+        }
+
+        const exercise = {
+          total_time: duration,
+          rest_time: 0,
+          exercise_id: element.querySelector("input[type='id']").value,
+        };
+        exercises.push(exercise);
+      });
+
+    if (exercises.length === 0) {
+      return iziToast.show({
+        color: "yellow",
+        position: "topRight",
+        timeout: 1500,
+        message: "Cannot create empty workout",
+      });
+    }
+
+    const accessToken = getCookie("access_token");
+    if (!accessToken) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const response = await fetch("/api/v1/workouts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        name,
+        description: `Custom workout created by ${name} with exercises [${exercises
+          .map((ex) => ex.exercise_id)
+          .join(",")}]`,
+        exercises: exercises,
+      }),
+    });
+
+    if (response.status >= 500) {
+      try {
+        const res = await response.json();
+        return iziToast.show({
+          color: "yellow",
+          position: "topRight",
+          timeout: 5000,
+          message: res.message,
+        });
+      } catch {
+        return iziToast.show({
+          color: "red",
+          position: "topRight",
+          timeout: 5000,
+          message: "Произошла ошибка на сервере. Попробуйте позже",
+        });
+      }
+    }
+
+    if (response.status === 409) {
+      return iziToast.show({
+        color: "red",
+        position: "topRight",
+        timeout: 5000,
+        message: "Номер телефона уже существует!",
+      });
+    }
+
+    if (response.status === 401) {
+      window.location.href = "/login";
+      return;
+    }
+
+    if (response.status === 422) {
+      return iziToast.show({
+        color: "yellow",
+        position: "topRight",
+        timeout: 5000,
+        message: "Данные успешно обновлены",
+      });
+    }
+
+    iziToast.show({
+      color: "green",
+      position: "topRight",
+      timeout: 3000,
+      message: "Created a new exercise!",
+    });
+  });
+
 function updateUI(mutations) {
   mutations.forEach((mutation) => {
     if (mutation.type === "attributes" && mutation.attributeName === "style") {
@@ -107,7 +234,7 @@ function createWorkoutCard(exercise) {
     return iziToast.show({
       color: "green", // blue, red, green, yellow
       position: "topRight",
-      timeout: 1000,
+      timeout: 500,
       message: `Added ${exercise.name}`,
     });
   });
@@ -115,6 +242,7 @@ function createWorkoutCard(exercise) {
 
 function createExerciseList() {
   const list = document.createElement("div");
+  list.id = "custom-exercises";
   const title = document.createElement("h5");
   title.textContent = "Список упражнений";
   list.appendChild(title);
@@ -127,9 +255,11 @@ function createExerciseList() {
       <div class="squat-wrap">
         <img src="../static/images/squat.png" alt="" />
       </div>
+      <input value="exercise" type="type" hidden />
       <h3>${exercise.name}</h3>
       <div class="timer-wrap">
-        <input value="${exercise.duration}" />
+        <input value="${exercise.duration}" type="duration" />
+        <input value="${exercise.id}" type="id" hidden />
       </div>
       `;
       list.appendChild(exerciseElement);
@@ -140,11 +270,12 @@ function createExerciseList() {
         restElement.innerHTML = `
         <div class="center-wrap">
           <img src="../static/images/dots.svg" alt="" />
-          </div>
-          <h3>Отдых</h3>
-          <div class="timer-wrap">
-            <input value="${exercise.rest_timeout}" />
-          </div>
+        </div>
+        <input value="rest" type="type" hidden />
+        <h3>Отдых</h3>
+        <div class="timer-wrap">
+          <input value="${exercise.rest_timeout}" type="duration" />
+        </div>
         `;
         list.appendChild(restElement);
       }
