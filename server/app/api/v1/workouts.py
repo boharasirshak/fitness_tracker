@@ -154,18 +154,6 @@ async def create_new_workout(
                 ),
             )
 
-    query = select(User).where(User.id == data.user_id)
-    result = await db.execute(query)
-    user = result.scalars().first()
-
-    if not user:
-        return JSONResponse(
-            status_code=404,
-            content=jsonable_encoder(
-                {"detail": f"User with id {data.user_id} not found"}
-            ),
-        )
-
     new_workout = Workout(user_id=user.id, name=data.name, description=data.description)
     db.add(new_workout)
     await db.commit()

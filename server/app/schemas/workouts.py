@@ -57,7 +57,6 @@ class CreateWorkoutSessionSchema(BaseModel):
 class CreateWorkoutSchema(BaseModel):
     name: str
     description: str
-    user_id: int
     exercises: list[CreateWorkoutExerciseSchema]
 
 
