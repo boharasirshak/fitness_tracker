@@ -31,7 +31,7 @@ document
     document
       .querySelectorAll("#custom-exercises .timer-edit")
       .forEach((element) => {
-        const type = element.querySelector("input[type='type']").value;
+        const type = element.querySelector("input[name='type']").value;
         const duration = parseInt(
           element.querySelector("input[type='duration']").value
         );
@@ -55,7 +55,7 @@ document
         const exercise = {
           total_time: duration,
           rest_time: 0,
-          exercise_id: element.querySelector("input[type='id']").value,
+          exercise_id: element.querySelector("input[type='exercise_id']").value,
         };
         exercises.push(exercise);
       });
@@ -75,19 +75,23 @@ document
       return;
     }
 
+    const payload = {
+      name,
+      description: `Custom workout created by ${name} with exercises [${exercises
+        .map((ex) => ex.exercise_id)
+        .join(",")}]`,
+      exercises: exercises,
+    };
+
+    console.log("Payload: ", payload);
+
     const response = await fetch("/api/v1/workouts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({
-        name,
-        description: `Custom workout created by ${name} with exercises [${exercises
-          .map((ex) => ex.exercise_id)
-          .join(",")}]`,
-        exercises: exercises,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (response.status >= 500) {
@@ -182,7 +186,7 @@ function createWorkoutCard(exercise) {
             <img src="../static/images/minus.svg" alt="" />
           </div>
           <div class="timer-wraps" type="timer">
-            <input value="10" type="timer"/>
+            <input value="60" type="timer"/>
           </div>
           <div class="plus-minus" type="plus" style="cursor: pointer;">
             <img src="../static/images/plus.svg" alt="" />
@@ -199,7 +203,7 @@ function createWorkoutCard(exercise) {
 
   workoutContainer.appendChild(card);
 
-  let timer = 10;
+  let timer = 60;
   const exercisePopup = card.querySelector(".exercise-popup-wraps");
   const closeBtn = card.querySelector(".cross");
   const plusBtn = card.querySelector(".plus-minus[type='plus']");
@@ -227,14 +231,16 @@ function createWorkoutCard(exercise) {
   addBtn.addEventListener("click", () => {
     const newExercise = {
       name: exercise.name,
-      id: exercise.id,
+      id: Date.now(),
+      exercise_id: exercise.id,
       gif_link: exercise.gif_link,
       video_link: exercise.video_link,
-      duration: timer,
+      duration: timerInput.value,
       rest_timeout: 0,
     };
     customExercises.push(newExercise);
-    console.log(customExercises);
+    console.log("Custom exercises: ", customExercises);
+
     return iziToast.show({
       color: "green", // blue, red, green, yellow
       position: "topRight",
@@ -256,33 +262,53 @@ function createExerciseList() {
       const exerciseElement = document.createElement("div");
       exerciseElement.className = "timer-edit";
       exerciseElement.innerHTML = `
-      <div class="squat-wrap">
-        <img src="../static/images/squat.png" alt="" />
-      </div>
-      <input value="exercise" type="type" hidden />
-      <h3>${exercise.name}</h3>
-      <div class="timer-wrap">
-        <input value="${exercise.duration}" type="duration" />
-        <input value="${exercise.id}" type="id" hidden />
-      </div>
-      `;
+        <div class="squat-wrap">
+          <img src="../static/images/squat.png" alt="" />
+        </div>
+        <input value="exercise" name="type" hidden />
+        <h3>${exercise.name}</h3>
+        <div class="timer-wrap">
+          <input value="${exercise.duration}" type="duration" name="total" />
+          <input value="${exercise.exercise_id}" type="exercise_id" hidden />
+          <input value="${exercise.id}" type="id" hidden />
+        </div>
+        `;
       list.appendChild(exerciseElement);
 
       if (exercise.rest_timeout > 0) {
         const restElement = document.createElement("div");
         restElement.className = "timer-edit";
         restElement.innerHTML = `
-        <div class="center-wrap">
-          <img src="../static/images/dots.svg" alt="" />
-        </div>
-        <input value="rest" type="type" hidden />
-        <h3>Отдых</h3>
-        <div class="timer-wrap">
-          <input value="${exercise.rest_timeout}" type="duration" />
-        </div>
-        `;
+          <div class="center-wrap">
+            <img src="../static/images/dots.svg" alt="" />
+          </div>
+          <input value="rest" name="type" hidden />
+          <h3>Отдых</h3>
+          <div class="timer-wrap">
+            <input value="${exercise.rest_timeout}" type="duration" name="rest" />
+          </div>
+          `;
         list.appendChild(restElement);
       }
+
+      const durationInputs = exerciseElement.querySelectorAll(
+        "input[type='duration']"
+      );
+      durationInputs.forEach((input) => {
+        input.addEventListener("input", () => {
+          const exerciseIndex = customExercises.findIndex(
+            (ex) => ex.id === exercise.id
+          );
+          if (exerciseIndex !== -1) {
+            let durationType = input.getAttribute("name");
+            if (durationType === "rest") {
+              customExercises[exerciseIndex].rest_timeout = input.value;
+            } else {
+              customExercises[exerciseIndex].duration = input.value;
+            }
+          }
+        });
+      });
     });
     editBox.appendChild(createButtons());
   } else {
@@ -322,10 +348,10 @@ function createButtons() {
   restBtn.onclick = () => {
     let lastExercise = customExercises[customExercises.length - 1];
     if (lastExercise && lastExercise.rest_timeout > 0) {
-      lastExercise.rest_timeout += 10;
-    } else {
-      lastExercise.rest_timeout = 10;
+      return;
     }
+
+    lastExercise.rest_timeout = 10;
     customExercises.pop();
     customExercises.push(lastExercise);
     updateUI([{ type: "attributes", attributeName: "style" }]);
