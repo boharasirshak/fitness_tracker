@@ -68,10 +68,12 @@
           <span>Каждая тренировка – шаг к лучшей версии себя</span>
         </div>
         <div class="workout-wrapper">
+          {% if workouts|length > 0 %}
           <div class="workout-name">
             <h6>Планка</h6>
             <div class="workout-btn">{{ workouts[0].name }}</div>
           </div>
+          {% endif %}
           <div class="btn-wrap">
             <button class="btn">Начать тренировку</button>
           </div>
