@@ -138,6 +138,10 @@ document
       timeout: 3000,
       message: "Created a new exercise!",
     });
+
+    setTimeout(() => {
+      window.location.href = "/dashboard";
+    }, 3000);
   });
 
 function updateUI(mutations) {
