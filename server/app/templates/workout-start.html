@@ -36,7 +36,9 @@
     {%else%}
     <section class="workout-video-page">
       <div class="main-video-wraps">
-        <div class="camera-video"></div>
+        <div class="camera-video">
+          <video src="" id="video" autoplay muted playsinline></video>
+        </div>
         <div class="time-duration">
           <div class="timer-wraps">
             <img src="../../static/images/timer.svg" alt="timer" />
@@ -58,7 +60,14 @@
         <div class="workout-name-wrap">
           <h5>Планка</h5>
           <div class="video-wrap">
-            <video src="" id="video" autoplay muted playsinline></video>
+            <video
+              src=""
+              id="helper-video"
+              autoplay
+              muted
+              playsinline
+              loop
+            ></video>
           </div>
           <button class="btn">Завершить</button>
         </div>

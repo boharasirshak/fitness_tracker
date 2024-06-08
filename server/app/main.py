@@ -474,6 +474,14 @@ async def start_workout(
 
     if workout:
         workout = json.loads(workout_to_schema(workout).model_dump_json())
+        if len(workout["exercises"]) == 0:
+            return templates.TemplateResponse(
+                "workout-start.html",
+                {
+                    "request": request,
+                    "error": "No exercises found in workout",
+                },
+            )
 
     if exercise:
         exercise = json.loads(
