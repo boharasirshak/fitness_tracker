@@ -1,7 +1,7 @@
 import json
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 
 from fastapi.responses import RedirectResponse
@@ -30,6 +30,7 @@ from app.api.v1.workouts import router as workouts_router
 from app.core.database import create_tables, drop_tables, get_db
 from app.schemas.users import UserSchema
 from app.schemas.exercises import ExerciseSchema
+from app.schemas.workouts import WorkoutSchema
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
@@ -380,13 +381,124 @@ async def workouts_page(request: Request, db: AsyncSession = Depends(get_db)):
     )
 
 
-# @app.get("/workouts/start/{workout_id}")
-# def start_workout(
-#     workout_id: int, request: Request, workout: Workout = Depends(workout_verify)
-# ):
-#     return templates.TemplateResponse(
-#         "workout.html", {"request": request, "workout": workout}
-#     )
+@app.get("/workouts/{idx}/start")
+async def start_workout(
+    request: Request,
+    idx: int | str,
+    _type: str = "workout",
+    duration: int = 0,
+    db: AsyncSession = Depends(get_db),
+):
+    access_token = request.cookies.get("access_token")
+    workout = None
+    exercise = None
+
+    if not access_token:
+        return RedirectResponse(url="/login")
+
+    token = is_valid_jwt(access_token)
+
+    if not token or token.get("subject", {}).get("user_id") is None:
+        resp = RedirectResponse(url="/login")
+        resp.delete_cookie("access_token")
+        return resp
+
+    if _type and _type not in ["workout", "exercise"]:
+        return templates.TemplateResponse(
+            "workout-start.html",
+            {
+                "request": request,
+                "error": "Invalid type of workout or exercise",
+            },
+        )
+
+    if _type == "exercise":
+        if duration <= 0:
+            return templates.TemplateResponse(
+                "workout-start.html",
+                {
+                    "request": request,
+                    "error": "Invalid duration for exercise",
+                },
+            )
+
+        query = select(Exercise).where(Exercise.id == idx)
+        result = await db.execute(query)
+        exercise = result.scalar()
+
+    if _type == "workout":
+        if not idx.isdigit():
+            return templates.TemplateResponse(
+                "workout-start.html",
+                {
+                    "request": request,
+                    "error": "Invalid workout id",
+                },
+            )
+
+        query = (
+            select(Workout)
+            .where(
+                Workout.user_id == token["subject"]["user_id"], Workout.id == int(idx)
+            )
+            .options(
+                joinedload(Workout.user),
+                joinedload(Workout.workout_exercises).joinedload(
+                    WorkoutExercise.exercise
+                ),
+                joinedload(Workout.workout_exercises).joinedload(
+                    WorkoutExercise.workout_sessions
+                ),
+            )
+        )
+        result = await db.execute(query)
+        workout = result.scalar()
+
+        if not workout:
+            return templates.TemplateResponse(
+                "workout-start.html",
+                {
+                    "request": request,
+                    "error": "Workout not found",
+                },
+            )
+
+    if not workout and not exercise:
+        return templates.TemplateResponse(
+            "workout-start.html",
+            {
+                "request": request,
+                "error": "Workout or exercise not found",
+            },
+        )
+
+    if workout:
+        workout = json.loads(workout_to_schema(workout).model_dump_json())
+
+    if exercise:
+        exercise = json.loads(
+            ExerciseSchema(
+                id=exercise.id,
+                name=exercise.name,
+                description=exercise.description,
+                video_link=exercise.video_link,
+                gif_link=exercise.gif_link,
+                created_at=exercise.created_at,
+            ).model_dump_json()
+        )
+
+    return templates.TemplateResponse(
+        "workout-start.html",
+        {
+            "request": request,
+            "idx": idx,
+            "type": _type,
+            "duration": duration,
+            "workout": workout,
+            "exercise": exercise,
+            "error": None,
+        },
+    )
 
 
 app.include_router(auth_router, prefix="/api/v1")

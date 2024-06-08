@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout Start</title>
+    <title>Workouts</title>
+    <link
+      rel="shortcut icon"
+      href="../../static/favicon.ico"
+      type="image/x-icon"
+    />
+    <link href="../../../static/css/style.css" rel="stylesheet" />
+    <link href="../../../static/css/toasts.css" rel="stylesheet" />
+
+    <script src="../../../static/js/lib.js" type="text/javascript"></script>
+    <script src="../../../static/js/toasts.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+    <!-- WORKOUT VIDEO PAGE START HERE -->
+
+    {% if error %}
+    <script>
+      iziToast.show({
+        color: "red",
+        position: "topRight",
+        message: "{{ error }}",
+        timeout: 10000,
+      });
+
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 10000);
+    </script>
+    {%else%}
+    <section class="workout-video-page">
+      <div class="main-video-wraps">
+        <div class="camera-video"></div>
+        <div class="time-duration">
+          <div class="timer-wraps">
+            <img src="../../static/images/timer.svg" alt="timer" />
+            <div class="duration-wrap">
+              <h5>Длительность</h5>
+              <span>00:30</span>
+            </div>
+          </div>
+          <div class="timer-wraps">
+            <img src="../../static/images/steps.svg" alt="steps" />
+            <div class="duration-wrap align-center">
+              <h5>Повторения</h5>
+              <span>3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="video-wraper">
+        <div class="workout-name-wrap">
+          <h5>Планка</h5>
+          <div class="video-wrap">
+            <video src="" id="video" autoplay muted playsinline></video>
+          </div>
+          <button class="btn">Завершить</button>
+        </div>
+      </div>
+    </section>
+    <!-- WORKOUT VIDEO PAGE START HERE -->
+
+    <script>
+      var idx = {{ idx }};
+      var workout = {{ workout|tojson }};
+      var duration = {{ duration }};
+      var exercise = "{{ exercise }}";
+
+      if (exercise === "None") {
+        exercise = null;
+      }
+    </script>
+
+    {%endif%}
+
+    <script
+      src="../../../static/js/workout-start.js"
+      type="text/javascript"
+    ></script>
+  </body>
+</html>
