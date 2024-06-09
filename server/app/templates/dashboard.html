@@ -72,7 +72,12 @@
             <div class="workout-btn">{{ workouts[0].name }}</div>
           </div>
           <div class="btn-wrap">
-            <button class="btn">Начать тренировку</button>
+            <button
+              class="btn"
+              onclick="window.location.href = '/workouts/{{workouts[0].id}}/start'"
+            >
+              Начать тренировку
+            </button>
           </div>
           {% endif %}
         </div>
@@ -84,7 +89,7 @@
             </div>
             <div class="workout-name-wrap">
               <h5>{{workout.name}}</h5>
-              <a href="/workouts/start/{{workout.id}}">
+              <a href="/workouts/{{workout.id}}/start">
                 <img src="../static/images/gradient-arrow.svg" alt="arrow" />
               </a>
             </div>

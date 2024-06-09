@@ -12,12 +12,22 @@ let isCustom = false;
 let connectionId = "";
 
 const video = document.getElementById("video");
+const helperVideo = document.getElementById("helper-video");
 const repetitionsCountElement = document.getElementById("repetition-count");
 const restTimerElement = document.getElementById("rest-timer");
 const timerElement = document.getElementById("timer");
 const downloadButtonElement = document.getElementById("download-button");
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
+
+let currentExercise;
+let exercises = [];
+
+if (exercise === null) {
+  exercises = workout.exercises;
+  currentExercise = exercises[0];
+  helperVideo.src = `../../static/videos/${currentExercise.video_link}`;
+}
 
 if (navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices
@@ -49,16 +59,15 @@ if (navigator.mediaDevices.getUserMedia) {
   }, 5000);
 }
 
-// ws.onmessage = function (event) {
-//   const message = JSON.parse(event.data);
+ws.onmessage = function (event) {
+  const message = JSON.parse(event.data);
 
-//   if (message.type === "image") {
-//   } else if (message.type === "count") {
-//     repetitions = parseInt(message.data);
-//     repetitionsCountElement.innerText = repetitions;
-//   }
-//   connectionId = message.connection_id;
-// };
+  if (message.type === "count") {
+    repetitions = parseInt(message.data);
+    repetitionsCountElement.innerText = repetitions;
+  }
+  connectionId = message.connection_id;
+};
 
 video.addEventListener("play", () => {
   startTime = Date.now();
@@ -84,7 +93,7 @@ video.addEventListener("play", () => {
         blob.arrayBuffer().then((buffer) => {
           // const b64Data = bufferToBase64(buffer);
           // const data = JSON.stringify({
-          //   type: workout.exercise.id,
+          //   type: currentExercise.id,
           //   data: b64Data,
           //   is_resting: isResting,
           // });
