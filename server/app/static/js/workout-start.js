@@ -98,7 +98,7 @@ video.addEventListener("play", () => {
     canvas.toBlob(
       (blob) => {
         blob.arrayBuffer().then((buffer) => {
-          const b64Data = bufferToBase64(buffer);
+          let b64Data = isResting ? null : bufferToBase64(buffer);
           const data = JSON.stringify({
             type: currentExercise.exercise_id,
             data: b64Data,
