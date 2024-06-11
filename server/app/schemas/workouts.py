@@ -12,8 +12,9 @@ class WorkoutSessionSchema(BaseModel):
 
 
 class WorkoutExerciseSchema(BaseModel):
-    id: str
+    id: int
     name: str
+    exercise_id: str
     description: str
     video_link: str
     gif_link: str
@@ -85,7 +86,8 @@ def workout_exercise_to_schema(
         for session in workout_exercise.workout_sessions
     ]
     return WorkoutExerciseSchema(
-        id=workout_exercise.exercise_id,
+        id=workout_exercise.id,
+        exercise_id=workout_exercise.exercise_id,
         name=workout_exercise.exercise.name,
         description=workout_exercise.exercise.description,
         video_link=workout_exercise.exercise.video_link,
