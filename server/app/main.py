@@ -208,6 +208,7 @@ async def dashboard_page(request: Request, db: AsyncSession = Depends(get_db)):
                 WorkoutExercise.workout_sessions
             ),
         )
+        .order_by(Workout.created_at.desc())
     )
 
     workouts = []

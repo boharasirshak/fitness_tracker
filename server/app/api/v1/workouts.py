@@ -58,6 +58,7 @@ async def get_all_users_workouts(
                 WorkoutExercise.workout_sessions
             ),
         )
+        .order_by(Workout.created_at.desc())
     )
     result = await db.execute(query)
     workouts = result.unique().scalars().all()
