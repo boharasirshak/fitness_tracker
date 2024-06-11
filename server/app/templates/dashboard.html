@@ -82,14 +82,14 @@
           {% endif %}
         </div>
         <div class="wrokouts-flexed">
-          {% for workout in workouts[:3] %}
+          {% for exercise in workouts[0].exercises %}
           <div class="workout-coolection">
             <div class="workout-image">
               <img src="../static/images/squat.png" alt="exercise video" />
             </div>
             <div class="workout-name-wrap">
-              <h5>{{workout.name}}</h5>
-              <a href="/workouts/{{workout.id}}/start">
+              <h5>{{exercise.name}}</h5>
+              <a href="/workouts/{{workouts[0].id}}/start">
                 <img src="../static/images/gradient-arrow.svg" alt="arrow" />
               </a>
             </div>
