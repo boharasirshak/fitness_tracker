@@ -18,6 +18,8 @@ class WorkoutExerciseSchema(BaseModel):
     video_link: str
     gif_link: str
     created_at: datetime
+    total_time: int
+    rest_time: int
 
     sessions: list[WorkoutSessionSchema]
 
@@ -90,6 +92,8 @@ def workout_exercise_to_schema(
         gif_link=workout_exercise.exercise.gif_link,
         created_at=workout_exercise.created_at,
         sessions=sessions,
+        total_time=workout_exercise.total_time,
+        rest_time=workout_exercise.rest_time,
     )
 
 
