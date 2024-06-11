@@ -43,22 +43,22 @@
           <div class="timer-wraps">
             <img src="../../static/images/timer.svg" alt="timer" />
             <div class="duration-wrap">
-              <h5>Длительность</h5>
-              <span>00:30</span>
+              <h5 id="time-label">Длительность</h5>
+              <span id="timer">00:00</span>
             </div>
           </div>
           <div class="timer-wraps">
             <img src="../../static/images/steps.svg" alt="steps" />
             <div class="duration-wrap align-center">
-              <h5>Повторения</h5>
-              <span>3</span>
+              <h5 type="exercise-name">Повторения</h5>
+              <span id="repetition-count">0</span>
             </div>
           </div>
         </div>
       </div>
       <div class="video-wraper">
         <div class="workout-name-wrap">
-          <h5>Планка</h5>
+          <h5 type="exercise-name">Планка</h5>
           <div class="video-wrap">
             <video
               src=""
@@ -69,7 +69,7 @@
               loop
             ></video>
           </div>
-          <button class="btn">Завершить</button>
+          <button class="btn" id="download-btn">Завершить</button>
         </div>
       </div>
     </section>
