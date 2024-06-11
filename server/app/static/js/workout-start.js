@@ -6,27 +6,34 @@ let isResting = false;
 let isPaused = false;
 let restTimer = 0;
 let repetitions = 0;
+let connectionId = "";
+let isCompleted = false;
 const fps = 30;
 const interval = 1000 / fps;
-let isCustom = false;
-let connectionId = "";
 
 const video = document.getElementById("video");
 const helperVideo = document.getElementById("helper-video");
 const repetitionsCountElement = document.getElementById("repetition-count");
-const restTimerElement = document.getElementById("rest-timer");
 const timerElement = document.getElementById("timer");
 const downloadButtonElement = document.getElementById("download-button");
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
+const accessToken = getCookie("access_token");
 
 let currentExercise;
+let currentExerciseIdx = 0;
 let exercises = [];
+
+// TODO: add a case for single exercise
 
 if (exercise === null) {
   exercises = workout.exercises;
-  currentExercise = exercises[0];
+  currentExercise = exercises[currentExerciseIdx];
+  restTimer = currentExercise.rest_time;
   helperVideo.src = `../../static/videos/${currentExercise.video_link}`;
+  document.querySelectorAll("[type='exercise-name']").forEach((el) => {
+    el.innerText = currentExercise.name;
+  });
 }
 
 if (navigator.mediaDevices.getUserMedia) {
@@ -91,13 +98,14 @@ video.addEventListener("play", () => {
     canvas.toBlob(
       (blob) => {
         blob.arrayBuffer().then((buffer) => {
-          // const b64Data = bufferToBase64(buffer);
-          // const data = JSON.stringify({
-          //   type: currentExercise.id,
-          //   data: b64Data,
-          //   is_resting: isResting,
-          // });
-          // ws.send(data);
+          const b64Data = bufferToBase64(buffer);
+          const data = JSON.stringify({
+            type: currentExercise.exercise_id,
+            data: b64Data,
+            is_resting: isResting,
+            is_paused: false,
+          });
+          ws.send(data);
         });
       },
       "image/jpeg",
@@ -106,12 +114,119 @@ video.addEventListener("play", () => {
     setTimeout(sendFrame, interval);
   };
 
-  // setInterval(updateTimer, 1000);
-
-  // do not send data if the exercise is custom
-  // if (workout.exercise.id === "custom") {
-  //   return;
-  // }
+  setInterval(updateTimer, 1000);
 
   sendFrame();
 });
+
+function updateTimer() {
+  if (isResting) {
+    return;
+  }
+
+  let totalTimeSpentSeconds = parseInt((Date.now() - startTime) / 1000);
+  let seconds = 0;
+
+  if (totalTimeSpentSeconds % 60 === 0) {
+    seconds = 0;
+    minutes++;
+  } else {
+    seconds = Math.round(totalTimeSpentSeconds % 60);
+  }
+
+  timerElement.innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+  if (startTime === undefined) {
+    return;
+  }
+
+  if (totalTimeSpentSeconds >= currentExercise.total_time && !isResting) {
+    endTime = Date.now();
+    saveSession();
+    startRestPeriod();
+  }
+}
+
+function saveSession() {
+  fetch(`/api/v1/workouts/sessions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      workout_id: workout.id,
+      repetitions: repetitions,
+      workout_exercise_id: currentExercise.id,
+    }),
+  })
+    .then((res) => {
+      if (res.status !== 200) {
+        iziToast.show({
+          color: "red",
+          position: "topRight",
+          message: "Failed to save the exercise session",
+          timeout: 1000,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error("Failed to complete workout", err);
+    });
+}
+
+function startRestPeriod() {
+  isResting = true;
+  document.getElementById("time-label").innerText = "Отдых";
+  document.getElementById("helper-video").src = "";
+  updateRestTimer();
+}
+
+function updateRestTimer() {
+  timerElement.innerText = `${restTimer}s`;
+  if (restTimer > 0) {
+    setTimeout(() => {
+      restTimer--;
+      updateRestTimer();
+    }, 1000);
+  } else {
+    endRestPeriod();
+  }
+}
+
+function endRestPeriod() {
+  isResting = false;
+  document.getElementById("time-label").innerText = "Длительность";
+  console.log("Resting complete..");
+  startTime = Date.now();
+  currentExerciseIdx++;
+
+  if (exercises.length >= currentExerciseIdx + 1) {
+    currentExercise = exercises[currentExerciseIdx];
+    restTimer = currentExercise.rest_time;
+    helperVideo.src = `../../static/videos/${currentExercise.video_link}`;
+    restTimer = currentExercise.rest_time;
+    repetitions = 0;
+    ws.send(
+      JSON.stringify({
+        type: "reset",
+        connection_id: connectionId,
+      })
+    );
+    document.querySelectorAll("[type='exercise-name']").forEach((el) => {
+      el.innerText = currentExercise.name;
+    });
+    document.getElementById("helper-video").play();
+  } else {
+    isCompleted = true;
+    iziToast.show({
+      color: "green",
+      position: "topRight",
+      message: "Тренировка завершена",
+      timeout: 5000,
+    });
+    setTimeout(() => {
+      window.location.href = "/dashboard";
+    }, 5000);
+  }
+}
