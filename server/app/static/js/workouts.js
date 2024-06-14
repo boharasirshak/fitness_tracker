@@ -1,3 +1,19 @@
+const customWorkoutList = document.getElementById("custom-workout-list");
+
+for (const workout of workouts) {
+  const div = document.createElement("div");
+  div.className = "workout-card";
+  div.innerHTML = `
+  <h4>${workout.name}</h4>
+  <img src="../static/images/gradient-arrow.svg" alt="" />
+  `;
+  div.style.cursor = "pointer";
+  div.onclick = function () {
+    window.location.href = `/workout/${workout.id}/start`;
+  };
+  customWorkoutList.appendChild(div);
+}
+
 var workoutCards = document.querySelectorAll(".workout-card");
 workoutCards.forEach(function (card) {
   card.addEventListener("click", function () {
