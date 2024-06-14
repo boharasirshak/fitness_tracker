@@ -9,7 +9,7 @@ for (const workout of workouts) {
   `;
   div.style.cursor = "pointer";
   div.onclick = function () {
-    window.location.href = `/workout/${workout.id}/start`;
+    window.location.href = `/workouts/${workout.id}/start`;
   };
   customWorkoutList.appendChild(div);
 }
