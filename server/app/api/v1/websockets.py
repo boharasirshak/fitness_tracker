@@ -229,6 +229,10 @@ async def workout_connection(websocket: WebSocket):
                 continue
 
             exercise_type = data_json["type"]
+
+            if data_json.get("is_downloading", False):
+                continue
+
             video_b64 = data_json["data"]
             video_bytes = base64.b64decode(video_b64)
             connections[connection_id]["video_frames"].append(video_bytes)
