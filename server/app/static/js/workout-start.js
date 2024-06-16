@@ -115,7 +115,11 @@ video.addEventListener("play", () => {
     setTimeout(sendFrame, interval);
   };
 
-  setInterval(updateTimer, 1000);
+  setInterval(() => {
+    if (!isDownloading) {
+      updateTimer();
+    }
+  }, 1000);
 
   sendFrame();
 });
@@ -159,8 +163,9 @@ document.getElementById("complete-btn").addEventListener("click", async () => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    window.URL.revokeObjectURL(downloadUrl);
-  } catch {
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error("Failed to download the video", e);
     iziToast.show({
       color: "red",
       position: "topRight",
@@ -178,7 +183,7 @@ document.getElementById("complete-btn").addEventListener("click", async () => {
     connection_id: connectionId,
   });
   ws.send(data);
-
+  endTime = Date.now();
   endRestPeriod();
 });
 
@@ -187,10 +192,14 @@ function updateTimer() {
     return;
   }
 
+  if (isDownloading) {
+    return;
+  }
+
   let totalTimeSpentSeconds = parseInt((Date.now() - startTime) / 1000);
   let seconds = 0;
 
-  if (totalTimeSpentSeconds % 60 === 0) {
+  if (totalTimeSpentSeconds > 0 && totalTimeSpentSeconds % 60 === 0) {
     seconds = 0;
     minutes++;
   } else {
