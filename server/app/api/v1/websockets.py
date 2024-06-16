@@ -20,6 +20,10 @@ from app.core.utils import TempFileResponse
 
 router = APIRouter(prefix="/ws", tags=["Websockets"])
 
+NEW_WIDTH = 128
+NEW_HEIGHT = 128
+DESIRED_FPS = 30
+
 # currently active connections. Currently stable and working fine.
 # Use Redis in case the application scales and set gunicorn workers to more than 1
 connections = {}
@@ -35,10 +39,6 @@ pose = mp_pose.Pose(
     enable_segmentation=False,
 )
 mp_draw = mp.solutions.drawing_utils
-
-NEW_WIDTH = 128
-NEW_HEIGHT = 128
-DESIRED_FPS = 30
 
 
 def process_high_knees(frame, session_data: dict):
@@ -210,6 +210,7 @@ async def workout_connection(websocket: WebSocket):
 
             if data_json["type"] == "reset":
                 connections[connection_id]["repetitions_count"] = 0
+                connections[connection_id]["video_frames"] = []
                 await websocket.send_json(
                     {
                         "type": "reset",

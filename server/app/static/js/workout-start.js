@@ -3,7 +3,7 @@ let endTime;
 let seconds = 0;
 let minutes = 0;
 let isResting = false;
-let isPaused = false;
+let isDownloading = false;
 let restTimer = 0;
 let repetitions = 0;
 let connectionId = "";
@@ -103,7 +103,8 @@ video.addEventListener("play", () => {
             type: currentExercise.exercise_id,
             data: b64Data,
             is_resting: isResting,
-            is_paused: false,
+            is_downloading: isDownloading,
+            is_completed: isCompleted,
           });
           ws.send(data);
         });
@@ -117,6 +118,68 @@ video.addEventListener("play", () => {
   setInterval(updateTimer, 1000);
 
   sendFrame();
+});
+
+document.getElementById("complete-btn").addEventListener("click", async () => {
+  isDownloading = true;
+  document.getElementById("complete-btn").disabled = true;
+  document.getElementById("complete-btn").innerText = "Скачивание...";
+
+  try {
+    const response = await fetch(
+      `/api/v1/ws/download_video?connection_id=${connectionId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const data = await response.json();
+      iziToast.show({
+        color: "red",
+        position: "topRight",
+        message: data.detail,
+        timeout: 3000,
+      });
+      document.getElementById("complete-btn").disabled = false;
+      document.getElementById("complete-btn").innerText = "Завершить";
+      isDownloading = false;
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "video.mp4";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch {
+    iziToast.show({
+      color: "red",
+      position: "topRight",
+      message: "Could not save the video. Please try again later.",
+      timeout: 3000,
+    });
+  } finally {
+    document.getElementById("complete-btn").disabled = false;
+    document.getElementById("complete-btn").innerText = "Завершить";
+    isDownloading = false;
+  }
+
+  const data = JSON.stringify({
+    type: "reset",
+    connection_id: connectionId,
+  });
+  ws.send(data);
+
+  endRestPeriod();
 });
 
 function updateTimer() {
@@ -183,21 +246,23 @@ function startRestPeriod() {
 }
 
 function updateRestTimer() {
-  timerElement.innerText = `${restTimer}s`;
+  timerElement.innerText = `${restTimer >= 0 ? restTimer : 0}s`;
   if (restTimer > 0) {
     setTimeout(() => {
       restTimer--;
       updateRestTimer();
     }, 1000);
   } else {
-    endRestPeriod();
+    // to prevent condition where the user completes the exercise before the rest period ends
+    if (!isDownloading) {
+      endRestPeriod();
+    }
   }
 }
 
 function endRestPeriod() {
   isResting = false;
   document.getElementById("time-label").innerText = "Длительность";
-  console.log("Resting complete..");
   startTime = Date.now();
   currentExerciseIdx++;
 
