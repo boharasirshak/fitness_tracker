@@ -117,6 +117,9 @@ a {
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
+  &.blue {
+    background: #deadfd;
+  }
 }
 // LOGIN PAGE START HERE
 .login-page {
@@ -318,11 +321,15 @@ a {
       height: 40px;
       border-radius: 100%;
       overflow: hidden;
+      img {
+        height: 100%;
+      }
     }
   }
   .day-wraps {
     padding-top: 30px;
     padding-bottom: 60px;
+    width: 100%;
     ul {
       display: flex;
       align-items: center;
@@ -495,7 +502,7 @@ a {
       gap: 50px;
     }
   }
-  .topic{
+  .topic {
     margin-top: 20px;
     text-align: center;
     h3 {
@@ -521,18 +528,20 @@ a {
       font-weight: 400;
       line-height: 17.07px;
       color: #000;
+      width: 100%;
+      word-break: break-all;
     }
     img {
       width: 40px;
     }
-    .exercise-img{
+    .exercise-img {
       width: 100px;
     }
-    &.new{
+    &.new {
       justify-content: space-between;
     }
   }
-  
+
   .workout-name-wraps {
     display: flex;
     flex-direction: column;
@@ -772,6 +781,9 @@ a {
         align-items: center;
         justify-content: center;
         margin-bottom: 10px;
+        img {
+          height: 100%;
+        }
       }
       span {
         font-family: $monst;
@@ -797,6 +809,11 @@ a {
   }
   .profile-details {
     margin-top: 30px;
+    input {
+      border: none;
+      background: none;
+      width: 100%;
+    }
     ul {
       display: flex;
       flex-direction: column;
@@ -1034,6 +1051,9 @@ a {
   .text-edit-wrap {
     padding: 15px 20px;
     padding-bottom: 25px;
+    font-family: $monst;
+    font-weight: 500;
+
     .edit-wrapper {
       position: relative;
       background: #fff;
@@ -1117,7 +1137,16 @@ a {
       padding: 12px 32px;
       border-radius: 10px;
       background: #ffffff9e;
-
+      input {
+        width: 30px;
+        border: none;
+        background: none;
+        // display: flex;
+        text-align: center;
+        // align-items: center;
+        // justify-content: center;
+        font-family: $monst;
+      }
       span {
         font-family: $monst;
         font-size: 25px;
@@ -1448,7 +1477,7 @@ a {
         gap: 15px;
       }
     }
-    .topic{
+    .topic {
       margin-top: 16px;
       text-align: center;
       h3 {
@@ -1458,14 +1487,14 @@ a {
     .workout-card {
       width: 95%;
       padding: 30px;
-      gap: 54px;
+      gap: 35px;
       h4 {
         font-size: 14px;
       }
       img {
         width: 23px;
       }
-      .exercise-img{
+      .exercise-img {
         width: 60px;
       }
     }
@@ -1482,8 +1511,8 @@ a {
   }
 
   .exercise-popup-wraps {
-    padding-left: 75px;
-    padding-right: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
     height: auto;
     padding-top: 46px;
     padding-bottom: 23px;
@@ -1517,8 +1546,18 @@ a {
           }
         }
         .timer-wraps {
-          padding: 5px 23px;
+          padding: 15px 23px;
           font-size: 24px;
+          width: min-content;
+          input {
+            border: none;
+            background: none;
+            width: 50px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
         }
       }
 
@@ -1614,7 +1653,7 @@ a {
         .profile-image {
           width: 100px;
           height: 100px;
-          padding: 26px;
+          padding: 15px;
           margin-bottom: 3px;
         }
         span {
@@ -1809,7 +1848,11 @@ a {
       }
       .timer-wrap {
         padding: 8px 20px;
-
+        input {
+          font-size: 15px;
+          font-weight: 400;
+          line-height: 18.29px;
+        }
         span {
           font-size: 15px;
         }
