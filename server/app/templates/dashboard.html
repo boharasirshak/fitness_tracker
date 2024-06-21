@@ -84,7 +84,12 @@
           {% for exercise in workouts[0].exercises %}
           <div class="workout-coolection">
             <div class="workout-image">
-              <img src="../static/images/squat.png" alt="exercise video" />
+              <img
+                src="../static/gif/{{exercise.gif_link}}"
+                alt="exercise animation"
+                width="50"
+                height="100"
+              />
             </div>
             <div class="workout-name-wrap">
               <h5>{{exercise.name}}</h5>
