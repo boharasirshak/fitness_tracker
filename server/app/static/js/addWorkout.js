@@ -8,6 +8,7 @@ observer.observe(document.getElementById("workout-page"), {
   attributes: true,
   attributeFilter: ["style"],
 });
+
 observer.observe(document.getElementById("edit-workout-page"), {
   attributes: true,
   attributeFilter: ["style"],
@@ -169,7 +170,7 @@ function createWorkoutCard(exercise) {
   card.className = "workout-card new";
   card.innerHTML = `
   <img
-      src="../static/images/exercise-1.png"
+      src="../static/gif/${exercise.gif_link}"
       alt=""
       class="exercise-img"
     />
@@ -179,7 +180,7 @@ function createWorkoutCard(exercise) {
       <div class="exercise-pop-wrapper">
         <h4>${exercise.name}</h4>
         <div class="workout">
-          <img src="../static/images/exercise-1.png" alt="" />
+          <img src="../static/gif/${exercise.gif_link}" alt="" />
         </div>
         <div class="timer-count">
           <div class="plus-minus" type="minus" style="cursor: pointer;">
@@ -266,7 +267,7 @@ function createExerciseList() {
       exerciseElement.className = "timer-edit";
       exerciseElement.innerHTML = `
         <div class="squat-wrap">
-          <img src="../static/images/squat.png" alt="" />
+          <img src="../static/gif/${exercise.gif_link}" alt="" />
         </div>
         <input value="exercise" name="type" hidden />
         <h3>${exercise.name}</h3>
