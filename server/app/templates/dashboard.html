@@ -79,7 +79,6 @@
               Начать тренировку
             </button>
           </div>
-          {% endif %}
         </div>
         <div class="wrokouts-flexed">
           {% for exercise in workouts[0].exercises %}
@@ -96,6 +95,7 @@
           </div>
           {% endfor %}
         </div>
+        {% endif %}
         <div class="three-btn-wraps">
           <a href="/workouts">
             <button class="btn">Выбрать другой уровень тренировки</button>
