@@ -80,15 +80,15 @@ async def insert_default_data():
     result = await db.execute(select(Exercise).where(Exercise.id == "custom"))
     exists = result.scalars().first()
 
-    if not exists:
-        jumping_jacks = Exercise(
-            id="custom",
-            name="Пользовательская",
-            video_link="",
-            description="Индивидуальное упражнение, выполненное по вашей собственной воле. Повторы засчитываться не будут.",
-            gif_link="",
-        )
-        db.add(jumping_jacks)
+    # if not exists:
+    #     jumping_jacks = Exercise(
+    #         id="custom",
+    #         name="Пользовательская",
+    #         video_link="",
+    #         description="Индивидуальное упражнение, выполненное по вашей собственной воле. Повторы засчитываться не будут.",
+    #         gif_link="",
+    #     )
+    #     db.add(jumping_jacks)
 
     await db.commit()
     await db.close()
