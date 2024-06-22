@@ -33,31 +33,51 @@ document
       .querySelectorAll("#custom-exercises .timer-edit")
       .forEach((element) => {
         const type = element.querySelector("input[name='type']").value;
-        const duration = parseInt(
-          element.querySelector("input[type='duration']").value
-        );
+        const exercise = {
+          repetitions: 0,
+          rest_time: 0,
+          exercise_id: "",
+        };
 
-        if (Number.isNaN(duration) || duration <= 0) {
-          return iziToast.show({
-            color: "yellow",
-            position: "topRight",
-            timeout: 1500,
-            message: "Time must be a integer",
-          });
+        if (type === "exercise") {
+          const repetitions = parseInt(
+            element.querySelector("input[name='repetitions']").value
+          );
+          const exercise_id = element.querySelector(
+            "input[name='exercise_id']"
+          ).value;
+
+          if (Number.isNaN(repetitions) || repetitions <= 0) {
+            return iziToast.show({
+              color: "yellow",
+              position: "topRight",
+              timeout: 1500,
+              message: "Repetitions must be integer",
+            });
+          }
+          exercise.repetitions = repetitions;
+          exercise.exercise_id = exercise_id;
         }
 
         if (type === "rest" && exercises.length > 0) {
           let lastExercise = exercises.pop();
-          lastExercise.rest_time = duration;
+          const restTimer = parseInt(
+            element.querySelector("input[name='rest']").value
+          );
+          if (Number.isNaN(restTimer) || restTimer <= 0) {
+            return iziToast.show({
+              color: "yellow",
+              position: "topRight",
+              timeout: 1500,
+              message: "Rest time must be integer",
+            });
+          }
+
+          lastExercise.rest_time = restTimer;
           exercises.push(lastExercise);
           return;
         }
 
-        const exercise = {
-          total_time: duration,
-          rest_time: 0,
-          exercise_id: element.querySelector("input[type='exercise_id']").value,
-        };
         exercises.push(exercise);
       });
 
@@ -186,8 +206,8 @@ function createWorkoutCard(exercise) {
           <div class="plus-minus" type="minus" style="cursor: pointer;">
             <img src="../static/images/minus.svg" alt="" />
           </div>
-          <div class="timer-wraps" type="timer">
-            <input value="60" type="timer"/>
+          <div class="timer-wraps">
+            <input value="20" name="repetitions"/>
           </div>
           <div class="plus-minus" type="plus" style="cursor: pointer;">
             <img src="../static/images/plus.svg" alt="" />
@@ -204,12 +224,12 @@ function createWorkoutCard(exercise) {
 
   workoutContainer.appendChild(card);
 
-  let timer = 60;
+  let reps = 20;
   const exercisePopup = card.querySelector(".exercise-popup-wraps");
   const closeBtn = card.querySelector(".cross");
   const plusBtn = card.querySelector(".plus-minus[type='plus']");
   const minusBtn = card.querySelector(".plus-minus[type='minus']");
-  const timerInput = card.querySelector("input[type='timer']");
+  const repetitionsInput = card.querySelector("input[name='repetitions']");
   const addBtn = card.querySelector(".btn[type='add']");
 
   card.addEventListener("click", () => exercisePopup.classList.add("active"));
@@ -218,25 +238,32 @@ function createWorkoutCard(exercise) {
     event.stopPropagation();
   });
 
+  repetitionsInput.addEventListener("input", () => {
+    let value = parseInt(repetitionsInput.value);
+    if (!Number.isNaN(value) || value > 0) {
+      reps = value;
+    }
+  });
+
   plusBtn.addEventListener("click", () => {
-    timer += 1;
-    timerInput.value = timer;
+    reps += 1;
+    repetitionsInput.value = reps;
   });
 
   minusBtn.addEventListener("click", () => {
-    if (timer <= 1) return;
-    timer -= 1;
-    timerInput.value = timer;
+    if (reps <= 1) return;
+    reps -= 1;
+    repetitionsInput.value = reps;
   });
 
   addBtn.addEventListener("click", () => {
     const newExercise = {
       name: exercise.name,
-      id: Date.now(),
+      id: Date.now(), // a unique id to identify the exercise based on the time it was added
       exercise_id: exercise.id,
       gif_link: exercise.gif_link,
       video_link: exercise.video_link,
-      duration: timerInput.value,
+      repetitions: repetitionsInput.value,
       rest_timeout: 0,
     };
     customExercises.push(newExercise);
@@ -272,11 +299,23 @@ function createExerciseList() {
         <input value="exercise" name="type" hidden />
         <h3>${exercise.name}</h3>
         <div class="timer-wrap">
-          <input value="${exercise.duration}" type="duration" name="total" />
-          <input value="${exercise.exercise_id}" type="exercise_id" hidden />
-          <input value="${exercise.id}" type="id" hidden />
+          <input value="${exercise.repetitions}" name="repetitions"/>
+          <input value="${exercise.exercise_id}" name="exercise_id" hidden />
+          <input value="${exercise.id}" name="id" hidden />
         </div>
         `;
+
+      let repsInput = exerciseElement.querySelector(
+        "input[name='repetitions']"
+      );
+
+      repsInput?.addEventListener("input", () => {
+        const idx = customExercises.findIndex((ex) => ex.id === exercise.id);
+        if (idx !== -1) {
+          customExercises[idx].repetitions = repsInput.value;
+        }
+      });
+
       list.appendChild(exerciseElement);
 
       if (exercise.rest_timeout > 0) {
@@ -289,30 +328,20 @@ function createExerciseList() {
           <input value="rest" name="type" hidden />
           <h3>Отдых</h3>
           <div class="timer-wrap">
-            <input value="${exercise.rest_timeout}" type="duration" name="rest" />
+            <input value="${exercise.rest_timeout}" name="rest" />
           </div>
           `;
-        list.appendChild(restElement);
-      }
 
-      const durationInputs = exerciseElement.querySelectorAll(
-        "input[type='duration']"
-      );
-      durationInputs.forEach((input) => {
-        input.addEventListener("input", () => {
-          const exerciseIndex = customExercises.findIndex(
-            (ex) => ex.id === exercise.id
-          );
-          if (exerciseIndex !== -1) {
-            let durationType = input.getAttribute("name");
-            if (durationType === "rest") {
-              customExercises[exerciseIndex].rest_timeout = input.value;
-            } else {
-              customExercises[exerciseIndex].duration = input.value;
-            }
+        let restInput = restElement.querySelector("input[name='rest']");
+
+        restInput.addEventListener("input", () => {
+          const idx = customExercises.findIndex((ex) => ex.id === exercise.id);
+          if (idx !== -1) {
+            customExercises[idx].rest_timeout = restInput.value;
           }
         });
-      });
+        list.appendChild(restElement);
+      }
     });
     editBox.appendChild(createButtons());
   } else {
