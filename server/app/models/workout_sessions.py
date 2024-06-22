@@ -13,7 +13,8 @@ class WorkoutSession(Base):
         Integer, ForeignKey("workout_exercises.id"), nullable=False
     )
     repetitions = Column(Integer, nullable=True, default=0)
-    created_at = Column(DateTime(timezone=True), default=func.now())
+    started_at = Column(DateTime(timezone=True), nullable=True)
+    finished_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User")
     workout_exercise = relationship(

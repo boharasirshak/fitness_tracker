@@ -9,6 +9,11 @@ from app.models import Workout, WorkoutExercise, WorkoutSession
 class WorkoutSessionSchema(BaseModel):
     id: int
     repetitions: int
+    started_at: datetime
+    finished_at: datetime
+
+    class Config:
+        json_encoders = {datetime: lambda dt: dt.isoformat()}
 
 
 class WorkoutExerciseSchema(BaseModel):
@@ -19,7 +24,7 @@ class WorkoutExerciseSchema(BaseModel):
     video_link: str
     gif_link: str
     created_at: datetime
-    total_time: int
+    repetitions: int
     rest_time: int
 
     sessions: list[WorkoutSessionSchema]
@@ -47,7 +52,7 @@ class AllWorkoutsSchema(BaseModel):
 
 class CreateWorkoutExerciseSchema(BaseModel):
     exercise_id: str
-    total_time: int
+    repetitions: int
     rest_time: int = 0
 
 
@@ -55,6 +60,8 @@ class CreateWorkoutSessionSchema(BaseModel):
     workout_id: int
     workout_exercise_id: int
     repetitions: int
+    started_at: datetime
+    finished_at: datetime
 
 
 class CreateWorkoutSchema(BaseModel):
@@ -75,6 +82,8 @@ def workout_session_to_schema(workout_session: WorkoutSession):
     return WorkoutSessionSchema(
         id=workout_session.id,
         repetitions=workout_session.repetitions,
+        started_at=workout_session.started_at,
+        finished_at=workout_session.finished_at,
     )
 
 
@@ -94,7 +103,7 @@ def workout_exercise_to_schema(
         gif_link=workout_exercise.exercise.gif_link,
         created_at=workout_exercise.created_at,
         sessions=sessions,
-        total_time=workout_exercise.total_time,
+        repetitions=workout_exercise.repetitions,
         rest_time=workout_exercise.rest_time,
     )
 
