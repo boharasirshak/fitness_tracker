@@ -58,7 +58,6 @@ async def get_all_users_workouts(
                 WorkoutExercise.workout_sessions
             ),
         )
-        .order_by(Workout.created_at.desc())
     )
     result = await db.execute(query)
     workouts = result.unique().scalars().all()
@@ -66,6 +65,7 @@ async def get_all_users_workouts(
         return AllWorkoutsSchema(workouts=[])
 
     for workout in workouts:
+        workout.workout_exercises.sort(key=lambda we: we.id)
         all_workouts.append(workout_to_schema(workout))
 
     return AllWorkoutsSchema(workouts=all_workouts)
@@ -115,6 +115,7 @@ async def get_single_workout(
             content=jsonable_encoder({"detail": "Тренировка не найдена"}),
         )
 
+    workout.workout_exercises.sort(key=lambda we: we.id)
     return workout_to_schema(workout)
 
 
@@ -164,7 +165,7 @@ async def create_new_workout(
         new_workout_exercise = WorkoutExercise(
             workout_id=new_workout.id,
             exercise_id=ex.exercise_id,
-            total_time=ex.total_time,
+            repetitions=ex.repetitions,
             rest_time=ex.rest_time,
         )
         db.add(new_workout_exercise)
@@ -227,6 +228,8 @@ async def add_new_workout_session(
         user_id=user.id,
         workout_exercise_id=data.workout_exercise_id,
         repetitions=data.repetitions,
+        started_at=data.started_at,
+        finished_at=data.finished_at,
     )
 
     db.add(new_workout_session)

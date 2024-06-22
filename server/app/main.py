@@ -216,6 +216,7 @@ async def dashboard_page(request: Request, db: AsyncSession = Depends(get_db)):
     data = result.unique().scalars().all()
 
     for workout in data:
+        workout.workout_exercises.sort(key=lambda we: we.id)
         workouts.append(json.loads(workout_to_schema(workout).model_dump_json()))
 
     query = select(User).where(User.id == token["subject"]["user_id"])
@@ -370,6 +371,7 @@ async def workouts_page(request: Request, db: AsyncSession = Depends(get_db)):
     data = result.unique().scalars().all()
 
     for workout in data:
+        workout.workout_exercises.sort(key=lambda we: we.id)
         workouts.append(json.loads(workout_to_schema(workout).model_dump_json()))
 
     return templates.TemplateResponse(
@@ -474,6 +476,7 @@ async def start_workout(
         )
 
     if workout:
+        workout.workout_exercises.sort(key=lambda we: we.id)
         workout = json.loads(workout_to_schema(workout).model_dump_json())
         if len(workout["exercises"]) == 0:
             return templates.TemplateResponse(
