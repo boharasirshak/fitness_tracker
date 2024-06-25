@@ -2,7 +2,7 @@ const customWorkoutList = document.getElementById("custom-workout-list");
 
 for (const workout of workouts) {
   const div = document.createElement("div");
-  div.className = "workout-card";
+  div.className = "workout-card gap";
   div.innerHTML = `
   <h4>${workout.name}</h4>
   <img src="../static/images/gradient-arrow.svg" alt="" />

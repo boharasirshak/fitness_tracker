@@ -453,6 +453,8 @@ a {
 }
 .dashboard-page .wrokouts-flexed .workout-coolection .workout-image img {
   width: 200px;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .dashboard-page .wrokouts-flexed .workout-coolection .workout-name-wrap {
   display: flex;
@@ -517,6 +519,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+.workout-page .workout-card.gap {
   gap: 250px;
 }
 .workout-page .workout-card h4 {
@@ -525,14 +529,16 @@ a {
   font-weight: 400;
   line-height: 17.07px;
   color: #000;
-  width: 100%;
-  word-break: break-all;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 .workout-page .workout-card img {
   width: 40px;
 }
 .workout-page .workout-card .exercise-img {
   width: 100px;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .workout-page .workout-card.new {
   justify-content: space-between;
@@ -618,6 +624,17 @@ a {
   line-height: 29.26px;
   text-align: left;
 }
+.exercise-popup-wraps .exercise-pop-wrapper .timer-count .timer-wraps input {
+  border: none;
+  background: none;
+  width: 100px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
+}
 .exercise-popup-wraps .exercise-pop-wrapper .add-flex .btn {
   padding: 27px 30px;
 }
@@ -651,6 +668,12 @@ a {
   width: 100%;
   height: 80vh;
   border-radius: 10px;
+}
+.workout-video-page .main-video-wraps .camera-video video {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .workout-video-page .main-video-wraps .time-duration {
   width: 60%;
@@ -1079,6 +1102,8 @@ a {
 }
 .edit-box .timer-edit .squat-wrap img {
   width: 100px;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .edit-box .timer-edit .center-wrap {
   width: 140px;
@@ -1134,6 +1159,10 @@ a {
   line-height: 17.07px;
 }
 
+.turn-text {
+  display: none;
+}
+
 @media (max-width: 1040px) {
   .container {
     max-width: 90%;
@@ -1144,17 +1173,17 @@ a {
     width: 80%;
   }
   .workout-video-page {
-    height: 100%;
     width: 100%;
     grid-template-columns: 1.4fr 1fr;
   }
   .workout-video-page .main-video-wraps {
-    width: 100%;
+    width: -moz-fit-content;
+    width: fit-content;
     padding: 15px;
     height: 100%;
   }
   .workout-video-page .main-video-wraps .camera-video {
-    height: 90%;
+    height: 100vh;
   }
   .workout-video-page .main-video-wraps .time-duration {
     width: 90%;
@@ -1177,6 +1206,7 @@ a {
     width: 100%;
     position: relative;
     padding: 15px;
+    height: 100vh;
   }
   .workout-video-page .video-wraper .workout-name-wrap {
     height: 100%;
@@ -1421,11 +1451,14 @@ a {
   }
   .workout-page .workout-card {
     width: 95%;
-    padding: 30px;
+    padding: 27px;
+  }
+  .workout-page .workout-card.gap {
     gap: 35px;
   }
   .workout-page .workout-card h4 {
     font-size: 14px;
+    word-break: break-all;
   }
   .workout-page .workout-card img {
     width: 23px;
@@ -1494,6 +1527,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 16px;
   }
   .exercise-popup-wraps .exercise-pop-wrapper .add-flex .btn {
     padding: 20px 30px;
@@ -1506,7 +1540,6 @@ a {
     width: 13px;
   }
   .workout-video-page {
-    height: 100%;
     grid-template-columns: 1fr 1fr;
   }
   .workout-video-page .main-video-wraps {
@@ -1514,7 +1547,7 @@ a {
     height: 100%;
   }
   .workout-video-page .main-video-wraps .camera-video {
-    height: 100%;
+    height: 90%;
   }
   .workout-video-page .main-video-wraps .time-duration {
     width: 90%;
@@ -1766,5 +1799,17 @@ a {
     gap: 12px;
     padding: 8px;
     font-size: 14px;
+  }
+  .turn-text {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 17.07px;
+    color: black;
+    z-index: 99;
   }
 }/*# sourceMappingURL=style.css.map */
