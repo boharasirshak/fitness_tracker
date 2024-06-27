@@ -72,7 +72,7 @@ fileInput.addEventListener("change", async (event) => {
   });
 });
 
-document.getElementById("submit").addEventListener("click", async () => {
+document.getElementById("edit").addEventListener("click", async () => {
   let name = document.getElementById("name").value;
   let gender = document.getElementById("male").checked ? "male" : "female";
   let height = document.getElementById("height").value;
@@ -170,10 +170,14 @@ document.getElementById("submit").addEventListener("click", async () => {
     color: "green",
     position: "topRight",
     timeout: 5000,
-    message: "Done!",
+    message: "Отредактировал ваш профиль!",
   });
 
   setTimeout(() => {
     window.location.href = "/login";
   }, 2000);
+});
+
+document.getElementById("submit").addEventListener("click", () => {
+  window.location.href = "/dashboard";
 });

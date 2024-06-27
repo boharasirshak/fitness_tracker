@@ -341,6 +341,49 @@ async def new_workout(request: Request, db: AsyncSession = Depends(get_db)):
     )
 
 
+@app.get("/workouts/edit")
+async def new_workout(request: Request, db: AsyncSession = Depends(get_db)):
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        return RedirectResponse(url="/login")
+
+    token = is_valid_jwt(access_token)
+
+    if not token or token.get("subject", {}).get("user_id") is None:
+        resp = RedirectResponse(url="/login")
+        resp.delete_cookie("access_token")
+        return resp
+
+    query = (
+        select(Workout)
+        .where(Workout.user_id == token["subject"]["user_id"])
+        .options(
+            joinedload(Workout.user),
+            joinedload(Workout.workout_exercises).joinedload(WorkoutExercise.exercise),
+            joinedload(Workout.workout_exercises).joinedload(
+                WorkoutExercise.workout_sessions
+            ),
+        )
+    )
+
+    workouts = []
+    result = await db.execute(query)
+    data = result.unique().scalars().all()
+
+    for workout in data:
+        workout.workout_exercises.sort(key=lambda we: we.id)
+        workouts.append(json.loads(workout_to_schema(workout).model_dump_json()))
+
+    return templates.TemplateResponse(
+        "edit-workouts.html",
+        {
+            "request": request,
+            "access_token": access_token,
+            "workouts": workouts,
+        },
+    )
+
+
 @app.get("/workouts")
 async def workouts_page(request: Request, db: AsyncSession = Depends(get_db)):
     access_token = request.cookies.get("access_token")
