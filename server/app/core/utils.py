@@ -13,7 +13,7 @@ from starlette.background import BackgroundTask
 
 from app.core.database import AsyncSessionFactory
 
-from app.models.exercises import Exercise
+from app.models import Exercise, Workout, WorkoutExercise, User
 
 
 class TempFileResponse(FileResponse):
@@ -54,7 +54,7 @@ async def insert_default_data():
         high_knees = Exercise(
             id="high_knees",
             name="High Knees",
-            video_link="high_knees.mov",
+            video_link="high_knees.mp4",
             description="Бег на месте с высоким поднятием коленей - это как игра в ловкие ниндзя! Отличный способ "
             "пробудить тело и дать заряд бодрости на весь день.",
             gif_link="high_knees.gif",
@@ -92,3 +92,21 @@ async def insert_default_data():
 
     await db.commit()
     await db.close()
+
+
+async def insert_generated_workouts(user: User):
+    db: AsyncSession = AsyncSessionFactory()
+    workout1 = Workout(
+        name="Тренировка № 1",
+        description="auto-generated workout no. 1",
+        user_id=user.id,
+    )
+    db.add(workout1)
+
+    exercise1 = WorkoutExercise()
+    workout2 = Workout(
+        name="Тренировка № 2",
+        description="auto-generated workout no. 2",
+        user_id=user.id,
+    )
+    db.add(workout2)
