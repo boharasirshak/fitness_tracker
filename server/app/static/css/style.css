@@ -1225,7 +1225,10 @@ a {
     height: 100%;
   }
   .workout-video-page .main-video-wraps .camera-video {
-    height: 75vh;
+    height: 95vh;
+  }
+  .workout-video-page .main-video-wraps .camera-video img {
+    height: 100%;
   }
   .workout-video-page .main-video-wraps .time-duration {
     width: 90%;
