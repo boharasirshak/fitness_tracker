@@ -98,15 +98,98 @@ async def insert_generated_workouts(user: User):
     db: AsyncSession = AsyncSessionFactory()
     workout1 = Workout(
         name="Тренировка № 1",
-        description="auto-generated workout no. 1",
+        description="auto-generated",
         user_id=user.id,
     )
     db.add(workout1)
+    await db.commit()
+    await db.refresh(workout1)
 
-    exercise1 = WorkoutExercise()
+    exercise = WorkoutExercise(
+        workout_id=workout1.id,
+        exercise_id="high_knees",
+        repetitions=15,
+        rest_time=45,
+    )
+    db.add(exercise)
+
+    exercise = WorkoutExercise(
+        workout_id=workout1.id,
+        exercise_id="high_knees",
+        repetitions=15,
+        rest_time=45,
+    )
+    db.add(exercise)
+
+    exercise = WorkoutExercise(
+        workout_id=workout1.id,
+        exercise_id="jumping_jacks",
+        repetitions=15,
+        rest_time=45,
+    )
+    db.add(exercise)
+
+    exercise = WorkoutExercise(
+        workout_id=workout1.id,
+        exercise_id="jumping_jacks",
+        repetitions=15,
+        rest_time=45,
+    )
+    db.add(exercise)
+
+    await db.commit()
+
     workout2 = Workout(
         name="Тренировка № 2",
-        description="auto-generated workout no. 2",
+        description="auto-generated",
         user_id=user.id,
     )
     db.add(workout2)
+    await db.commit()
+    await db.refresh(workout2)
+
+    exercise = WorkoutExercise(
+        workout_id=workout2.id,
+        exercise_id="high_knees",
+        repetitions=30,
+        rest_time=20,
+    )
+    db.add(exercise)
+    exercise = WorkoutExercise(
+        workout_id=workout2.id,
+        exercise_id="high_knees",
+        repetitions=30,
+        rest_time=20,
+    )
+    db.add(exercise)
+    exercise = WorkoutExercise(
+        workout_id=workout2.id,
+        exercise_id="high_knees",
+        repetitions=30,
+        rest_time=20,
+    )
+    db.add(exercise)
+
+    exercise = WorkoutExercise(
+        workout_id=workout2.id,
+        exercise_id="jumping_jacks",
+        repetitions=30,
+        rest_time=20,
+    )
+    db.add(exercise)
+    exercise = WorkoutExercise(
+        workout_id=workout2.id,
+        exercise_id="jumping_jacks",
+        repetitions=30,
+        rest_time=20,
+    )
+    db.add(exercise)
+    exercise = WorkoutExercise(
+        workout_id=workout2.id,
+        exercise_id="jumping_jacks",
+        repetitions=30,
+        rest_time=20,
+    )
+    db.add(exercise)
+
+    await db.commit()

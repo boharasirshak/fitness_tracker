@@ -11,8 +11,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-from app.models.users import User
-from app.models.reset_password_token import ResetPasswordToken
+from app.models import User, ResetPasswordToken
 from app.core.database import get_db
 from app.dependencies.jwt import jwt_verify
 from app.config import FORGOT_PASSWORD_TOKEN_EXPIRATION
@@ -27,6 +26,7 @@ from app.schemas.users import (
     ResetUserPasswordSchema,
     ResetUserPasswordResponseSchema,
 )
+from app.core.utils import insert_generated_workouts
 from app.core.emails import (
     read_email_template,
     send_mail_sync,
@@ -111,12 +111,17 @@ async def register(data: UserRegisterSchema, db: AsyncSession = Depends(get_db))
         db.add(user)
         await db.commit()
         await db.refresh(user)
+
+        await insert_generated_workouts(user)
+
         subject = {"email": user.email, "user_id": user.id}
 
         access_token = access_security.create_access_token(
             subject=subject,
             expires_delta=timedelta(days=365 * 100),
         )
+
+        # add some default exercises
 
         return UserRegisterResponseSchema(
             name=user.name,

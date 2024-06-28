@@ -1,4 +1,5 @@
 const customWorkoutList = document.getElementById("custom-workout-list");
+const generatedWorkoutList = document.getElementById("generated-workout-list");
 
 for (const workout of workouts) {
   const div = document.createElement("div");
@@ -11,7 +12,12 @@ for (const workout of workouts) {
   div.onclick = function () {
     window.location.href = `/workouts/${workout.id}/start`;
   };
-  customWorkoutList.appendChild(div);
+
+  if (workout.description === "auto-generated") {
+    generatedWorkoutList.appendChild(div);
+  } else {
+    customWorkoutList.appendChild(div);
+  }
 }
 
 var workoutCards = document.querySelectorAll(".workout-card");

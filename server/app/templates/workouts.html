@@ -1,139 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workouts</title>
+    <link
+      rel="shortcut icon"
+      href="../static/favicon.ico"
+      type="image/x-icon"
+    />
+    <link href="../static/css/style.css" rel="stylesheet" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workouts</title>
-  <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon" />
-  <link href="../static/css/style.css" rel="stylesheet" />
+    <script src="../static/js/lib.js" type="text/javascript"></script>
+  </head>
 
-  <script src="../static/js/lib.js" type="text/javascript"></script>
-</head>
+  <script>
+    var workouts = {{ workouts| tojson }};
+  </script>
 
-<script>
-  var workouts = {{ workouts| tojson }};
-</script>
-
-<body>
-  <!-- WORKOUT PAGE START HERE -->
-  <section class="workout-page">
-    <div class="container">
-      <div class="number-list-wrapper">
-        <h3>Тренировки</h3>
-        <div class="workout-number-list">
+  <body>
+    <!-- WORKOUT PAGE START HERE -->
+    <section class="workout-page">
+      <div class="container">
+        <div class="number-list-wrapper">
+          <h3>Тренировки</h3>
+          <div class="workout-number-list" id="generated-workout-list">
+            <!-- Generated Workouts reside here -->
+          </div>
+        </div>
+        <div class="number-list-wrapper mt-45">
+          <h3>Свои тренировки</h3>
+          <div class="workout-number-list" id="custom-workout-list">
+            <!-- Custom Workouts reside here -->
+          </div>
+        </div>
+        <div class="workout-name-wraps mt-60">
           <div class="workout-card gap">
-            <h4>Тренировка № 1</h4>
+            <h4>Приседания</h4>
             <img src="../static/images/gradient-arrow.svg" alt="" />
+            <div class="exercise-popup-wraps">
+              <div class="exercise-pop-wrapper">
+                <h4>Приседания</h4>
+                <div class="workout">
+                  <img src="../static/images/squat.png" alt="" />
+                </div>
+                <div class="timer-count">
+                  <div class="plus-minus">
+                    <img src="../static/images/minus.svg" alt="" />
+                  </div>
+                  <div class="timer-wraps">
+                    <span>0:10</span>
+                  </div>
+                  <div class="plus-minus">
+                    <img src="../static/images/plus.svg" alt="" />
+                  </div>
+                </div>
+                <div class="flex align-center add-flex gap-20">
+                  <button class="btn">Добавить</button>
+                  <div class="cross">
+                    <img src="../static/images/cross.svg" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="workout-card gap">
-            <h4>Тренировка № 2</h4>
+            <h4>Планка</h4>
             <img src="../static/images/gradient-arrow.svg" alt="" />
+            <div class="exercise-popup-wraps">
+              <div class="exercise-pop-wrapper">
+                <h4>Планка</h4>
+                <div class="workout">
+                  <img src="../static/images/plank.png" alt="" />
+                </div>
+                <div class="timer-count">
+                  <div class="plus-minus">
+                    <img src="../static/images/minus.svg" alt="" />
+                  </div>
+                  <div class="timer-wraps">
+                    <span>0:10</span>
+                  </div>
+                  <div class="plus-minus">
+                    <img src="../static/images/plus.svg" alt="" />
+                  </div>
+                </div>
+                <div class="flex align-center add-flex gap-20">
+                  <button class="btn">Добавить</button>
+                  <div class="cross">
+                    <img src="../static/images/cross.svg" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="number-list-wrapper mt-45">
-        <h3>Свои тренировки</h3>
-        <div class="workout-number-list" id="custom-workout-list">
-          <!-- Custom Workouts reside here -->
-        </div>
-      </div>
-      <div class="workout-name-wraps mt-60">
-        <div class="workout-card gap">
-          <h4>Приседания</h4>
-          <img src="../static/images/gradient-arrow.svg" alt="" />
-          <div class="exercise-popup-wraps">
-            <div class="exercise-pop-wrapper">
-              <h4>Приседания</h4>
-              <div class="workout">
-                <img src="../static/images/squat.png" alt="" />
-              </div>
-              <div class="timer-count">
-                <div class="plus-minus">
-                  <img src="../static/images/minus.svg" alt="" />
+          <div class="workout-card gap">
+            <h4>Берпи</h4>
+            <img src="../static/images/gradient-arrow.svg" alt="" />
+            <div class="exercise-popup-wraps">
+              <div class="exercise-pop-wrapper">
+                <h4>Берпи</h4>
+                <div class="workout">
+                  <img src="../static/images/burpee.png" alt="" />
                 </div>
-                <div class="timer-wraps">
-                  <span>0:10</span>
+                <div class="timer-count">
+                  <div class="plus-minus">
+                    <img src="../static/images/minus.svg" alt="" />
+                  </div>
+                  <div class="timer-wraps">
+                    <span>0:10</span>
+                  </div>
+                  <div class="plus-minus">
+                    <img src="../static/images/plus.svg" alt="" />
+                  </div>
                 </div>
-                <div class="plus-minus">
-                  <img src="../static/images/plus.svg" alt="" />
-                </div>
-              </div>
-              <div class="flex align-center add-flex gap-20">
-                <button class="btn">Добавить</button>
-                <div class="cross">
-                  <img src="../static/images/cross.svg" alt="" />
+                <div class="flex align-center add-flex gap-20">
+                  <button class="btn">Добавить</button>
+                  <div class="cross">
+                    <img src="../static/images/cross.svg" alt="" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="workout-card gap">
-          <h4>Планка</h4>
-          <img src="../static/images/gradient-arrow.svg" alt="" />
-          <div class="exercise-popup-wraps">
-            <div class="exercise-pop-wrapper">
-              <h4>Планка</h4>
-              <div class="workout">
-                <img src="../static/images/plank.png" alt="" />
-              </div>
-              <div class="timer-count">
-                <div class="plus-minus">
-                  <img src="../static/images/minus.svg" alt="" />
-                </div>
-                <div class="timer-wraps">
-                  <span>0:10</span>
-                </div>
-                <div class="plus-minus">
-                  <img src="../static/images/plus.svg" alt="" />
-                </div>
-              </div>
-              <div class="flex align-center add-flex gap-20">
-                <button class="btn">Добавить</button>
-                <div class="cross">
-                  <img src="../static/images/cross.svg" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="workout-card gap">
-          <h4>Берпи</h4>
-          <img src="../static/images/gradient-arrow.svg" alt="" />
-          <div class="exercise-popup-wraps">
-            <div class="exercise-pop-wrapper">
-              <h4>Берпи</h4>
-              <div class="workout">
-                <img src="../static/images/burpee.png" alt="" />
-              </div>
-              <div class="timer-count">
-                <div class="plus-minus">
-                  <img src="../static/images/minus.svg" alt="" />
-                </div>
-                <div class="timer-wraps">
-                  <span>0:10</span>
-                </div>
-                <div class="plus-minus">
-                  <img src="../static/images/plus.svg" alt="" />
-                </div>
-              </div>
-              <div class="flex align-center add-flex gap-20">
-                <button class="btn">Добавить</button>
-                <div class="cross">
-                  <img src="../static/images/cross.svg" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="btn-wraps">
+          <button class="btn">Назад</button>
         </div>
       </div>
-      <div class="btn-wraps">
-        <button class="btn">Назад</button>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <script src="../static/js/workouts.js" defer></script>
-</body>
-
+    <script src="../static/js/workouts.js" defer></script>
+  </body>
 </html>
