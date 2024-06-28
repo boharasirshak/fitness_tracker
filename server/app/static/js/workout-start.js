@@ -20,8 +20,7 @@ const downloadButtonElement = document.getElementById("download-button");
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
 const accessToken = getCookie("access_token");
-const receivedImageCanvas = document.getElementById("received-image");
-const receivedImageContext = receivedImageCanvas.getContext("2d");
+const receivedImage = document.getElementById("received-image");
 
 let currentExercise;
 let currentExerciseIdx = 0;
@@ -72,23 +71,12 @@ function handleWebSocketMessage(event) {
   const message = JSON.parse(event.data);
 
   if (message.type === "image") {
-    const imageData = `data:image/jpeg;base64,${message.data}`;
-    updateCanvas(imageData);
+    receivedImage.src = `data:image/jpeg;base64,${message.data}`;
   } else if (message.type === "count") {
     repetitions = parseInt(message.data);
     repetitionsCountElement.innerText = repetitions;
   }
   connectionId = message.connection_id;
-}
-
-function updateCanvas(imageData) {
-  const img = new Image();
-  img.onload = () => {
-    receivedImageCanvas.width = img.width;
-    receivedImageCanvas.height = img.height;
-    receivedImageContext.drawImage(img, 0, 0, img.width, img.height);
-  };
-  img.src = imageData;
 }
 
 function startVideoProcessing() {
