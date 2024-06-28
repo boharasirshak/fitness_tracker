@@ -72,6 +72,7 @@ function handleWebSocketMessage(event) {
 
   if (message.type === "image") {
     receivedImage.src = `data:image/jpeg;base64,${message.data}`;
+    showToast("green", "Image received");
   } else if (message.type === "count") {
     repetitions = parseInt(message.data);
     repetitionsCountElement.innerText = repetitions;
