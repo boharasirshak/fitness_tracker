@@ -9,19 +9,22 @@
 
 @font-face {
   font-family: "Grtsk Tera";
-  src: url("../fonts/GrtskTera-Regular.woff2") format("woff2"), url("../fonts/GrtskTera-Regular.woff") format("woff");
+  src: url("../fonts/GrtskTera-Regular.woff2") format("woff2"),
+    url("../fonts/GrtskTera-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Grtsk Tera";
-  src: url("../fonts/GrtskTera-Semibold.woff2") format("woff2"), url("../fonts/GrtskTera-Semibold.woff") format("woff");
+  src: url("../fonts/GrtskTera-Semibold.woff2") format("woff2"),
+    url("../fonts/GrtskTera-Semibold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
   font-family: "Grtsk Tera";
-  src: url("../fonts/GrtskTera-Bold.woff2") format("woff2"), url("../fonts/GrtskTera-Bold.woff") format("woff");
+  src: url("../fonts/GrtskTera-Bold.woff2") format("woff2"),
+    url("../fonts/GrtskTera-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
 }
@@ -54,7 +57,7 @@ a {
   width: 100%;
   height: auto;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .flex {
@@ -141,7 +144,11 @@ a {
 .login-page {
   padding-top: 60px;
   padding-bottom: 60px;
-  background: linear-gradient(180deg, rgba(217, 155, 255, 0.8) 0%, rgba(15, 0, 135, 0.8) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.8) 0%,
+    rgba(15, 0, 135, 0.8) 100%
+  );
 }
 .login-page .top-logo-part .main-logo img {
   width: 46.5px;
@@ -262,7 +269,7 @@ a {
   align-items: center;
   gap: 10px;
 }
-.login-page .main-login-section .white-form .check-wrap input[type=checkbox] {
+.login-page .main-login-section .white-form .check-wrap input[type="checkbox"] {
   width: 20px;
   height: 20px;
   accent-color: #d99bff;
@@ -447,14 +454,18 @@ a {
   overflow: hidden;
 }
 .dashboard-page .wrokouts-flexed .workout-coolection .workout-image {
-  background: linear-gradient(180deg, rgba(217, 155, 255, 0.5) 0%, rgba(113, 97, 239, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.5) 0%,
+    rgba(113, 97, 239, 0.5) 100%
+  );
   padding: 20px;
   border-radius: 15px;
 }
 .dashboard-page .wrokouts-flexed .workout-coolection .workout-image img {
   width: 200px;
   -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .dashboard-page .wrokouts-flexed .workout-coolection .workout-name-wrap {
   display: flex;
@@ -481,7 +492,11 @@ a {
 }
 
 .workout-page {
-  background: linear-gradient(180deg, rgba(159, 227, 255, 0.2) 0%, rgba(217, 155, 255, 0.2) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(159, 227, 255, 0.2) 0%,
+    rgba(217, 155, 255, 0.2) 100%
+  );
   padding-top: 60px;
   padding-bottom: 60px;
 }
@@ -538,7 +553,7 @@ a {
 .workout-page .workout-card .exercise-img {
   width: 100px;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .workout-page .workout-card.new {
   justify-content: space-between;
@@ -589,7 +604,11 @@ a {
   margin-bottom: 20px;
 }
 .exercise-popup-wraps .exercise-pop-wrapper .workout {
-  background: linear-gradient(180deg, rgba(217, 155, 255, 0.5) 0%, rgba(113, 97, 239, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.5) 0%,
+    rgba(113, 97, 239, 0.5) 100%
+  );
   padding: 20px;
   border-radius: 15px;
 }
@@ -673,7 +692,7 @@ a {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .workout-video-page .main-video-wraps .time-duration {
   width: 60%;
@@ -687,19 +706,33 @@ a {
   align-items: flex-start;
   gap: 15px;
 }
-.workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap {
+.workout-video-page
+  .main-video-wraps
+  .time-duration
+  .timer-wraps
+  .duration-wrap {
   color: #fff;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap h5 {
+.workout-video-page
+  .main-video-wraps
+  .time-duration
+  .timer-wraps
+  .duration-wrap
+  h5 {
   font-family: "Montserrat", sans-serif;
   font-size: 18px;
   font-weight: 500;
   line-height: 15.85px;
 }
-.workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap span {
+.workout-video-page
+  .main-video-wraps
+  .time-duration
+  .timer-wraps
+  .duration-wrap
+  span {
   font-family: "Montserrat", sans-serif;
   font-size: 20px;
   font-weight: 500;
@@ -732,7 +765,7 @@ a {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .workout-video-page .video-wraper .workout-name-wrap .btn {
   width: -moz-fit-content;
@@ -906,7 +939,7 @@ a {
   width: 60%;
 }
 
-.gender-switcher input[type=radio] {
+.gender-switcher input[type="radio"] {
   position: absolute;
   opacity: 0;
 }
@@ -937,13 +970,13 @@ a {
   transition: transform 0.5s;
 }
 
-.gender-switcher input[type=radio]:checked + label + .switch,
-.gender-switcher input[type=radio]:checked + label:nth-of-type(n) + .switch {
+.gender-switcher input[type="radio"]:checked + label + .switch,
+.gender-switcher input[type="radio"]:checked + label:nth-of-type(n) + .switch {
   transform: translateX(100%);
   left: 0px;
 }
 
-.gender-switcher input[type=radio]:checked + label {
+.gender-switcher input[type="radio"]:checked + label {
   color: #fff;
 }
 
@@ -973,7 +1006,11 @@ a {
 .edit-workout-page {
   padding-top: 60px;
   padding-bottom: 60px;
-  background: linear-gradient(180deg, rgba(159, 227, 255, 0.2) 0%, rgba(217, 155, 255, 0.2) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(159, 227, 255, 0.2) 0%,
+    rgba(217, 155, 255, 0.2) 100%
+  );
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -1098,12 +1135,16 @@ a {
 .edit-box .timer-edit .squat-wrap {
   border-radius: 15px;
   padding: 20px;
-  background: linear-gradient(180deg, rgba(217, 155, 255, 0.5) 0%, rgba(113, 97, 239, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.5) 0%,
+    rgba(113, 97, 239, 0.5) 100%
+  );
 }
 .edit-box .timer-edit .squat-wrap img {
   width: 100px;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .edit-box .timer-edit .center-wrap {
   width: 140px;
@@ -1194,13 +1235,27 @@ a {
   .workout-video-page .main-video-wraps .time-duration .timer-wraps {
     gap: 7px;
   }
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap {
     gap: 6px;
   }
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap h5 {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    h5 {
     font-size: 13px;
   }
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap span {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    span {
     font-size: 16px;
   }
   .workout-video-page .video-wraper {
@@ -1225,7 +1280,7 @@ a {
     width: 100%;
     height: 97%;
     -o-object-fit: cover;
-       object-fit: cover;
+    object-fit: cover;
   }
   .workout-video-page .video-wraper .workout-name-wrap .btn {
     padding: 11px 38px;
@@ -1316,7 +1371,11 @@ a {
     margin-top: 17px;
     gap: 6px;
   }
-  .login-page .main-login-section .white-form .check-wrap input[type=checkbox] {
+  .login-page
+    .main-login-section
+    .white-form
+    .check-wrap
+    input[type="checkbox"] {
     width: 12px;
     height: 12px;
   }
@@ -1562,13 +1621,27 @@ a {
   .workout-video-page .main-video-wraps .time-duration .timer-wraps {
     gap: 7px;
   }
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap {
     gap: 6px;
   }
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap h5 {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    h5 {
     font-size: 13px;
   }
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap span {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    span {
     font-size: 16px;
   }
   .workout-video-page .video-wraper {
@@ -1590,7 +1663,7 @@ a {
     width: 100%;
     height: 100%;
     -o-object-fit: cover;
-       object-fit: cover;
+    object-fit: cover;
   }
   .workout-video-page .video-wraper .workout-name-wrap .btn {
     width: -moz-fit-content;
@@ -1817,4 +1890,4 @@ a {
     color: black;
     z-index: 99;
   }
-}/*# sourceMappingURL=style.css.map */
+} /*# sourceMappingURL=style.css.map */
