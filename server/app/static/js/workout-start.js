@@ -8,7 +8,7 @@ let restTimer = 0;
 let repetitions = 0;
 let connectionId = "";
 let isCompleted = false;
-const fps = 30;
+const fps = 21;
 const interval = 1000 / fps;
 
 const video = document.getElementById("video");
@@ -88,7 +88,7 @@ function startVideoProcessing() {
     if (video.paused || video.ended) return;
 
     const aspectRatio = video.videoWidth / video.videoHeight;
-    const targetHeight = 240;
+    const targetHeight = 144;
     const targetWidth = aspectRatio * targetHeight;
 
     canvas.width = targetWidth;
@@ -112,7 +112,7 @@ function startVideoProcessing() {
         }
       },
       "image/jpeg",
-      0.9
+      0.5
     );
 
     setTimeout(sendFrame, interval);
