@@ -1204,6 +1204,16 @@ a {
   display: none;
 }
 
+.info-text {
+  top: 30px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 17.07px;
+  color: black;
+  z-index: 99;
+}
+
 @media (max-width: 1040px) {
   .container {
     max-width: 90%;
