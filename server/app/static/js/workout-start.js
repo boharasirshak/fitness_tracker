@@ -32,9 +32,12 @@ if (exercises.length > 0) {
 
 initializeVideoStream();
 
-ws.onmessage = handleWebSocketMessage;
+setTimeout(() => {
+  video.addEventListener("play", startVideoProcessing);
+  initializeVideoStream();
+}, 5000);
 
-video.addEventListener("play", startVideoProcessing);
+ws.onmessage = handleWebSocketMessage;
 
 completeButton.addEventListener("click", completeWorkout);
 
