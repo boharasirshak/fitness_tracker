@@ -20,7 +20,7 @@ const downloadButtonElement = document.getElementById("download-button");
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
 const accessToken = getCookie("access_token");
-const receivedImage = document.getElementById("received-image");
+// const receivedImage = document.getElementById("received-image");
 
 let currentExercise;
 let currentExerciseIdx = 0;
@@ -73,9 +73,12 @@ function initializeVideoStream() {
 function handleWebSocketMessage(event) {
   const message = JSON.parse(event.data);
 
-  if (message.type === "image") {
-    receivedImage.src = `data:image/jpeg;base64,${message.data}`;
-  } else if (message.type === "count") {
+  // We do not process the image
+  // if (message.type === "image") {
+  //   receivedImage.src = `data:image/jpeg;base64,${message.data}`;
+  // }
+
+  if (message.type === "count") {
     repetitions = parseInt(message.data);
     repetitionsCountElement.innerText = repetitions;
   }

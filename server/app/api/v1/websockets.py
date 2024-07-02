@@ -262,16 +262,15 @@ async def workout_connection(websocket: WebSocket):
                 )
 
             # This is no longer needed as we are sending the count only
-
-            _, buffer = cv2.imencode(".jpg", frame)
-            b64_img = base64.b64encode(buffer.tobytes()).decode("utf-8")
-            await websocket.send_json(
-                {
-                    "type": "image",
-                    "data": b64_img,
-                    "connection_id": connection_id,
-                }
-            )
+            # _, buffer = cv2.imencode(".jpg", frame)
+            # b64_img = base64.b64encode(buffer.tobytes()).decode("utf-8")
+            # await websocket.send_json(
+            #     {
+            #         "type": "image",
+            #         "data": b64_img,
+            #         "connection_id": connection_id,
+            #     }
+            # )
 
             await websocket.send_json(
                 {
