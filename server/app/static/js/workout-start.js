@@ -94,7 +94,7 @@ function startVideoProcessing() {
     if (video.paused || video.ended) return;
 
     const aspectRatio = video.videoWidth / video.videoHeight;
-    const targetHeight = 144;
+    const targetHeight = 360;
     const targetWidth = aspectRatio * targetHeight;
 
     canvas.width = targetWidth;
