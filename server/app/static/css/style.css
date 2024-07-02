@@ -149,9 +149,11 @@ a {
 .login-page {
   padding-top: 60px;
   padding-bottom: 60px;
-  background: linear-gradient(180deg,
-      rgba(217, 155, 255, 0.8) 0%,
-      rgba(15, 0, 135, 0.8) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.8) 0%,
+    rgba(15, 0, 135, 0.8) 100%
+  );
 }
 
 .login-page .top-logo-part .main-logo img {
@@ -507,9 +509,11 @@ a {
 }
 
 .dashboard-page .wrokouts-flexed .workout-coolection .workout-image {
-  background: linear-gradient(180deg,
-      rgba(217, 155, 255, 0.5) 0%,
-      rgba(113, 97, 239, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.5) 0%,
+    rgba(113, 97, 239, 0.5) 100%
+  );
   padding: 20px;
   border-radius: 15px;
 }
@@ -548,9 +552,11 @@ a {
 }
 
 .workout-page {
-  background: linear-gradient(180deg,
-      rgba(159, 227, 255, 0.2) 0%,
-      rgba(217, 155, 255, 0.2) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(159, 227, 255, 0.2) 0%,
+    rgba(217, 155, 255, 0.2) 100%
+  );
   padding-top: 60px;
   padding-bottom: 60px;
 }
@@ -675,9 +681,11 @@ a {
 }
 
 .exercise-popup-wraps .exercise-pop-wrapper .workout {
-  background: linear-gradient(180deg,
-      rgba(217, 155, 255, 0.5) 0%,
-      rgba(113, 97, 239, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.5) 0%,
+    rgba(113, 97, 239, 0.5) 100%
+  );
   padding: 20px;
   border-radius: 15px;
 }
@@ -790,21 +798,35 @@ a {
   gap: 15px;
 }
 
-.workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap {
+.workout-video-page
+  .main-video-wraps
+  .time-duration
+  .timer-wraps
+  .duration-wrap {
   color: #fff;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap h5 {
+.workout-video-page
+  .main-video-wraps
+  .time-duration
+  .timer-wraps
+  .duration-wrap
+  h5 {
   font-family: "Montserrat", sans-serif;
   font-size: 18px;
   font-weight: 500;
   line-height: 15.85px;
 }
 
-.workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap span {
+.workout-video-page
+  .main-video-wraps
+  .time-duration
+  .timer-wraps
+  .duration-wrap
+  span {
   font-family: "Montserrat", sans-serif;
   font-size: 20px;
   font-weight: 500;
@@ -839,6 +861,13 @@ a {
 }
 
 .workout-video-page .video-wraper .workout-name-wrap .video-wrap video {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+.workout-video-page .video-wraper .workout-name-wrap .video-wrap img {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
@@ -1072,13 +1101,13 @@ a {
   transition: transform 0.5s;
 }
 
-.gender-switcher input[type="radio"]:checked+label+.switch,
-.gender-switcher input[type="radio"]:checked+label:nth-of-type(n)+.switch {
+.gender-switcher input[type="radio"]:checked + label + .switch,
+.gender-switcher input[type="radio"]:checked + label:nth-of-type(n) + .switch {
   transform: translateX(100%);
   left: 0px;
 }
 
-.gender-switcher input[type="radio"]:checked+label {
+.gender-switcher input[type="radio"]:checked + label {
   color: #fff;
 }
 
@@ -1112,9 +1141,11 @@ a {
 .edit-workout-page {
   padding-top: 60px;
   padding-bottom: 60px;
-  background: linear-gradient(180deg,
-      rgba(159, 227, 255, 0.2) 0%,
-      rgba(217, 155, 255, 0.2) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(159, 227, 255, 0.2) 0%,
+    rgba(217, 155, 255, 0.2) 100%
+  );
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -1259,9 +1290,11 @@ a {
 .edit-box .timer-edit .squat-wrap {
   border-radius: 15px;
   padding: 20px;
-  background: linear-gradient(180deg,
-      rgba(217, 155, 255, 0.5) 0%,
-      rgba(113, 97, 239, 0.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(217, 155, 255, 0.5) 0%,
+    rgba(113, 97, 239, 0.5) 100%
+  );
 }
 
 .edit-box .timer-edit .squat-wrap img {
@@ -1389,15 +1422,29 @@ a {
     gap: 7px;
   }
 
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap {
     gap: 6px;
   }
 
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap h5 {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    h5 {
     font-size: 13px;
   }
 
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap span {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    span {
     font-size: 16px;
   }
 
@@ -1543,7 +1590,11 @@ a {
     gap: 6px;
   }
 
-  .login-page .main-login-section .white-form .check-wrap input[type="checkbox"] {
+  .login-page
+    .main-login-section
+    .white-form
+    .check-wrap
+    input[type="checkbox"] {
     width: 12px;
     height: 12px;
   }
@@ -1854,15 +1905,29 @@ a {
     gap: 7px;
   }
 
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap {
     gap: 6px;
   }
 
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap h5 {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    h5 {
     font-size: 13px;
   }
 
-  .workout-video-page .main-video-wraps .time-duration .timer-wraps .duration-wrap span {
+  .workout-video-page
+    .main-video-wraps
+    .time-duration
+    .timer-wraps
+    .duration-wrap
+    span {
     font-size: 16px;
   }
 
@@ -1886,6 +1951,13 @@ a {
   }
 
   .workout-video-page .video-wraper .workout-name-wrap .video-wrap video {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+  }
+
+  .workout-video-page .video-wraper .workout-name-wrap .video-wrap img {
     width: 100%;
     height: 100%;
     -o-object-fit: cover;
@@ -2162,7 +2234,6 @@ a {
   }
 
   .turn-text {
-
     display: block;
     font-family: "Montserrat", sans-serif;
     font-size: 16px;
