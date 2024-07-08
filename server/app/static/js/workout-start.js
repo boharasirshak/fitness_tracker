@@ -15,7 +15,7 @@ const video = document.getElementById("video");
 const helperVideo = document.getElementById("helper-video");
 const repetitionsCountElement = document.getElementById("repetition-count");
 const timerElement = document.getElementById("timer");
-const completeButton = document.getElementById("complete-btn");
+// const completeButton = document.getElementById("complete-btn");
 const downloadButtonElement = document.getElementById("download-button");
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
@@ -39,7 +39,8 @@ setTimeout(() => {
 
 ws.onmessage = handleWebSocketMessage;
 
-completeButton.addEventListener("click", completeWorkout);
+// we do not save the video currently
+// completeButton.addEventListener("click", completeWorkout);
 
 function initializeExercise(exercise) {
   currentExercise = exercise;

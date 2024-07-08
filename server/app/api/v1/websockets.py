@@ -242,11 +242,13 @@ async def workout_connection(websocket: WebSocket):
 
             video_b64 = data_json["data"]
             video_bytes = base64.b64decode(video_b64)
-            connections[connection_id]["video_frames"].append(video_bytes)
 
             np_array = np.frombuffer(video_bytes, np.uint8)
             img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-            connections[connection_id]["video_frames"].append(img)
+
+            # Do not save the video now
+            # connections[connection_id]["video_frames"].append(video_bytes)
+            # connections[connection_id]["video_frames"].append(img)
 
             if exercise_type == "high_knees":
                 frame, _, repetitions_count = process_high_knees(
