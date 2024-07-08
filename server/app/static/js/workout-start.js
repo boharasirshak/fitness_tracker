@@ -15,7 +15,7 @@ const video = document.getElementById("video");
 const helperVideo = document.getElementById("helper-video");
 const repetitionsCountElement = document.getElementById("repetition-count");
 const timerElement = document.getElementById("timer");
-// const completeButton = document.getElementById("complete-btn");
+const completeButton = document.getElementById("complete-btn");
 const downloadButtonElement = document.getElementById("download-button");
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const ws = new WebSocket(`${protocol}://${window.location.host}/api/v1/ws`);
@@ -39,8 +39,7 @@ setTimeout(() => {
 
 ws.onmessage = handleWebSocketMessage;
 
-// we do not save the video currently
-// completeButton.addEventListener("click", completeWorkout);
+completeButton.addEventListener("click", completeWorkout);
 
 function initializeExercise(exercise) {
   currentExercise = exercise;
@@ -136,26 +135,25 @@ async function completeWorkout() {
   completeButton.innerText = "Скачивание...";
 
   try {
-    const response = await fetch(
-      `/api/v1/ws/download_video?connection_id=${connectionId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      const data = await response.json();
-      showToast("red", data.detail);
-      resetCompleteButton();
-      return;
-    }
-
-    const blob = await response.blob();
-    downloadBlob(blob, "video.mp4");
+    // no need to download the video currently
+    // const response = await fetch(
+    //   `/api/v1/ws/download_video?connection_id=${connectionId}`,
+    //   {
+    //     method: "GET",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   }
+    // );
+    // if (!response.ok) {
+    //   const data = await response.json();
+    //   showToast("red", data.detail);
+    //   resetCompleteButton();
+    //   return;
+    // }
+    // const blob = await response.blob();
+    // downloadBlob(blob, "video.mp4");
   } catch (e) {
     console.error("Failed to download the video", e);
     showToast("red", "Could not save the video. Please try again later.");
